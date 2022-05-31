@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/wonseok/WALKU/app/src/main/res/drawable/ic_challenge.xml" value="0.229" />
         <entry key="..\:/Users/wonseok/WALKU/app/src/main/res/drawable/ic_home.xml" value="0.229" />
         <entry key="..\:/Users/wonseok/WALKU/app/src/main/res/drawable/main_btm_nav_item_color.xml" value="0.229" />
         <entry key="..\:/Users/wonseok/WALKU/app/src/main/res/layout/activity_main.xml" value="0.22" />
@@ -11,7 +12,7 @@
         <entry key="..\:/Users/wonseok/WALKU/app/src/main/res/layout/fragment_challenge.xml" value="0.3651041666666667" />
         <entry key="..\:/Users/wonseok/WALKU/app/src/main/res/layout/fragment_home.xml" value="0.3651041666666667" />
         <entry key="..\:/Users/wonseok/WALKU/app/src/main/res/layout/fragment_settings.xml" value="0.36614583333333334" />
-        <entry key="..\:/Users/wonseok/WALKU/app/src/main/res/menu/menu_main_bottom_nav.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/wonseok/WALKU/app/src/main/res/menu/menu_main_bottom_nav.xml" value="0.25" />
       </map>
     </option>
   </component>
