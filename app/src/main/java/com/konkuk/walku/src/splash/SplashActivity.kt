@@ -9,6 +9,7 @@ import android.view.animation.AnimationUtils
 import com.konkuk.walku.R
 import com.konkuk.walku.config.BaseActivity
 import com.konkuk.walku.databinding.ActivitySplashBinding
+import com.konkuk.walku.src.login.LoginActivity
 import com.konkuk.walku.src.main.MainActivity
 
 class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding::inflate){
@@ -28,7 +29,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
 
         // 2.5초 후에 자동으로 메인액티비티로 넘어갑니다. (부드럽게 넘어가는 애니메이션 적용)
         Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(Intent(this, MainActivity::class.java))
+            startActivity(Intent(this, LoginActivity::class.java))
             overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out)
         }, 2500)
 
