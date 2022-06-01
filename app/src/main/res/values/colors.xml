@@ -9,11 +9,14 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="black_for_menu_text">#4a4a4a</color>
+    <color name="gray_for_dots_indicator">#F3F3F3</color>
 
     <!-- WALKU 앱 베이스 색상 (그린조아!)-->
     <color name="main_green_base">#72CC82</color>
     <color name="main_green">#3CB371</color>
     <color name="main_green_accent">#109972</color>
     <color name="main_green_background">#54e48f</color>
+
+
 
 </resources>

@@ -17,6 +17,7 @@
         <item name="android:navigationBarColor">@color/white</item>
     </style>
 
+    <!-- 스플래시 화면 기기 상단 바 색상 변경 -->
     <style name="AppTheme.Splash">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

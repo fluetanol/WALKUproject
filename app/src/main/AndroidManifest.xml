@@ -6,18 +6,18 @@
     <application
         android:name="com.konkuk.walku.config.ApplicationClass"
         android:icon="@mipmap/ic_main"
-        android:roundIcon="@mipmap/ic_main_round"
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/network_security_config"
+        android:roundIcon="@mipmap/ic_main_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup"
         tools:targetApi="s">
         <activity
             android:name=".src.splash.SplashActivity"
+            android:exported="true"
             android:screenOrientation="fullSensor"
-            android:theme="@style/AppTheme.Splash"
-            android:exported="true" >
+            android:theme="@style/AppTheme.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,10 +25,15 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".src.login.LoginActivity"
+            android:exported="true"
+            android:screenOrientation="fullSensor"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".src.main.MainActivity"
             android:exported="true"
             android:screenOrientation="fullSensor"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

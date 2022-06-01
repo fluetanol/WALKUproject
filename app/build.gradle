@@ -75,6 +75,9 @@ dependencies {
         exclude group: 'com.android.support'
     }
 
+    //
+    implementation 'com.tbuonomo:dotsindicator:4.2'
+
     // https://github.com/ybq/Android-SpinKit
     implementation 'com.github.ybq:Android-SpinKit:1.4.0'
 }

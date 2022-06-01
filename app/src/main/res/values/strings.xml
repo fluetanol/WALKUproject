@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">워쿠</string>
+    <string name="login_skip_all">건너뛰기</string>
 </resources>
