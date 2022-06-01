@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.konkuk.walku">
 
+    <!-- 네트워크 통신을 위해 인터넷 권한을 추가했습니다.-->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name="com.konkuk.walku.config.ApplicationClass"
         android:icon="@mipmap/ic_main"
@@ -11,6 +14,7 @@
         android:roundIcon="@mipmap/ic_main_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup"
         tools:targetApi="s">
         <activity
