@@ -5,7 +5,7 @@
 
     <item
         android:id="@+id/menu_main_btm_nav_home"
-        android:icon="@drawable/ic_home"
+        android:icon="@drawable/ic_home_selector"
         app:showAsAction="always"
         android:enabled="true"
         android:checkable="true"
@@ -13,7 +13,7 @@
 
     <item
         android:id="@+id/menu_main_btm_nav_analysis"
-        android:icon="@drawable/ic_analysis"
+        android:icon="@drawable/ic_analysis_selector"
         app:showAsAction="always"
         android:enabled="true"
         android:title="분석" />
@@ -27,7 +27,7 @@
 
     <item
         android:id="@+id/menu_main_btm_nav_challenge"
-        android:icon="@drawable/ic_challenge"
+        android:icon="@drawable/ic_challenge_selector"
         app:showAsAction="always"
         android:enabled="true"
         android:title="챌린지" />
@@ -35,7 +35,7 @@
 
     <item
         android:id="@+id/menu_main_btm_nav_settings"
-        android:icon="@drawable/ic_settings"
+        android:icon="@drawable/ic_settings_selector"
         app:showAsAction="always"
         android:enabled="true"
         android:title="설정" />

@@ -2,10 +2,14 @@ package com.konkuk.walku.config
 
 import android.content.Context
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
+import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
+import com.konkuk.walku.R
 import com.konkuk.walku.util.LoadingDialog
 
 // 액티비티의 기본을 작성, 뷰 바인딩 활용
