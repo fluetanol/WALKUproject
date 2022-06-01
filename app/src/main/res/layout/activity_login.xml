@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".src.login.LoginActivity">
 
     <com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator
         android:id="@+id/activity_login_dots_indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="60dp"
         app:dotsColor="@color/main_green_background"
         app:dotsCornerRadius="8dp"
         app:dotsSize="12dp"
@@ -25,11 +26,11 @@
         android:id="@+id/activity_login_skip_all_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="25dp"
         android:fontFamily="@font/roboto_regular"
         android:text="@string/login_skip_all"
         android:textColor="@color/main_green_base"
-        android:textSize="16sp"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@id/activity_login_dots_indicator"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/activity_login_dots_indicator" />
@@ -38,10 +39,34 @@
         android:id="@+id/activity_login_view_pager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:1.05"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/activity_login_start_layout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/top_round_background_green"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/activity_login_dots_indicator" />
+        app:layout_constraintDimensionRatio="6.5:1"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/activity_login_start_text_view"
+            android:layout_width="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:fontFamily="@font/roboto_bold"
+            android:text="시작하기"
+            android:layout_height="wrap_content"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
