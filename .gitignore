@@ -13,7 +13,7 @@
 .externalNativeBuild
 .cxx
 local.properties
-
+/app/google-services.json
 
 
 # Created by https://www.toptal.com/developers/gitignore/api/androidstudio
