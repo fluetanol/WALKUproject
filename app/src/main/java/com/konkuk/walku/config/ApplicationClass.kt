@@ -9,6 +9,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
+
 // 앱이 실행될때 1번만 실행이 됩니다.
 class ApplicationClass : Application() {
     val API_URL = "http://54.180.68.142:8080/"
@@ -32,6 +33,11 @@ class ApplicationClass : Application() {
 
         // Retrofit 인스턴스, 앱 실행시 한번만 생성하여 사용합니다.
         lateinit var sRetrofit: Retrofit
+
+        // .gitignore에 해당 클래스 경로 설정해두었으니, api key들은 안전하게 여기에 등록해두시면 됩니다.
+        // 홈 프래그먼트에서 사용하는 날씨 관련 API KEY
+        val HOME_WEATHER_API_KEY = ""
+
     }
 
     // 앱이 처음 생성되는 순간, SP를 새로 만들어주고, 레트로핏 인스턴스를 생성합니다.
