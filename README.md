@@ -8,12 +8,18 @@
  - 디자인 최종 수정
  - src/main/home
 
+------------
+
 - 김경호
  - src/main/analysis 
+
+------------
 
 - 정태승
  - src/main/settings
  - src/main/challenge
+
+------------
 
 - 아이닌자리파
  - 디자인 작업
