@@ -42,10 +42,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                         .commitAllowingStateLoss()
                     return@setOnItemSelectedListener true
                 }
+                R.id.action_empty -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.main_frm, HomeFragment())
+                        .commitAllowingStateLoss()
+                }
             }
             false
         }
-
     }
 
 }
