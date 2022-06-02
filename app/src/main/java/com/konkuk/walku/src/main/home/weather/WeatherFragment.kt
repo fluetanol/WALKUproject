@@ -21,7 +21,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 
-// 코드가 자고 일어나서 지저분하므로 깔끔하게 변경할 예정 (...)
+// TODO 코드가 지저분하므로 깔끔하게 리팩토링할 예정 (...)
 
 class WeatherFragment :
     BaseFragment<FragmentWeatherBinding>(FragmentWeatherBinding::bind, R.layout.fragment_weather),
@@ -64,7 +64,6 @@ class WeatherFragment :
                 override fun onLocationResult(p0: LocationResult) {
                     p0.let {
                         for (location in it.locations) {
-
 
                             // 현재 위치의 위경도를 격자 좌표로 변환
                             curPoint = OpenApiCommon().dfsXyConv(location.latitude, location.longitude)
@@ -116,7 +115,6 @@ class WeatherFragment :
     override fun onGetWeatherSuccess(response: GetWeatherResponse) {
         // 테스트입니다.
         dismissLoadingDialog()
-
         showCustomToast("날씨 api 연동 성공")
     }
 
