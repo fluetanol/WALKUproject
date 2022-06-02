@@ -9,7 +9,7 @@ interface HomeRetrofitInterface {
 
     @GET("getUltraSrtNcst")
     fun getWeather(
-        @Query("serviceKey") serviceKey: String,
+        @Query("serviceKey", encoded = true) serviceKey: String,
         @Query("numOfRows") numOfRows: Int,
         @Query("pageNo") pageNo: Int,
         @Query("dataType") dataType: String = "json",
