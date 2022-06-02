@@ -17,6 +17,13 @@
     <color name="main_green_accent">#109972</color>
     <color name="main_green_background">#54e48f</color>
 
+    <!-- 회색 색상 코드 모음 (그레이조아) -->
+    <color name="dark_gray">#666666</color>
+    <color name="medium_gray">#999999</color>
+    <color name="light_gray">#CCCCCC</color>
+    <color name="border_gray">#DEDEDE</color>
+    <color name="background_gray">#F3F3F3</color>
+
     <!-- 기타 -->
     <color name="kakao_background">#FDE101</color>
     <color name="kakao_text">#3C1E1C</color>
