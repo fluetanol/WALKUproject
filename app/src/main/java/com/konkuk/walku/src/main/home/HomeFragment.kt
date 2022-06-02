@@ -14,15 +14,18 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         super.onViewCreated(view, savedInstanceState)
 
         // 테스트입니다.
-        HomeService(this).tryGetWeather(numOfRows = 10, pageNo = 1, base_date = "20220602", base_time = "0000", nx = 50, ny = 127)
+        HomeService(this).tryGetWeather(numOfRows = 300, pageNo = 1, base_date = "20220602", base_time = "1450", nx = 50, ny = 127)
+        showLoadingDialog(requireActivity())
     }
 
     override fun onGetWeatherSuccess(response: GetWeatherResponse) {
+        dismissLoadingDialog()
         // 테스트입니다.
         showCustomToast("날씨 api 연동 성공")
     }
 
     override fun onGetWeatherFailure(message: String) {
+        dismissLoadingDialog()
         showCustomToast("오류 : $message")
     }
 

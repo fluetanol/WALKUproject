@@ -1,9 +1,10 @@
 package com.konkuk.walku.src.main.home
 
-import com.konkuk.walku.R
 import com.konkuk.walku.config.ApplicationClass
-import com.konkuk.walku.config.ApplicationClass.Companion.HOME_WEATHER_API_KEY
 import com.konkuk.walku.src.main.home.model.GetWeatherResponse
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -21,7 +22,6 @@ class HomeService(val view: HomeFragmentView) {
         val getWeatherRetrofitInterface =
             ApplicationClass.sRetrofit[0].create(HomeRetrofitInterface::class.java)
         getWeatherRetrofitInterface.getWeather(
-            serviceKey = HOME_WEATHER_API_KEY,
             numOfRows = numOfRows,
             pageNo = pageNo,
             base_date = base_date,

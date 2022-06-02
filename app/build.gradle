@@ -4,6 +4,9 @@ plugins {
     id 'com.google.gms.google-services'
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
 android {
     compileSdk 32
 
@@ -15,6 +18,8 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "HOME_WEATHER_API_KEY", properties.getProperty("home_weather_api_key"))
+        buildConfigField("String", "KAKAO_APP_KEY", properties.getProperty("kakao_app_key"))
     }
 
     buildTypes {
@@ -33,6 +38,7 @@ android {
     buildFeatures {
         viewBinding true
     }
+
 }
 
 dependencies {
@@ -82,4 +88,6 @@ dependencies {
 
     // https://github.com/ybq/Android-SpinKit
     implementation 'com.github.ybq:Android-SpinKit:1.4.0'
+
+
 }
