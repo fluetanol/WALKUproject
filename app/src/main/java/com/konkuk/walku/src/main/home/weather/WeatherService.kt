@@ -1,15 +1,12 @@
-package com.konkuk.walku.src.main.home
+package com.konkuk.walku.src.main.home.weather
 
 import com.konkuk.walku.config.ApplicationClass
-import com.konkuk.walku.src.main.home.model.GetWeatherResponse
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.konkuk.walku.src.main.home.weather.model.GetWeatherResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class HomeService(val view: HomeFragmentView) {
+class WeatherService(val view: WeatherFragmentView) {
 
     fun tryGetWeather(
         numOfRows: Int,
@@ -20,7 +17,7 @@ class HomeService(val view: HomeFragmentView) {
         ny: Int
     ) {
         val getWeatherRetrofitInterface =
-            ApplicationClass.sRetrofit[0].create(HomeRetrofitInterface::class.java)
+            ApplicationClass.sRetrofit[0].create(WeatherRetrofitInterface::class.java)
         getWeatherRetrofitInterface.getWeather(
             numOfRows = numOfRows,
             pageNo = pageNo,

@@ -1,12 +1,12 @@
-package com.konkuk.walku.src.main.home
+package com.konkuk.walku.src.main.home.weather
 
 import com.konkuk.walku.BuildConfig
-import com.konkuk.walku.src.main.home.model.GetWeatherResponse
+import com.konkuk.walku.src.main.home.weather.model.GetWeatherResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface HomeRetrofitInterface {
+interface WeatherRetrofitInterface {
 
     // 기상청 초단기예보 실황 API
     @GET("1360000/VilageFcstInfoService_2.0/getUltraSrtFcst")

@@ -1,4 +1,4 @@
-package com.konkuk.walku.src.main.home.model
+package com.konkuk.walku.src.main.home.weather.model
 
 import com.google.gson.annotations.SerializedName
 
