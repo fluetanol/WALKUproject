@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat
 import android.graphics.*
 import com.konkuk.walku.R
 
+// 커스텀바텀네비게이션뷰 클래스입니다. (바텀네비게이션뷰 가운데의 원형 fab버튼을 위해 필요한 클래스)
 class CustomBottomNavigationView : BottomNavigationView {
     private var mPath: Path = Path()
     private var mPaint: Paint = Paint()

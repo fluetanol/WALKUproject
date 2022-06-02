@@ -42,6 +42,9 @@
             android:exported="true"
             android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.NoActionBar" />
+        <meta-data
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="7m3xcjkrie" />
     </application>
 
 </manifest>
