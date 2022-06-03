@@ -38,6 +38,11 @@
             android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".src.permission.PermissionActivity"
+            android:exported="true"
+            android:screenOrientation="fullSensor"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".src.main.MainActivity"
             android:exported="true"
             android:screenOrientation="fullSensor"

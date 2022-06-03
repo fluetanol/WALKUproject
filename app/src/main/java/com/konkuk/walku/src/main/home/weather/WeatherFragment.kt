@@ -7,6 +7,7 @@ import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import androidx.core.app.ActivityCompat
 import com.bumptech.glide.Glide
@@ -37,20 +38,9 @@ class WeatherFragment :
     
     var latitude: Double = 0.0
     var longitude: Double = 0.0
-    
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // Get permission
-        val permissionList = arrayOf(
-            // 위치 권한
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-        )
-
-        // 권한 요청
-        ActivityCompat.requestPermissions(requireActivity(), permissionList, 1)
 
         requestLocation()
 
@@ -67,7 +57,7 @@ class WeatherFragment :
             val locationRequest = LocationRequest.create()
             locationRequest.run {
                 priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-                interval = 60 * 1000    // 요청 간격(1초)
+                interval = 60 * 10000   // 요청 간격(10초)
             }
             val locationCallback = object : LocationCallback() {
                 // 요청 결과
@@ -164,6 +154,7 @@ class WeatherFragment :
     override fun onGetWeatherFailure(message: String) {
         dismissLoadingDialog()
         showCustomToast("오류 : $message")
+        Log.d("okhttp", "$message")
     }
 
 

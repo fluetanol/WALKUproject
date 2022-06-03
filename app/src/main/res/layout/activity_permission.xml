@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="match_parent"
+    tools:context=".src.permission.PermissionActivity">
+
+    <TextView
+        android:id="@+id/activity_permission_title_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="워쿠 앱 이용을 위한 권한 안내"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/activity_permission_title_divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="15dp"
+        android:background="#C3C3C3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/activity_permission_title_text_view" />
+
+    <!-- -->
+
+    <TextView
+        android:id="@+id/activity_permission_mandate_permission_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="필수 접근 권한"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/activity_permission_title_divider" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/activity_permission_location_image_view"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/ic_location"
+        app:layout_constraintStart_toStartOf="@id/activity_permission_mandate_permission_text_view"
+        app:layout_constraintTop_toBottomOf="@id/activity_permission_mandate_permission_text_view" />
+
+    <TextView
+        android:id="@+id/activity_permission_location_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="위치"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@id/activity_permission_location_image_view"
+        app:layout_constraintTop_toTopOf="@id/activity_permission_location_image_view" />
+
+    <TextView
+        android:id="@+id/activity_permission_location_sub_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_regular"
+        android:text="현재 위치 기준 정확한 날씨, 산책/등산로 정보 표시"
+        android:textColor="@color/light_gray"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@id/activity_permission_location_image_view"
+        app:layout_constraintStart_toStartOf="@id/activity_permission_location_text_view"
+        app:layout_constraintTop_toBottomOf="@id/activity_permission_location_text_view" />
+
+
+    <!-- -->
+
+    <TextView
+        android:id="@+id/activity_permission_choice_permission_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="50dp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="선택 접근 권한"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/activity_permission_location_sub_text_view" />
+
+    <TextView
+        android:id="@+id/activity_permission_detail_description_first_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:text="※ 선택적 접근권한은 해당 기능 사용 시 요청하며, 동의하지 않아도 서비스 이용 가능"
+        android:textColor="#C2C2C2"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@id/activity_permission_detail_description_second_text_view"
+        app:layout_constraintEnd_toEndOf="@id/activity_permission_check_button"
+        app:layout_constraintStart_toStartOf="@id/activity_permission_check_button" />
+
+    <TextView
+        android:id="@+id/activity_permission_detail_description_second_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="20dp"
+        android:text="※ 휴대폰 설정 > 애플리케이션(앱) > 워쿠 > 앱 권한 메뉴에서 설정 변경 가능"
+        android:textColor="#C2C2C2"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@id/activity_permission_check_button"
+        app:layout_constraintEnd_toEndOf="@id/activity_permission_check_button"
+        app:layout_constraintStart_toStartOf="@id/activity_permission_check_button" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/activity_permission_check_button"
+        android:layout_width="0dp"
+        android:layout_height="55dp"
+        android:layout_margin="15dp"
+        android:background="@drawable/all_round_background_green"
+        android:text="확인"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
