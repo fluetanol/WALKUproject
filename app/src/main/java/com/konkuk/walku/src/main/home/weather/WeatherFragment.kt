@@ -10,6 +10,7 @@ import android.os.Looper
 import android.view.View
 import androidx.core.app.ActivityCompat
 import com.bumptech.glide.Glide
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
@@ -155,7 +156,7 @@ class WeatherFragment :
                 // 현재 내 위치 주소 (한글 주소로 표시)
                 // TODO 00구 00동 까지만 나오도록 변경할 예정
                 fragmentWeatherAddressTextView.text = getAddress(latitude, longitude)
-
+                fragmentWeatherCurrentWeatherStateTextView.text = getWeatherString(weatherArr[0].sky)
             }
         }
     }
@@ -173,6 +174,15 @@ class WeatherFragment :
             "3" ->  R.drawable.medium_cloud_anim        // 구름 많음
             "4" -> R.drawable.heavy_cloud_anim          // 흐림
             else -> R.drawable.ic_launcher_foreground   // 오류
+        }
+    }
+
+    private fun getWeatherString(skyCode: String) : String {
+        return when(skyCode) {
+            "1" -> "맑음"      
+            "3" -> "구름 많음"
+            "4" -> "흐림"
+            else -> "알 수 없음"
         }
     }
 
@@ -195,7 +205,7 @@ class WeatherFragment :
         } catch (e: IOException) {
             e.printStackTrace()
         }
-        return addressResult
+        return addressResult.replace("대한민국 ", "")
     }
 
 }
