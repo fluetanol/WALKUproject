@@ -2,4 +2,6 @@
     <string name="app_name">워쿠</string>
     <string name="login_skip_all">건너뛰기</string>
     <string name="APP_KEY">XBjxV9xTCua8I8aTeD05wrLmnvj5y1uKf5edmduha2zqAt7uUOYBZyu9bd2RxOChY7AusVoQdITaVC0JxJE4cQ%3D%3D</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
