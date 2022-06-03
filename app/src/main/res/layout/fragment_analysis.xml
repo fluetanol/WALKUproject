@@ -1,19 +1,65 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@color/white">
 
-    <TextView
-        app:layout_constraintStart_toStartOf="parent"
+    <!-- 상단 레이아웃 바 (로고, 알림) -->
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/fragment_analysis_top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="6:1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/fragment_analysis_walku_title_image_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/walku_main_text"
+            android:tint="@color/main_green_background"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- 탭 레이아웃 -->
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/fragment_analysis_tap_layout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="8:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fragment_analysis_top_layout"
+        app:tabGravity="center"
+        app:tabIndicator="@drawable/home_tab_indicator"
+        app:tabIndicatorColor="@color/main_green_background"
+        app:tabIndicatorFullWidth="false"
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="@color/main_green_base"
+        app:tabTextAppearance="@style/TabTextStyle"
+        app:tabTextColor="@color/medium_gray" />
+
+    <!-- 뷰페이저 -->
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/fragment_analysis_view_pager"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:text="분석"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fragment_analysis_tap_layout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
