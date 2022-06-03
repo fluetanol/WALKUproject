@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.os.Looper
 import android.view.View
 import androidx.core.app.ActivityCompat
-import com.google.android.gms.common.internal.service.Common
+import com.bumptech.glide.Glide
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
@@ -19,7 +19,6 @@ import com.konkuk.walku.src.main.home.weather.model.GetWeatherResponse
 import com.konkuk.walku.util.OpenApiCommon
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-
 
 // TODO 코드가 지저분하므로 깔끔하게 리팩토링할 예정 (...)
 
@@ -45,6 +44,8 @@ class WeatherFragment :
         requestLocation()
 
         showLoadingDialog(requireActivity())
+
+        Glide.with(this).load(R.drawable.sunny_anim).into(binding.fragmentWeatherCurrentWeatherStateAnimView)
 
     }
 
@@ -116,6 +117,12 @@ class WeatherFragment :
         // 테스트입니다.
         dismissLoadingDialog()
         showCustomToast("날씨 api 연동 성공")
+
+
+
+
+
+
     }
 
     override fun onGetWeatherFailure(message: String) {
