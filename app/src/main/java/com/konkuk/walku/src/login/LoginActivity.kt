@@ -12,6 +12,7 @@ import com.konkuk.walku.config.BaseActivity
 import com.konkuk.walku.databinding.ActivityLoginBinding
 import com.konkuk.walku.src.login.adapter.LoginAdapter
 import com.konkuk.walku.src.main.MainActivity
+import com.konkuk.walku.src.permission.PermissionActivity
 import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator
 
 class LoginActivity: BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::inflate) {
@@ -43,9 +44,9 @@ class LoginActivity: BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::in
                 viewPager.currentItem = viewpagerImages.size - 1
             }
             // TODO 카카오로그인 bottomDialogSheet 띄울 것
-            // 시작하기 버튼 누르면 메인액티비티로 이동합니다. (임시)
+            // 시작하기 버튼 누르면 권한액티비티로 이동합니다. (임시)
             activityLoginStartLayout.setOnClickListener {
-                startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                startActivity(Intent(this@LoginActivity, PermissionActivity::class.java))
                 overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out)
             }
         }

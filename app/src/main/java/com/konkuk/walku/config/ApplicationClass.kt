@@ -3,6 +3,7 @@ package com.konkuk.walku.config
 import android.app.Application
 import android.content.SharedPreferences
 import android.util.Log
+import com.google.gson.GsonBuilder
 import com.kakao.sdk.common.KakaoSdk
 import com.konkuk.walku.BuildConfig
 import okhttp3.OkHttpClient
@@ -64,6 +65,9 @@ class ApplicationClass : Application() {
             .addNetworkInterceptor(XAccessTokenInterceptor()) // JWT 자동 헤더 전송
             .build()
 
+
+        val gson = GsonBuilder().setLenient().create()
+
         // sRetrofit 이라는 전역변수에 API url, 인터셉터, Gson을 넣어주고 빌드해주는 코드
         // 이 전역변수로 http 요청을 서버로 보내면 됩니다.
         API_URL_LIST.forEach {
@@ -71,7 +75,7 @@ class ApplicationClass : Application() {
                 Retrofit.Builder()
                     .baseUrl(it)
                     .client(client)
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
                     .build()
             )
         }

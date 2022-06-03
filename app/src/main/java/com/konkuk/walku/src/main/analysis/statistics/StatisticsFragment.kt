@@ -12,4 +12,5 @@ class StatisticsFragment: BaseFragment<FragmentStatisticsBinding>(FragmentStatis
         super.onViewCreated(view, savedInstanceState)
     }
 
+
 }

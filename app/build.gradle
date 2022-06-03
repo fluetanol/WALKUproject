@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'com.google.gms.google-services'
+    id 'kotlin-kapt'
 }
 
 Properties properties = new Properties()
@@ -37,6 +38,7 @@ android {
     }
     buildFeatures {
         viewBinding true
+        dataBinding true
     }
 
 }
@@ -88,6 +90,9 @@ dependencies {
 
     // https://github.com/ybq/Android-SpinKit
     implementation 'com.github.ybq:Android-SpinKit:1.4.0'
+
+    // 스켈레톤 로딩 화면
+    implementation "com.facebook.shimmer:shimmer:0.5.0"
 
 
 }
