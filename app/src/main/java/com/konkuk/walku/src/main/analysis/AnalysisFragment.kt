@@ -1,16 +1,8 @@
 package com.konkuk.walku.src.main.analysis
 
-import android.app.Activity
-import android.content.Intent
+
 import android.os.Bundle
-import android.system.Os.bind
-import android.util.Log
 import android.view.View
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.fitness.Fitness
-import com.google.android.gms.fitness.FitnessOptions
-import com.google.android.gms.fitness.data.DataType
-import com.google.android.gms.fitness.request.DataReadRequest
 import com.google.android.material.tabs.TabLayoutMediator
 import com.konkuk.walku.R
 import com.konkuk.walku.config.BaseFragment
@@ -18,12 +10,7 @@ import com.konkuk.walku.databinding.FragmentAnalysisBinding
 import com.konkuk.walku.src.main.analysis.recordmap.RecordMapFragment
 import com.konkuk.walku.src.main.analysis.statistics.StatisticsFragment
 import com.konkuk.walku.src.main.analysis.today.TodayFragment
-import com.konkuk.walku.src.main.home.HomeAdapter
-import com.konkuk.walku.src.main.home.map.MapFragment
-import com.konkuk.walku.src.main.home.weather.WeatherFragment
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.util.concurrent.TimeUnit
+
 
 class AnalysisFragment : BaseFragment<FragmentAnalysisBinding>(FragmentAnalysisBinding::bind, R.layout.fragment_analysis),
     AnalysisFragmentView {
