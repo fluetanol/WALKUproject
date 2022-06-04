@@ -1,8 +1,15 @@
 package com.konkuk.walku.src.main
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.fitness.Fitness
+import com.google.android.gms.fitness.FitnessOptions
+import com.google.android.gms.fitness.data.DataType
 import com.konkuk.walku.R
 import com.konkuk.walku.config.BaseActivity
 import com.konkuk.walku.databinding.ActivityMainBinding
@@ -13,10 +20,18 @@ import com.konkuk.walku.src.main.settings.SettingsFragment
 
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
 
+    private val fitnessOptions = FitnessOptions.builder()
+        .addDataType(DataType.TYPE_STEP_COUNT_CUMULATIVE,FitnessOptions.ACCESS_WRITE)
+        .addDataType(DataType.TYPE_STEP_COUNT_CUMULATIVE,FitnessOptions.ACCESS_READ)
+        .addDataType(DataType.TYPE_STEP_COUNT_DELTA)
+        .build()
+
     private var doubleBackToExit = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val account = GoogleSignIn.getAccountForExtension(this, fitnessOptions)
 
         supportFragmentManager.beginTransaction().replace(R.id.main_frm, HomeFragment()).commitAllowingStateLoss()
 
@@ -41,6 +56,15 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                     return@setOnItemSelectedListener true
                 }
                 R.id.menu_main_btm_nav_analysis -> {
+                    if (!GoogleSignIn.hasPermissions(account, fitnessOptions)) {
+                        GoogleSignIn.requestPermissions(
+                            this, // your activity
+                            99, // e.g. 1
+                            account,
+                            fitnessOptions)
+                    }else {
+                        //accessGoogleFit()
+                    }
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.main_frm, AnalysisFragment())
                         .commitAllowingStateLoss()
@@ -72,5 +96,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     private fun runDelayed(millis: Long, function: () -> Unit) {
         Handler(Looper.getMainLooper()).postDelayed(function, millis)
     }
+
 
 }

@@ -1,9 +1,13 @@
 package com.konkuk.walku.src.permission
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.fitness.FitnessOptions
+import com.google.android.gms.fitness.data.DataType
 import com.konkuk.walku.R
 import com.konkuk.walku.config.BaseActivityForPermission
 import com.konkuk.walku.databinding.ActivityPermissionBinding
@@ -11,14 +15,18 @@ import com.konkuk.walku.src.main.MainActivity
 
 class PermissionActivity : BaseActivityForPermission<ActivityPermissionBinding>(ActivityPermissionBinding::inflate){
 
+
     // 위치 권한 배열입니다.
     private val permissionList = arrayOf(
         Manifest.permission.ACCESS_FINE_LOCATION,
         Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACTIVITY_RECOGNITION,
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
 
         // 모든 권한이 설정되었는지 확인하는 변수
         val isAllPermissionGranted = permissionList.all {
@@ -41,6 +49,7 @@ class PermissionActivity : BaseActivityForPermission<ActivityPermissionBinding>(
             )
         }
 
+
     }
 
     override fun permissionGranted(requestCode: Int) {
@@ -58,6 +67,7 @@ class PermissionActivity : BaseActivityForPermission<ActivityPermissionBinding>(
             overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out)
         }
     }
+
 
     companion object {
         const val PERMISSION_REQUEST_CODE = 99
