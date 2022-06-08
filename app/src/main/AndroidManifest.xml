@@ -27,7 +27,8 @@
             android:name=".src.splash.SplashActivity"
             android:exported="true"
             android:screenOrientation="fullSensor"
-            android:theme="@style/AppTheme.Splash">
+            android:theme="@style/AppTheme.Splash"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

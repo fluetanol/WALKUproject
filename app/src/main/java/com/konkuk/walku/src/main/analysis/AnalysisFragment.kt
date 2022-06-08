@@ -1,25 +1,27 @@
 package com.konkuk.walku.src.main.analysis
 
 
-import android.app.Activity
+import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
-import androidx.constraintlayout.motion.widget.Debug.getLocation
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
+import androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_DRAGGING
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.fitness.Fitness
 import com.google.android.gms.fitness.FitnessOptions
 import com.google.android.gms.fitness.data.*
-import com.google.android.gms.fitness.request.DataReadRequest
-import com.google.android.gms.fitness.request.DataUpdateRequest
+import com.google.android.gms.fitness.request.*
 import com.google.android.material.tabs.TabLayoutMediator
 import com.konkuk.walku.R
 import com.konkuk.walku.config.BaseFragment
 import com.konkuk.walku.databinding.FragmentAnalysisBinding
+import com.konkuk.walku.databinding.FragmentWeatherBinding
 import com.konkuk.walku.src.main.MainActivity
 import com.konkuk.walku.src.main.analysis.recordmap.RecordMapFragment
 import com.konkuk.walku.src.main.analysis.statistics.StatisticsFragment
@@ -29,6 +31,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.concurrent.TimeUnit
+import java.util.stream.IntStream.range
 
 
 class AnalysisFragment : BaseFragment<FragmentAnalysisBinding>(FragmentAnalysisBinding::bind, R.layout.fragment_analysis),
@@ -36,11 +39,20 @@ class AnalysisFragment : BaseFragment<FragmentAnalysisBinding>(FragmentAnalysisB
 
     private val fragmentList = listOf(TodayFragment(),RecordMapFragment(),StatisticsFragment())
 
-    private val fitnessOptions = FitnessOptions.builder()
+    val fitnessOptions = FitnessOptions.builder()
         .addDataType(DataType.TYPE_STEP_COUNT_CUMULATIVE,FitnessOptions.ACCESS_WRITE)
         .addDataType(DataType.TYPE_STEP_COUNT_CUMULATIVE,FitnessOptions.ACCESS_READ)
         .addDataType(DataType.TYPE_STEP_COUNT_DELTA)
+        .addDataType(DataType.TYPE_LOCATION_SAMPLE)
         .build()
+
+    private val location_listener = OnDataPointListener { dataPoint ->
+        for (field in dataPoint.dataType.fields) {
+            val value = dataPoint.getValue(field)
+            Log.i("asd", "Detected DataPoint field: ${field.name}")
+            Log.i("asd", "Detected DataPoint value: $value")
+        }
+    }
 
     // 1. Context를 할당할 변수를 프로퍼티로 선언(어디서든 사용할 수 있게)
     lateinit var mainActivity: MainActivity
@@ -53,38 +65,39 @@ class AnalysisFragment : BaseFragment<FragmentAnalysisBinding>(FragmentAnalysisB
     }
 
     private fun accessGoogleFit() {
-        updateStepData(2000)
+//        updateStepData(2000)
+//
+//        subscribeData()
+//
+//        dailyStepData()
+//
+//        //n일전 걸음수 가져오기\
+//        getStepData(7)
 
-        subscribeData()
-
-        dailyStepData()
-
-        //n일전 걸음수 가져오기\
-        getStepData(7)
-
-        getDataLocation()
+        //getDataLocation()
     }
 
-    private fun getDataLocation() {
-        // Read the data that's been collected throughout the past week.
-        val endTime = LocalDateTime.now().atZone(ZoneId.systemDefault())
-        val startTime = endTime.minusWeeks(1)
-        Log.i("asd", "Range Start: $startTime")
-        Log.i("asd", "Range End: $endTime")
-
-        val readRequest =
-            DataReadRequest.Builder()
-                // The data request can specify multiple data types to return,
-                // effectively combining multiple data queries into one call.
-                // This example demonstrates aggregating only one data type.
-                .aggregate(DataType.TYPE_LOCATION_SAMPLE)
-                // Analogous to a "Group By" in SQL, defines how data should be
-                // aggregated.
-                // bucketByTime allows for a time span, whereas bucketBySession allows
-                // bucketing by <a href="/fit/android/using-sessions">sessions</a>.
-                .bucketByTime(1, TimeUnit.DAYS)
-                .setTimeRange(startTime.toEpochSecond(), endTime.toEpochSecond(), TimeUnit.SECONDS)
-                .build()
+    private fun getDataLocation() {  //10초간격으로 listener(위치데이터 받아옴)
+        Fitness.getSensorsClient(mainActivity, GoogleSignIn.getAccountForExtension(mainActivity, fitnessOptions))
+            .add(
+                SensorRequest.Builder()
+                    //.setDataSource(dataSource) // Optional but recommended for custom
+                    // data sets.
+                    .setDataType(DataType.TYPE_LOCATION_SAMPLE) // Can't be omitted.
+                    .setSamplingRate(10, TimeUnit.SECONDS)
+                    .build(),
+                location_listener
+            )
+    }
+    private fun removeDataLocation() { // 위치데이터 리스너 제거
+        Fitness.getSensorsClient(mainActivity, GoogleSignIn.getAccountForExtension(mainActivity, fitnessOptions))
+            .remove(location_listener)
+            .addOnSuccessListener {
+                Log.i("asd", "Listener was removed!")
+            }
+            .addOnFailureListener {
+                Log.i("asd", "Listener was not removed.")
+            }
     }
 
     private fun getStepData(n:Long) {
@@ -135,7 +148,7 @@ class AnalysisFragment : BaseFragment<FragmentAnalysisBinding>(FragmentAnalysisB
         Fitness.getRecordingClient(mainActivity, GoogleSignIn.getAccountForExtension(mainActivity, fitnessOptions))
             // This example shows subscribing to a DataType, across all possible data
             // sources. Alternatively, a specific DataSource can be used.
-            .subscribe(DataType.TYPE_STEP_COUNT_DELTA)
+            .subscribe(DataType.TYPE_LOCATION_SAMPLE)
             .addOnSuccessListener {
                 Log.i("asd2", "Successfully subscribed!")
             }
@@ -208,14 +221,60 @@ class AnalysisFragment : BaseFragment<FragmentAnalysisBinding>(FragmentAnalysisB
         mainActivity = context as MainActivity
     }
 
-
     private fun setSwipeView() {
         val adapter = AnalysisAdapter(requireActivity())
+
         adapter.fragmentList = fragmentList
         binding.fragmentAnalysisViewPager.adapter = adapter
-        val tabTitles = listOf("오늘의 걸음", "내가간 경로","일주일 통계")
-        TabLayoutMediator(binding.fragmentAnalysisTapLayout, binding.fragmentAnalysisViewPager) { tab, position ->
+        val tabTitles = listOf("오늘의 걸음", "내가간 경로", "일주일 통계")
+        TabLayoutMediator(
+            binding.fragmentAnalysisTapLayout,
+            binding.fragmentAnalysisViewPager
+        ) { tab, position ->
             tab.text = tabTitles[position]
         }.attach()
+
+        binding.fragmentAnalysisViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+
+
+            override fun onPageScrollStateChanged(state: Int) {
+                super.onPageScrollStateChanged(state)
+                binding.fragmentAnalysisViewPager.isUserInputEnabled = !(state == SCROLL_STATE_DRAGGING && binding.fragmentAnalysisViewPager.currentItem == 1)
+            }
+        })
+
+    }
+
+
+    override fun onDetach() {
+        super.onDetach()
+        Log.i("asd","AnalysisOnDetach!!")
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.i("asd","AnalysisOnDestroy!!")
+        for(i:Int in range(0,3)){
+            fragmentList[i].onPause()
+            fragmentList[i].onStop()
+            fragmentList[i].onDestroyView()
+            fragmentList[i].onDestroy()
+            fragmentList[i].onDetach()
+        }
+
+
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.i("asd","AnalysisOnDestroyView!!")
+
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.i("asd","AnalysisOnPause!!")
+
     }
 }

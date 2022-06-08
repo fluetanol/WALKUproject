@@ -15,7 +15,7 @@ class CircleBarView: View {
 
     // ARC(호)의 각도값을 관리할 변수
     var numProgress: Float = 0.0f
-
+    var text:String = ""
     // 뷰 그리기
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
@@ -31,7 +31,7 @@ class CircleBarView: View {
 
         val textPaint = Paint()
         textPaint.textSize= 60F
-        canvas?.drawText("3000/5000",220.0f,440.0f,textPaint)
+        canvas?.drawText(text,220.0f,440.0f,textPaint)
 
         // 2. 파란 원(프로그레스)
         paint.color = Color.GREEN
@@ -43,11 +43,11 @@ class CircleBarView: View {
 
 
     // 함수: 프로그레스바의 각도값을 변경하는 함수
-    fun setProgress(num: Float){
+    fun setProgress(num: Float,step:String){
 
         // numProgress 값을 변경한다.
         numProgress = num
-
+        text =step
         // 뷰 갱신: 변경된 numProgress 값을 적용하여 뷰를 다시 그린다.
         invalidate()
     }
