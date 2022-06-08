@@ -1,27 +1,25 @@
 package com.konkuk.walku.src.main.analysis
 
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import android.view.MotionEvent
 import android.view.View
 import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
-import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_DRAGGING
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.fitness.Fitness
 import com.google.android.gms.fitness.FitnessOptions
 import com.google.android.gms.fitness.data.*
-import com.google.android.gms.fitness.request.*
+import com.google.android.gms.fitness.request.DataReadRequest
+import com.google.android.gms.fitness.request.DataUpdateRequest
+import com.google.android.gms.fitness.request.OnDataPointListener
+import com.google.android.gms.fitness.request.SensorRequest
 import com.google.android.material.tabs.TabLayoutMediator
 import com.konkuk.walku.R
 import com.konkuk.walku.config.BaseFragment
 import com.konkuk.walku.databinding.FragmentAnalysisBinding
-import com.konkuk.walku.databinding.FragmentWeatherBinding
 import com.konkuk.walku.src.main.MainActivity
 import com.konkuk.walku.src.main.analysis.recordmap.RecordMapFragment
 import com.konkuk.walku.src.main.analysis.statistics.StatisticsFragment

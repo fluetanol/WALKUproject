@@ -32,7 +32,7 @@
         android:id="@+id/login_bottom_sheet_dialog_main_title_description_sub_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="20dp"
         android:fontFamily="@font/roboto_regular"
         android:text="워쿠를 통해 바쁜 일상 힐링하세요!"
         android:textColor="@color/black"
