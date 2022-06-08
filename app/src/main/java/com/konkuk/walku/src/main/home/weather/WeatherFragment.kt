@@ -109,7 +109,7 @@ class WeatherFragment :
 
     private fun getBaseDate(h: String, m: String): String {
         val cal = Calendar.getInstance()
-        return if (h == "00" && OpenApiCommon().getBaseTime(h, m) == "2300") {
+        return if (h == "00" || OpenApiCommon().getBaseTime(h, m) == "2300") {
             cal.add(Calendar.DATE, -1)
             SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(cal.time)
         } else SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(cal.time)

@@ -31,8 +31,8 @@ abstract class BaseFragment<B : ViewBinding>(
     }
 
     override fun onDestroyView() {
-        _binding = null
         super.onDestroyView()
+        _binding = null
     }
 
     fun showCustomToast(message: String) {

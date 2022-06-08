@@ -22,7 +22,8 @@ class ApplicationClass : Application() {
 
     // 기본 url만 작성해주세요.
     val API_URL_LIST = arrayListOf(
-        "http://apis.data.go.kr/"
+        "http://apis.data.go.kr/",
+        "http://openAPI.seoul.go.kr:8080/"
     )
 
     // 코틀린의 전역변수 문법

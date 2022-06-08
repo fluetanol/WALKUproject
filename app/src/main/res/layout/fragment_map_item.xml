@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/background_radius"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/fragment_map_card_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cardCornerRadius="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/fragment_map_image_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bike_view" />
+
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/fragment_map_title_text_view"
+        android:layout_width="60dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginBottom="90dp"
+        android:background="@drawable/white_round_rectangle"
+        android:elevation="10dp"
+        android:gravity="center"
+        tools:text="따릉이"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/fragment_map_card_view"
+        app:layout_constraintStart_toStartOf="@id/fragment_map_card_view" />
+
+    <TextView
+        android:id="@+id/fragment_map_first_hash_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:elevation="50dp"
+        tools:text="#서울자전거"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@id/fragment_map_title_text_view"
+        app:layout_constraintTop_toBottomOf="@id/fragment_map_title_text_view" />
+
+    <TextView
+        android:id="@+id/fragment_map_second_hash_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:elevation="50dp"
+        tools:text="#라이딩"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@id/fragment_map_title_text_view"
+        app:layout_constraintTop_toBottomOf="@id/fragment_map_first_hash_tag" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
