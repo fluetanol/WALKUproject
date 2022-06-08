@@ -74,10 +74,6 @@ class WeatherFragment :
                             latitude = location.latitude
                             longitude = location.longitude
 
-//                            Log.d("okhttp", getBaseTimeHour())
-//                            Log.d("okhttp", getBaseTimeMinutes())
-//                            Log.d("okhttp", OpenApiCommon().getBaseTime(getBaseTimeHour(), getBaseTimeMinutes()))
-
                             // 기상청 레트로핏 서비스 호출
                             WeatherService(this@WeatherFragment).tryGetWeather(
                                 numOfRows = 1000,
@@ -115,7 +111,7 @@ class WeatherFragment :
 
     private fun getBaseTimeHour(): String {
         val cal = Calendar.getInstance()
-        cal.add(Calendar.HOUR, -2)
+        cal.add(Calendar.HOUR, -3)
         return SimpleDateFormat("HH", Locale.getDefault()).format(cal.time)
     }
 
@@ -172,6 +168,8 @@ class WeatherFragment :
                 // TODO 00구 00동 까지만 나오도록 변경할 예정
                 fragmentWeatherAddressTextView.text = getAddress(latitude, longitude)
                 fragmentWeatherCurrentWeatherStateTextView.visibility = View.VISIBLE
+                fragmentWeatherCurrentPossibilityRainTextView.visibility = View.VISIBLE
+                fragmentWeatherCurrentPossibilityRainValueTextView.text = "${weatherArr[0].rainPossibility}%"
                 fragmentWeatherCurrentWeatherStateValueTextView.text = getWeatherString(weatherArr[0].sky)
                 with(weatherArr) {
                     forEach {
@@ -187,8 +185,14 @@ class WeatherFragment :
                         }
                     }
                 }
-                fragmentWeatherCurrentPossibilityRainTextView.visibility = View.VISIBLE
-                fragmentWeatherCurrentPossibilityRainValueTextView.text = "${weatherArr[0].rainPossibility}%"
+                fragmentWeatherHumidityTitleTextView.visibility = View.VISIBLE
+                fragmentWeatherHumidityTitleTextValueView.text = "${weatherArr[0].humidity}%"
+                fragmentWeatherHumidityProgressView.progress = weatherArr[0].humidity.toFloat()
+                fragmentWeatherHumidityProgressView.animate()
+
+
+
+
             }
         }
     }

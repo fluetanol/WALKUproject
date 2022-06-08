@@ -158,6 +158,62 @@
                 app:layout_constraintTop_toTopOf="@id/fragment_weather_min_temp_text_view"
                 tools:visibility="visible" />
 
+            <!-- -->
+
+            <TextView
+                android:id="@+id/fragment_weather_humidity_title_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:fontFamily="@font/roboto_regular"
+                android:text="습도"
+                android:visibility="invisible"
+                tools:visibility="visible"
+                android:textColor="#2178EF"
+                android:textSize="13sp"
+                app:layout_constraintVertical_chainStyle="packed"
+                app:layout_constraintBottom_toTopOf="@id/fragment_weather_humidity_title_text_value_view"
+                app:layout_constraintEnd_toStartOf="@id/fragment_weather_humidity_progress_view"
+                app:layout_constraintTop_toTopOf="@id/fragment_weather_humidity_progress_view" />
+
+            <TextView
+                android:id="@+id/fragment_weather_humidity_title_text_value_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_regular"
+                tools:text="45%"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/dark_gray"
+                android:textSize="13sp"
+                app:layout_constraintTop_toBottomOf="@id/fragment_weather_humidity_title_text_view"
+                app:layout_constraintStart_toStartOf="@id/fragment_weather_humidity_title_text_view"
+                app:layout_constraintEnd_toEndOf="@id/fragment_weather_humidity_title_text_view"
+                app:layout_constraintBottom_toBottomOf="@id/fragment_weather_humidity_progress_view" />
+
+            <com.skydoves.progressview.ProgressView
+                android:id="@+id/fragment_weather_humidity_progress_view"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginEnd="5dp"
+                app:layout_constraintDimensionRatio="1:9"
+                app:layout_constraintEnd_toEndOf="@id/fragment_weather_current_weather_state_value_text_view"
+                app:layout_constraintStart_toStartOf="@id/fragment_weather_current_weather_state_value_text_view"
+                app:layout_constraintTop_toBottomOf="@id/fragment_weather_current_possibility_rain_value_text_view"
+                app:progressView_animation="accelerateDecelerate"
+                app:progressView_autoAnimate="true"
+                app:progressView_colorBackground="#f3f3f3"
+                app:progressView_colorGradientEnd="#85C6F8"
+                app:progressView_colorGradientStart="#7FA6F0"
+                app:progressView_colorProgress="#7FA6F0"
+                app:progressView_max="100"
+                app:progressView_min="0"
+                app:progressView_orientation="vertical"
+                app:progressView_padding="1dp"
+                app:progressView_progressFromPrevious="true"
+                app:progressView_radius="12dp" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>
