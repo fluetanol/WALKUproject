@@ -2,7 +2,6 @@ package com.konkuk.walku.config
 
 import android.app.Application
 import android.content.SharedPreferences
-import android.util.Log
 import com.google.gson.GsonBuilder
 import com.kakao.sdk.common.KakaoSdk
 import com.konkuk.walku.BuildConfig
