@@ -35,7 +35,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
         val account = GoogleSignIn.getAccountForExtension(this, fitnessOptions)
 
-        supportFragmentManager.beginTransaction().replace(R.id.main_frm, AnalysisFragment()).commitAllowingStateLoss()
+        supportFragmentManager.beginTransaction().replace(R.id.main_frm, HomeFragment()).commitAllowingStateLoss()
 
         binding.mainBtmNav.setOnItemSelectedListener{ item ->
             when (item.itemId) {
