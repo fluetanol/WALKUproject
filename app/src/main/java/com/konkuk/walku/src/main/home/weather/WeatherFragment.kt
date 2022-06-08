@@ -1,5 +1,6 @@
 package com.konkuk.walku.src.main.home.weather
 
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.graphics.Point
 import android.location.Address
@@ -8,6 +9,8 @@ import android.os.Bundle
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import com.bumptech.glide.Glide
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -16,6 +19,7 @@ import com.google.android.gms.location.LocationServices
 import com.konkuk.walku.R
 import com.konkuk.walku.config.BaseFragment
 import com.konkuk.walku.databinding.FragmentWeatherBinding
+import com.konkuk.walku.src.main.MainActivity
 import com.konkuk.walku.src.main.home.weather.model.GetWeatherResponse
 import com.konkuk.walku.src.main.home.weather.model.ModelWeather
 import com.konkuk.walku.util.OpenApiCommon
@@ -124,6 +128,7 @@ class WeatherFragment :
     @SuppressLint("SetTextI18n")
     override fun onGetWeatherSuccess(response: GetWeatherResponse) {
         dismissLoadingDialog()
+        Log.d("okhttp", "onGetWeatherSuccess")
         showCustomToast("날씨 api 연동 성공")
         if(response.response.header.resultCode=="00") {
             val it = response.response.body.items.item
@@ -190,6 +195,11 @@ class WeatherFragment :
                 fragmentWeatherHumidityProgressView.progress = weatherArr[0].humidity.toFloat()
                 fragmentWeatherHumidityProgressView.animate()
 
+                // 알파값 조정으로 fade in 구현하였습니다.
+                ObjectAnimator.ofFloat(this.fragmentWeatherIsItGoodToGoOutsideLayout, View.ALPHA, 0f,1f).apply {
+                    duration = 2000
+                    start()
+                }
 
 
 
@@ -242,7 +252,10 @@ class WeatherFragment :
         } catch (e: IOException) {
             e.printStackTrace()
         }
-        return addressResult.replace("대한민국 ", "")
+        val endIndex = addressResult.indexOf("구 ")
+        Log.d("okhttp", "$endIndex")
+        Log.d("okhttp", "${addressResult.replace("대한민국 ", "").substring(0, endIndex)}")
+        return addressResult.substring(0, endIndex+1).replace("대한민국", "")
     }
 
 }

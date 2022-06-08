@@ -167,28 +167,28 @@
                 android:layout_marginEnd="10dp"
                 android:fontFamily="@font/roboto_regular"
                 android:text="습도"
-                android:visibility="invisible"
-                tools:visibility="visible"
                 android:textColor="#2178EF"
                 android:textSize="13sp"
-                app:layout_constraintVertical_chainStyle="packed"
+                android:visibility="invisible"
                 app:layout_constraintBottom_toTopOf="@id/fragment_weather_humidity_title_text_value_view"
                 app:layout_constraintEnd_toStartOf="@id/fragment_weather_humidity_progress_view"
-                app:layout_constraintTop_toTopOf="@id/fragment_weather_humidity_progress_view" />
+                app:layout_constraintTop_toTopOf="@id/fragment_weather_humidity_progress_view"
+                app:layout_constraintVertical_chainStyle="packed"
+                tools:visibility="visible" />
 
             <TextView
                 android:id="@+id/fragment_weather_humidity_title_text_value_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_regular"
-                tools:text="45%"
                 android:layout_marginTop="5dp"
+                android:fontFamily="@font/roboto_regular"
                 android:textColor="@color/dark_gray"
                 android:textSize="13sp"
-                app:layout_constraintTop_toBottomOf="@id/fragment_weather_humidity_title_text_view"
-                app:layout_constraintStart_toStartOf="@id/fragment_weather_humidity_title_text_view"
+                app:layout_constraintBottom_toBottomOf="@id/fragment_weather_humidity_progress_view"
                 app:layout_constraintEnd_toEndOf="@id/fragment_weather_humidity_title_text_view"
-                app:layout_constraintBottom_toBottomOf="@id/fragment_weather_humidity_progress_view" />
+                app:layout_constraintStart_toStartOf="@id/fragment_weather_humidity_title_text_view"
+                app:layout_constraintTop_toBottomOf="@id/fragment_weather_humidity_title_text_view"
+                tools:text="45%" />
 
             <com.skydoves.progressview.ProgressView
                 android:id="@+id/fragment_weather_humidity_progress_view"
@@ -213,6 +213,32 @@
                 app:progressView_padding="1dp"
                 app:progressView_progressFromPrevious="true"
                 app:progressView_radius="12dp" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/fragment_weather_is_it_good_to_go_outside_layout"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="25dp"
+                android:background="@drawable/good_to_go_outside_background"
+                app:layout_constraintBottom_toBottomOf="@id/fragment_weather_humidity_progress_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/fragment_weather_humidity_progress_view"
+                app:layout_constraintTop_toTopOf="@id/fragment_weather_humidity_progress_view">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_bold"
+                    android:text="오늘은 산책가기 좋은날이에요!"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
