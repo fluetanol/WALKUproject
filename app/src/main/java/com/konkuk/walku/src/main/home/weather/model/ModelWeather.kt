@@ -9,4 +9,7 @@ data class ModelWeather (
     @SerializedName("sky") var sky: String = "",           // 하능 상태
     @SerializedName("temp") var temp: String = "",          // 기온
     @SerializedName("fcstTime") var fcstTime: String = "",      // 예보시각
+    @SerializedName("maxTemp") var maxTemp: String = "",  // 최고 기온
+    @SerializedName("minTemp") var minTemp: String = "",   // 최저 기온
+    @SerializedName("rainPossibility") var rainPossibility: String = "", // 강수 확률
 )

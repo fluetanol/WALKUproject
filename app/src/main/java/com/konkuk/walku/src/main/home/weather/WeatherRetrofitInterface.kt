@@ -8,8 +8,8 @@ import retrofit2.http.Query
 
 interface WeatherRetrofitInterface {
 
-    // 기상청 초단기예보 실황 API
-    @GET("1360000/VilageFcstInfoService_2.0/getUltraSrtFcst")
+    // 기상청 단기예보 실황 API
+    @GET("1360000/VilageFcstInfoService_2.0/getVilageFcst")
     fun getWeather(
         @Query("serviceKey", encoded = true) serviceKey: String = BuildConfig.HOME_WEATHER_API_KEY,
         @Query("numOfRows") numOfRows: Int,

@@ -1,6 +1,6 @@
 package com.konkuk.walku.src.main.home.weather
 
-import android.Manifest
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.graphics.Point
 import android.location.Address
@@ -9,9 +9,9 @@ import android.os.Bundle
 import android.os.Looper
 import android.util.Log
 import android.view.View
-import androidx.core.app.ActivityCompat
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import com.bumptech.glide.Glide
-import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
@@ -19,16 +19,24 @@ import com.google.android.gms.location.LocationServices
 import com.konkuk.walku.R
 import com.konkuk.walku.config.BaseFragment
 import com.konkuk.walku.databinding.FragmentWeatherBinding
+import com.konkuk.walku.src.main.MainActivity
 import com.konkuk.walku.src.main.home.weather.model.GetWeatherResponse
 import com.konkuk.walku.src.main.home.weather.model.ModelWeather
 import com.konkuk.walku.util.OpenApiCommon
 import java.io.IOException
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 
 // TODO 코드가 지저분하므로 깔끔하게 리팩토링할 예정 (...)
+
+// 기상청 단기예보 API 규칙 정리
+// TMX 값은 fcstTime 1500 일때에만 받아옴.
+// 단기예보 base_time
+// 0200 0500 0800 1100 1400 1700 2000 2300 (8회)
+
 
 class WeatherFragment :
     BaseFragment<FragmentWeatherBinding>(FragmentWeatherBinding::bind, R.layout.fragment_weather),
@@ -74,9 +82,9 @@ class WeatherFragment :
 
                             // 기상청 레트로핏 서비스 호출
                             WeatherService(this@WeatherFragment).tryGetWeather(
-                                numOfRows = 300,
+                                numOfRows = 1000,
                                 pageNo = 1,
-                                base_date = getBaseDate(),
+                                base_date = getBaseDate(getBaseTimeHour(), getBaseTimeMinutes()),
                                 base_time = OpenApiCommon().getBaseTime(getBaseTimeHour(), getBaseTimeMinutes()),
                                 nx = curPoint!!.x,
                                 ny = curPoint!!.y
@@ -98,16 +106,19 @@ class WeatherFragment :
         }
     }
 
-    private fun getBaseDate(): String {
-        val currentTime = LocalDateTime.now()
-        val formatterForBaseDate = DateTimeFormatter.ofPattern("yyyyMMdd")
-        return currentTime.format(formatterForBaseDate)
+
+    private fun getBaseDate(h: String, m: String): String {
+        val cal = Calendar.getInstance()
+        return if (h == "00" && OpenApiCommon().getBaseTime(h, m) == "2300") {
+            cal.add(Calendar.DATE, -1)
+            SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(cal.time)
+        } else SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(cal.time)
     }
 
     private fun getBaseTimeHour(): String {
-        val currentTime = LocalDateTime.now()
-        val formatterForBaseTimeHour = DateTimeFormatter.ofPattern("HH")
-        return currentTime.format(formatterForBaseTimeHour)
+        val cal = Calendar.getInstance()
+        cal.add(Calendar.HOUR, -1)
+        return SimpleDateFormat("HH", Locale.getDefault()).format(cal.time)
     }
 
     private fun getBaseTimeMinutes(): String {
@@ -118,35 +129,84 @@ class WeatherFragment :
 
     @SuppressLint("SetTextI18n")
     override fun onGetWeatherSuccess(response: GetWeatherResponse) {
-        // 테스트입니다.
         dismissLoadingDialog()
+        Log.d("okhttp", "onGetWeatherSuccess")
         showCustomToast("날씨 api 연동 성공")
         if(response.response.header.resultCode=="00") {
             val it = response.response.body.items.item
-            // 현재 시각부터 1시간 뒤의 날씨 6개를 담을 배열
-            val weatherArr = arrayOf(ModelWeather(), ModelWeather(), ModelWeather(), ModelWeather(), ModelWeather(), ModelWeather())
+            // 현재 시각부터 1시간 뒤 마다의 날씨 100개를 담을 배열 (100개는 넉넉하게 만들었습니다.)
+            val weatherArr = mutableListOf<ModelWeather>()
+            for (i in 0..100) {
+                weatherArr.add(ModelWeather())
+            }
             var index = 0
             val totalCount = response.response.body.totalCount - 1
             for (i in 0..totalCount) {
-                index %= 6
                 when(it[i].category) {
+                    "TMP" -> weatherArr[index].temp = it[i].fcstValue         // 기온
+                    "SKY" -> weatherArr[index].sky = it[i].fcstValue          // 하늘 상태
                     "PTY" -> weatherArr[index].rainType = it[i].fcstValue     // 강수 형태
                     "REH" -> weatherArr[index].humidity = it[i].fcstValue     // 습도
-                    "SKY" -> weatherArr[index].sky = it[i].fcstValue          // 하늘 상태
-                    "T1H" -> weatherArr[index].temp = it[i].fcstValue         // 기온
+                    "POP" -> weatherArr[index].rainPossibility = it[i].fcstValue // 강수 확률
+                    "TMX" -> {
+                        weatherArr[index].maxTemp = it[i].fcstValue
+                        index++
+                        continue
+                    }
+                    "TMN" -> {
+                        weatherArr[index].minTemp = it[i].fcstValue
+                        index++
+                        continue
+                    }
+                    "SNO" -> {
+                        index++
+                    }
                 }
-                index++
             }
+
+            Log.d("okhttp", "$weatherArr")
 
             binding.apply {
                 // 현재 기온 설정
-                fragmentWeatherCurrentWeatherTemperatureTextView.text = "${weatherArr[0].temp}°C"
+                fragmentWeatherCurrentWeatherTemperatureTextView.text = "${weatherArr[0].temp}°"
                 // 현재 하늘 상태 애니메이션 설정
                 Glide.with(this@WeatherFragment).load(getWeatherImage(weatherArr[0].sky)).into(fragmentWeatherCurrentWeatherStateAnimView)
                 // 현재 내 위치 주소 (한글 주소로 표시)
                 // TODO 00구 00동 까지만 나오도록 변경할 예정
                 fragmentWeatherAddressTextView.text = getAddress(latitude, longitude)
-                fragmentWeatherCurrentWeatherStateTextView.text = getWeatherString(weatherArr[0].sky)
+                fragmentWeatherCurrentWeatherStateTextView.visibility = View.VISIBLE
+                fragmentWeatherCurrentPossibilityRainTextView.visibility = View.VISIBLE
+                fragmentWeatherCurrentPossibilityRainValueTextView.text = "${weatherArr[0].rainPossibility}%"
+                fragmentWeatherCurrentWeatherStateValueTextView.text = getWeatherString(weatherArr[0].sky)
+                with(weatherArr) {
+                    forEach {
+                        if(it.maxTemp!="") {
+                            fragmentWeatherMaxTempIcon.visibility = View.VISIBLE
+                            fragmentWeatherMaxTempTextView.text = "${it.maxTemp.toDouble().toInt()}°"
+                        }
+                    }
+                    forEach {
+                        if (it.minTemp != "") {
+                            fragmentWeatherMinTempIcon.visibility = View.VISIBLE
+                            fragmentWeatherMinTempTextView.text = "${it.minTemp.toDouble().toInt()}°"
+                        }
+                    }
+                }
+                fragmentWeatherHumidityTitleTextView.visibility = View.VISIBLE
+                fragmentWeatherHumidityProgressView.visibility = View.VISIBLE
+                fragmentWeatherIsItGoodToGoOutsideLayout.visibility = View.VISIBLE
+                fragmentWeatherHumidityTitleTextValueView.text = "${weatherArr[0].humidity}%"
+                fragmentWeatherHumidityProgressView.progress = weatherArr[0].humidity.toFloat()
+                fragmentWeatherHumidityProgressView.animate()
+
+                // 알파값 조정으로 fade in 구현하였습니다.
+                ObjectAnimator.ofFloat(this.fragmentWeatherIsItGoodToGoOutsideLayout, View.ALPHA, 0f,1f).apply {
+                    duration = 2000
+                    start()
+                }
+
+
+
             }
         }
     }
@@ -196,7 +256,10 @@ class WeatherFragment :
         } catch (e: IOException) {
             e.printStackTrace()
         }
-        return addressResult.replace("대한민국 ", "")
+        val endIndex = addressResult.indexOf("구 ")
+        Log.d("okhttp", "$endIndex")
+        Log.d("okhttp", "${addressResult.replace("대한민국 ", "").substring(0, endIndex)}")
+        return addressResult.substring(0, endIndex+1).replace("대한민국", "")
     }
 
 }

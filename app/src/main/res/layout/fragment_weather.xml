@@ -33,9 +33,10 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="30dp"
-                tools:src="@drawable/sunny_anim"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/fragment_weather_address_text_view" />
+                app:layout_constraintEnd_toStartOf="@id/fragment_weather_max_temp_icon"
+                app:layout_constraintStart_toEndOf="@id/fragment_weather_current_weather_state_value_text_view"
+                app:layout_constraintTop_toBottomOf="@id/fragment_weather_address_text_view"
+                tools:src="@drawable/sunny_anim" />
 
 
             <TextView
@@ -43,24 +44,207 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_regular"
-                tools:text="맑음"
-                android:textColor="@color/medium_gray"
+                android:text="날씨"
+                android:textColor="#FFB900"
                 android:textSize="13sp"
-                app:layout_constraintBottom_toTopOf="@id/fragment_weather_current_weather_temperature_text_view"
-                app:layout_constraintStart_toStartOf="@id/fragment_weather_current_weather_temperature_text_view" />
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="@id/fragment_weather_current_possibility_rain_text_view"
+                app:layout_constraintTop_toTopOf="@id/fragment_weather_max_temp_icon"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/fragment_weather_current_weather_state_value_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:fontFamily="@font/roboto_regular"
+                android:textColor="@color/dark_gray"
+                android:textSize="13sp"
+                app:layout_constraintBottom_toBottomOf="@id/fragment_weather_current_weather_state_text_view"
+                app:layout_constraintStart_toEndOf="@id/fragment_weather_current_weather_state_text_view"
+                app:layout_constraintTop_toTopOf="@id/fragment_weather_current_weather_state_text_view"
+                tools:text="맑음" />
+
+            <TextView
+                android:id="@+id/fragment_weather_current_possibility_rain_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_regular"
+                android:text="강수확률"
+                android:textColor="#3EA6FF"
+                android:textSize="13sp"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="@id/fragment_weather_min_temp_icon"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/fragment_weather_current_possibility_rain_value_text_view"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/roboto_regular"
+                android:maxLines="1"
+                android:textColor="@color/dark_gray"
+                android:textSize="13sp"
+                app:layout_constraintBottom_toBottomOf="@id/fragment_weather_current_possibility_rain_text_view"
+                app:layout_constraintStart_toEndOf="@id/fragment_weather_current_possibility_rain_text_view"
+                app:layout_constraintTop_toTopOf="@id/fragment_weather_current_possibility_rain_text_view"
+                tools:text="21%" />
 
             <TextView
                 android:id="@+id/fragment_weather_current_weather_temperature_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="15dp"
                 android:fontFamily="@font/roboto_bold"
-                tools:text="25°C"
                 android:textColor="@color/main_green_accent"
-                android:textSize="35sp"
+                android:textSize="40sp"
                 app:layout_constraintBottom_toBottomOf="@id/fragment_weather_current_weather_state_anim_view"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/fragment_weather_current_weather_state_anim_view" />
+                app:layout_constraintTop_toTopOf="@id/fragment_weather_current_weather_state_anim_view"
+                tools:text="25°" />
+
+            <!-- -->
+
+            <TextView
+                android:id="@+id/fragment_weather_max_temp_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="15dp"
+                android:fontFamily="@font/roboto_regular"
+                android:textColor="@color/main_green_accent"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toStartOf="@id/fragment_weather_current_weather_temperature_text_view"
+                app:layout_constraintTop_toTopOf="@id/fragment_weather_current_weather_temperature_text_view"
+                tools:text="28°" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/fragment_weather_max_temp_icon"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginEnd="3dp"
+                android:src="@drawable/ic_up"
+                android:tint="#DD766D"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="@id/fragment_weather_max_temp_text_view"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toStartOf="@id/fragment_weather_max_temp_text_view"
+                app:layout_constraintTop_toTopOf="@id/fragment_weather_max_temp_text_view"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/fragment_weather_min_temp_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="15dp"
+                android:fontFamily="@font/roboto_regular"
+                android:textColor="@color/main_green_accent"
+                android:textSize="14sp"
+                app:layout_constraintBaseline_toBaselineOf="@id/fragment_weather_current_weather_temperature_text_view"
+                app:layout_constraintEnd_toStartOf="@id/fragment_weather_current_weather_temperature_text_view"
+                tools:text="21°" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/fragment_weather_min_temp_icon"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginEnd="3dp"
+                android:src="@drawable/ic_down"
+                android:tint="#7FA6F0"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="@id/fragment_weather_min_temp_text_view"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toStartOf="@id/fragment_weather_min_temp_text_view"
+                app:layout_constraintTop_toTopOf="@id/fragment_weather_min_temp_text_view"
+                tools:visibility="visible" />
+
+            <!-- -->
+
+            <TextView
+                android:id="@+id/fragment_weather_humidity_title_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:fontFamily="@font/roboto_regular"
+                android:text="습도"
+                android:textColor="#2178EF"
+                android:textSize="13sp"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toTopOf="@id/fragment_weather_humidity_title_text_value_view"
+                app:layout_constraintEnd_toStartOf="@id/fragment_weather_humidity_progress_view"
+                app:layout_constraintTop_toTopOf="@id/fragment_weather_humidity_progress_view"
+                app:layout_constraintVertical_chainStyle="packed"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/fragment_weather_humidity_title_text_value_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/roboto_regular"
+                android:textColor="@color/dark_gray"
+                android:textSize="13sp"
+                app:layout_constraintBottom_toBottomOf="@id/fragment_weather_humidity_progress_view"
+                app:layout_constraintEnd_toEndOf="@id/fragment_weather_humidity_title_text_view"
+                app:layout_constraintStart_toStartOf="@id/fragment_weather_humidity_title_text_view"
+                app:layout_constraintTop_toBottomOf="@id/fragment_weather_humidity_title_text_view"
+                tools:text="45%" />
+
+            <com.skydoves.progressview.ProgressView
+                android:id="@+id/fragment_weather_humidity_progress_view"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginEnd="6dp"
+                app:layout_constraintDimensionRatio="1:8"
+                app:layout_constraintEnd_toEndOf="@id/fragment_weather_current_possibility_rain_value_text_view"
+                app:layout_constraintStart_toStartOf="@id/fragment_weather_current_possibility_rain_value_text_view"
+                app:layout_constraintTop_toBottomOf="@id/fragment_weather_current_possibility_rain_value_text_view"
+                app:progressView_animation="accelerateDecelerate"
+                app:progressView_autoAnimate="true"
+                app:progressView_colorBackground="#f3f3f3"
+                app:progressView_colorGradientEnd="#85C6F8"
+                app:progressView_colorGradientStart="#7FA6F0"
+                app:progressView_colorProgress="#7FA6F0"
+                app:progressView_max="100"
+                app:progressView_min="0"
+                app:progressView_orientation="vertical"
+                app:progressView_padding="1dp"
+                android:visibility="invisible"
+                tools:visibility="visible"
+                app:progressView_progressFromPrevious="true"
+                app:progressView_radius="12dp" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/fragment_weather_is_it_good_to_go_outside_layout"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:visibility="invisible"
+                tools:visibility="visible"
+                android:layout_marginStart="25dp"
+                android:background="@drawable/good_to_go_outside_background"
+                app:layout_constraintBottom_toBottomOf="@id/fragment_weather_humidity_progress_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/fragment_weather_humidity_progress_view"
+                app:layout_constraintTop_toTopOf="@id/fragment_weather_humidity_progress_view">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_bold"
+                    android:text="오늘은 산책가기 좋은날이에요!"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
