@@ -13,6 +13,7 @@ import com.konkuk.walku.databinding.ActivityLoginBinding
 import com.konkuk.walku.src.login.adapter.LoginAdapter
 import com.konkuk.walku.src.main.MainActivity
 import com.konkuk.walku.src.permission.PermissionActivity
+import com.konkuk.walku.util.LoginBottomSheetDialog
 import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator
 
 class LoginActivity: BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::inflate) {
@@ -42,11 +43,23 @@ class LoginActivity: BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::in
             activityLoginSkipAllTextView.setOnClickListener {
                 viewPager.currentItem = viewpagerImages.size - 1
             }
-            // TODO 카카오로그인 bottomDialogSheet 띄울 것
-            // 시작하기 버튼 누르면 권한액티비티로 이동합니다. (임시)
             activityLoginStartLayout.setOnClickListener {
-                startActivity(Intent(this@LoginActivity, PermissionActivity::class.java))
-                overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out)
+
+                val loginBottomSheetDialog = LoginBottomSheetDialog {
+                    when(it) {
+                        0 -> {
+                            showCustomToast("구글 로그인")
+                        }
+                        1 -> {
+                            showCustomToast("카카오 로그인")
+                        }
+                        2 -> {
+                            startActivity(Intent(this@LoginActivity, PermissionActivity::class.java))
+                            overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out)
+                        }
+                    }
+                }
+                loginBottomSheetDialog.show(supportFragmentManager, loginBottomSheetDialog.tag)
             }
         }
 
