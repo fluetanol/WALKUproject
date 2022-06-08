@@ -32,9 +32,10 @@ class PermissionActivity : BaseActivityForPermission<ActivityPermissionBinding>(
                     permissionList, PERMISSION_REQUEST_CODE
                 )
             }
+
         }
 
-        // 권한 설정이 최초에 한 번 완료되었다면, 인트로 액티비티에서 권한 액티비티가 아니라 메인 액티비티로 바로 이동
+        // 권한 설정이 최초에 한 번 완료되었다면, 로그인 액티비티(뷰페이저 슬라이드)에서 권한 액티비티가 아니라 메인 액티비티로 바로 이동합니다.
         else {
             requirePermissions(
                 permissionList, PERMISSION_REQUEST_CODE

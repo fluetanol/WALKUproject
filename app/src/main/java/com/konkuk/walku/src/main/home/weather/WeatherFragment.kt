@@ -1,6 +1,5 @@
 package com.konkuk.walku.src.main.home.weather
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.graphics.Point
 import android.location.Address
@@ -9,9 +8,7 @@ import android.os.Bundle
 import android.os.Looper
 import android.util.Log
 import android.view.View
-import androidx.core.app.ActivityCompat
 import com.bumptech.glide.Glide
-import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
@@ -23,12 +20,17 @@ import com.konkuk.walku.src.main.home.weather.model.GetWeatherResponse
 import com.konkuk.walku.src.main.home.weather.model.ModelWeather
 import com.konkuk.walku.util.OpenApiCommon
 import java.io.IOException
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 
 // TODO 코드가 지저분하므로 깔끔하게 리팩토링할 예정 (...)
+
+// 기상청 단기예보 API 규칙 정리
+// TMX 값은 fcstTime 1500 일때에만 받아옴.
+
 
 class WeatherFragment :
     BaseFragment<FragmentWeatherBinding>(FragmentWeatherBinding::bind, R.layout.fragment_weather),
@@ -72,11 +74,16 @@ class WeatherFragment :
                             latitude = location.latitude
                             longitude = location.longitude
 
+
+                            Log.d("okhttp", getBaseTimeHour())
+                            Log.d("okhttp", getBaseTimeMinutes())
+                            Log.d("okhttp", OpenApiCommon().getBaseTime(getBaseTimeHour(), getBaseTimeMinutes()))
+
                             // 기상청 레트로핏 서비스 호출
                             WeatherService(this@WeatherFragment).tryGetWeather(
-                                numOfRows = 300,
+                                numOfRows = 1000,
                                 pageNo = 1,
-                                base_date = getBaseDate(),
+                                base_date = getBaseDate(getBaseTimeHour(), getBaseTimeMinutes()),
                                 base_time = OpenApiCommon().getBaseTime(getBaseTimeHour(), getBaseTimeMinutes()),
                                 nx = curPoint!!.x,
                                 ny = curPoint!!.y
@@ -98,16 +105,20 @@ class WeatherFragment :
         }
     }
 
-    private fun getBaseDate(): String {
+
+    private fun getBaseDate(h: String, m: String): String {
         val currentTime = LocalDateTime.now()
+        if(h=="00" && OpenApiCommon().getBaseTime(h, m) == "2330") {
+            currentTime.minusDays(1L)
+        }
         val formatterForBaseDate = DateTimeFormatter.ofPattern("yyyyMMdd")
         return currentTime.format(formatterForBaseDate)
     }
 
     private fun getBaseTimeHour(): String {
-        val currentTime = LocalDateTime.now()
-        val formatterForBaseTimeHour = DateTimeFormatter.ofPattern("HH")
-        return currentTime.format(formatterForBaseTimeHour)
+        val cal = Calendar.getInstance()
+        cal.add(Calendar.HOUR, -1)
+        return SimpleDateFormat("HH", Locale.getDefault()).format(cal.time)
     }
 
     private fun getBaseTimeMinutes(): String {
@@ -118,25 +129,40 @@ class WeatherFragment :
 
     @SuppressLint("SetTextI18n")
     override fun onGetWeatherSuccess(response: GetWeatherResponse) {
-        // 테스트입니다.
         dismissLoadingDialog()
         showCustomToast("날씨 api 연동 성공")
         if(response.response.header.resultCode=="00") {
             val it = response.response.body.items.item
-            // 현재 시각부터 1시간 뒤의 날씨 6개를 담을 배열
-            val weatherArr = arrayOf(ModelWeather(), ModelWeather(), ModelWeather(), ModelWeather(), ModelWeather(), ModelWeather())
+            // 현재 시각부터 1시간 뒤 마다의 날씨 64개를 담을 배열
+            val weatherArr = mutableListOf<ModelWeather>()
+            for (i in 0..100) {
+                weatherArr.add(ModelWeather())
+            }
             var index = 0
             val totalCount = response.response.body.totalCount - 1
             for (i in 0..totalCount) {
-                index %= 6
                 when(it[i].category) {
+                    "TMP" -> weatherArr[index].temp = it[i].fcstValue         // 기온
+                    "SKY" -> weatherArr[index].sky = it[i].fcstValue          // 하늘 상태
                     "PTY" -> weatherArr[index].rainType = it[i].fcstValue     // 강수 형태
                     "REH" -> weatherArr[index].humidity = it[i].fcstValue     // 습도
-                    "SKY" -> weatherArr[index].sky = it[i].fcstValue          // 하늘 상태
-                    "T1H" -> weatherArr[index].temp = it[i].fcstValue         // 기온
+                    "TMX" -> {
+                        weatherArr[index].maxTemp = it[i].fcstValue
+                        index++
+                        continue
+                    }
+                    "TMN" -> {
+                        weatherArr[index].minTemp = it[i].fcstValue
+                        index++
+                        continue
+                    }
+                    "SNO" -> {
+                        index++
+                    }
                 }
-                index++
             }
+
+            Log.d("okhttp", "$weatherArr")
 
             binding.apply {
                 // 현재 기온 설정

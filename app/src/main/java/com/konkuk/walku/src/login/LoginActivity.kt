@@ -37,7 +37,6 @@ class LoginActivity: BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::in
         // 뷰페이저 초기 설정 함수입니다.
         setViewpager()
 
-
         binding.apply {
             // 건너뛰기 버튼을 누르면 뷰페이저2 마지막 슬라이드로 이동합니다.
             activityLoginSkipAllTextView.setOnClickListener {
