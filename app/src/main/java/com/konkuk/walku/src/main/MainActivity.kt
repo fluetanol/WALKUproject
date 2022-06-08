@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import androidx.core.app.ActivityCompat.finishAffinity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.fitness.Fitness
 import com.google.android.gms.fitness.FitnessOptions
@@ -24,6 +25,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         .addDataType(DataType.TYPE_STEP_COUNT_CUMULATIVE,FitnessOptions.ACCESS_WRITE)
         .addDataType(DataType.TYPE_STEP_COUNT_CUMULATIVE,FitnessOptions.ACCESS_READ)
         .addDataType(DataType.TYPE_STEP_COUNT_DELTA)
+        .addDataType(DataType.TYPE_LOCATION_SAMPLE)
         .build()
 
     private var doubleBackToExit = false
@@ -33,7 +35,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
         val account = GoogleSignIn.getAccountForExtension(this, fitnessOptions)
 
-        supportFragmentManager.beginTransaction().replace(R.id.main_frm, HomeFragment()).commitAllowingStateLoss()
+        supportFragmentManager.beginTransaction().replace(R.id.main_frm, AnalysisFragment()).commitAllowingStateLoss()
 
         binding.mainBtmNav.setOnItemSelectedListener{ item ->
             when (item.itemId) {
@@ -69,6 +71,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                         .replace(R.id.main_frm, AnalysisFragment())
                         .commitAllowingStateLoss()
                     return@setOnItemSelectedListener true
+
                 }
                 R.id.action_empty -> {
                     supportFragmentManager.beginTransaction()
