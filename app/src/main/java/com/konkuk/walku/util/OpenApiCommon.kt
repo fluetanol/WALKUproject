@@ -7,21 +7,34 @@ class OpenApiCommon {
     fun getBaseTime(h : String, m : String) : String {
         var result = ""
 
-        // 45분 전이면
-        if (m.toInt() < 45) {
-            // 0시면 2330
-            if (h == "00") result = "2330"
-            // 아니면 1시간 전 날씨 정보 부르기
-            else {
-                var resultH = h.toInt() - 1
-                // 1자리면 0 붙여서 2자리로 만들기
-                if (resultH < 10) result = "0" + resultH + "30"
-                // 2자리면 그대로
-                else result = resultH.toString() + "30"
-            }
+
+        when(h.toInt()) {
+            in 0 until 2 -> result = "2300"
+            in 2 until 5 -> result = "0200"
+            in 5 until 8 -> result = "0500"
+            in 8 until 11 -> result = "0800"
+            in 11 until 14 -> result = "1100"
+            in 14 until 17 -> result = "1400"
+            in 17 until 20 -> result = "1700"
+            in 20 until 23 -> result = "2000"
+            in 23 until 24 -> result = "2300"
         }
-        // 45분 이후면 바로 정보 받아오기
-        else result = h + "30"
+
+//        // 45분 전이면
+//        if (m.toInt() < 45) {
+//            // 0시면 2330
+//            if (h == "00") result = "2330"
+//            // 아니면 1시간 전 날씨 정보 부르기
+//            else {
+//                var resultH = h.toInt() - 1
+//                // 1자리면 0 붙여서 2자리로 만들기
+//                if (resultH < 10) result = "0" + resultH + "30"
+//                // 2자리면 그대로
+//                else result = resultH.toString() + "30"
+//            }
+//        }
+//        // 45분 이후면 바로 정보 받아오기
+//        else result = h + "30"
 
         return result
     }

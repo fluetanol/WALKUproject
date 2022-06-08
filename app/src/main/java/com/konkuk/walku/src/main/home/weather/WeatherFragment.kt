@@ -34,6 +34,8 @@ import kotlin.collections.ArrayList
 
 // 기상청 단기예보 API 규칙 정리
 // TMX 값은 fcstTime 1500 일때에만 받아옴.
+// 단기예보 base_time
+// 0200 0500 0800 1100 1400 1700 2000 2300 (8회)
 
 
 class WeatherFragment :
@@ -107,7 +109,7 @@ class WeatherFragment :
 
     private fun getBaseDate(h: String, m: String): String {
         val cal = Calendar.getInstance()
-        return if (h == "00" && OpenApiCommon().getBaseTime(h, m) == "2330") {
+        return if (h == "00" && OpenApiCommon().getBaseTime(h, m) == "2300") {
             cal.add(Calendar.DATE, -1)
             SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(cal.time)
         } else SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(cal.time)
@@ -115,7 +117,7 @@ class WeatherFragment :
 
     private fun getBaseTimeHour(): String {
         val cal = Calendar.getInstance()
-        cal.add(Calendar.HOUR, -3)
+        cal.add(Calendar.HOUR, -1)
         return SimpleDateFormat("HH", Locale.getDefault()).format(cal.time)
     }
 
@@ -191,6 +193,8 @@ class WeatherFragment :
                     }
                 }
                 fragmentWeatherHumidityTitleTextView.visibility = View.VISIBLE
+                fragmentWeatherHumidityProgressView.visibility = View.VISIBLE
+                fragmentWeatherIsItGoodToGoOutsideLayout.visibility = View.VISIBLE
                 fragmentWeatherHumidityTitleTextValueView.text = "${weatherArr[0].humidity}%"
                 fragmentWeatherHumidityProgressView.progress = weatherArr[0].humidity.toFloat()
                 fragmentWeatherHumidityProgressView.animate()
