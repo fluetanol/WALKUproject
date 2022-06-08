@@ -74,10 +74,9 @@ class WeatherFragment :
                             latitude = location.latitude
                             longitude = location.longitude
 
-
-                            Log.d("okhttp", getBaseTimeHour())
-                            Log.d("okhttp", getBaseTimeMinutes())
-                            Log.d("okhttp", OpenApiCommon().getBaseTime(getBaseTimeHour(), getBaseTimeMinutes()))
+//                            Log.d("okhttp", getBaseTimeHour())
+//                            Log.d("okhttp", getBaseTimeMinutes())
+//                            Log.d("okhttp", OpenApiCommon().getBaseTime(getBaseTimeHour(), getBaseTimeMinutes()))
 
                             // 기상청 레트로핏 서비스 호출
                             WeatherService(this@WeatherFragment).tryGetWeather(
@@ -107,17 +106,16 @@ class WeatherFragment :
 
 
     private fun getBaseDate(h: String, m: String): String {
-        val currentTime = LocalDateTime.now()
-        if(h=="00" && OpenApiCommon().getBaseTime(h, m) == "2330") {
-            currentTime.minusDays(1L)
-        }
-        val formatterForBaseDate = DateTimeFormatter.ofPattern("yyyyMMdd")
-        return currentTime.format(formatterForBaseDate)
+        val cal = Calendar.getInstance()
+        return if (h == "00" && OpenApiCommon().getBaseTime(h, m) == "2330") {
+            cal.add(Calendar.DATE, -1)
+            SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(cal.time)
+        } else SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(cal.time)
     }
 
     private fun getBaseTimeHour(): String {
         val cal = Calendar.getInstance()
-        cal.add(Calendar.HOUR, -1)
+        cal.add(Calendar.HOUR, -2)
         return SimpleDateFormat("HH", Locale.getDefault()).format(cal.time)
     }
 
@@ -133,7 +131,7 @@ class WeatherFragment :
         showCustomToast("날씨 api 연동 성공")
         if(response.response.header.resultCode=="00") {
             val it = response.response.body.items.item
-            // 현재 시각부터 1시간 뒤 마다의 날씨 64개를 담을 배열
+            // 현재 시각부터 1시간 뒤 마다의 날씨 100개를 담을 배열 (100개는 넉넉하게 만들었습니다.)
             val weatherArr = mutableListOf<ModelWeather>()
             for (i in 0..100) {
                 weatherArr.add(ModelWeather())
@@ -146,6 +144,7 @@ class WeatherFragment :
                     "SKY" -> weatherArr[index].sky = it[i].fcstValue          // 하늘 상태
                     "PTY" -> weatherArr[index].rainType = it[i].fcstValue     // 강수 형태
                     "REH" -> weatherArr[index].humidity = it[i].fcstValue     // 습도
+                    "POP" -> weatherArr[index].rainPossibility = it[i].fcstValue // 강수 확률
                     "TMX" -> {
                         weatherArr[index].maxTemp = it[i].fcstValue
                         index++
@@ -166,13 +165,30 @@ class WeatherFragment :
 
             binding.apply {
                 // 현재 기온 설정
-                fragmentWeatherCurrentWeatherTemperatureTextView.text = "${weatherArr[0].temp}°C"
+                fragmentWeatherCurrentWeatherTemperatureTextView.text = "${weatherArr[0].temp}°"
                 // 현재 하늘 상태 애니메이션 설정
                 Glide.with(this@WeatherFragment).load(getWeatherImage(weatherArr[0].sky)).into(fragmentWeatherCurrentWeatherStateAnimView)
                 // 현재 내 위치 주소 (한글 주소로 표시)
                 // TODO 00구 00동 까지만 나오도록 변경할 예정
                 fragmentWeatherAddressTextView.text = getAddress(latitude, longitude)
-                fragmentWeatherCurrentWeatherStateTextView.text = getWeatherString(weatherArr[0].sky)
+                fragmentWeatherCurrentWeatherStateTextView.visibility = View.VISIBLE
+                fragmentWeatherCurrentWeatherStateValueTextView.text = getWeatherString(weatherArr[0].sky)
+                with(weatherArr) {
+                    forEach {
+                        if(it.maxTemp!="") {
+                            fragmentWeatherMaxTempIcon.visibility = View.VISIBLE
+                            fragmentWeatherMaxTempTextView.text = "${it.maxTemp.toDouble().toInt()}°"
+                        }
+                    }
+                    forEach {
+                        if (it.minTemp != "") {
+                            fragmentWeatherMinTempIcon.visibility = View.VISIBLE
+                            fragmentWeatherMinTempTextView.text = "${it.minTemp.toDouble().toInt()}°"
+                        }
+                    }
+                }
+                fragmentWeatherCurrentPossibilityRainTextView.visibility = View.VISIBLE
+                fragmentWeatherCurrentPossibilityRainValueTextView.text = "${weatherArr[0].rainPossibility}%"
             }
         }
     }
