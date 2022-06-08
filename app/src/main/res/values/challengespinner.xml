@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="challenge_sortingarray">
+        <item>시작 날짜 순 </item>
+        <item>남은 시간 순 </item>
+        <item>달성도 순 </item>
+    </string-array>
+</resources>

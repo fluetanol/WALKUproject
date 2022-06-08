@@ -10,6 +10,8 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.konkuk.walku.R
 import com.konkuk.walku.config.BaseFragment
+import com.konkuk.walku.databinding.FragmentChallengeBinding
+import com.konkuk.walku.databinding.FragmentChallengetempBinding
 import com.konkuk.walku.src.main.challenge.Littlefragment.MyChallengeWindow.ChallengeMyChallengeFragment
 import com.konkuk.walku.src.main.challenge.Littlefragment.NewChallengeWindow.ChallengeNewChallengeFragment
 import com.konkuk.walku.src.main.challenge.Littlefragment.SuccessChallengeWindow.ChallengeSuccessChallengeFragment
@@ -17,17 +19,15 @@ import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
-import com.google.android.material.tabs.TabLayoutMediator
-import com.konkuk.walku.databinding.FragmentChallengeBinding
-import com.konkuk.walku.src.main.analysis.ChallengefragmentAdapter
+
 import com.konkuk.walku.src.main.challenge.ChallengeFragmentView.Companion.FLAG_MY_CHALLENGELIST
 import com.konkuk.walku.src.main.challenge.ChallengeFragmentView.Companion.FLAG_NEW_CHALLENGELIST
+import com.konkuk.walku.src.main.challenge.ChallengeFragmentView.Companion.FLAG_SUCCESS_CHALLENGELIST
 
 
-class ChallengeFragment : BaseFragment<FragmentChallengeBinding>(FragmentChallengeBinding::bind, R.layout.fragment_challenge),
-    ChallengeFragmentView {
+class ChallengeFragmenttemp : BaseFragment<FragmentChallengetempBinding>(FragmentChallengetempBinding::bind, R.layout.fragment_challengetemp), ChallengeFragmentView {
     val data = ArrayList<ChallengeData>()
-    private val fragmentList = listOf(ChallengeMyChallengeFragment(),ChallengeNewChallengeFragment(),ChallengeSuccessChallengeFragment())
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         challengeinit()
@@ -70,16 +70,15 @@ class ChallengeFragment : BaseFragment<FragmentChallengeBinding>(FragmentChallen
 
 
     override fun challengeinit() {
-        val adapter = ChallengefragmentAdapter(requireActivity())
-        adapter.fragmentList = fragmentList
-        binding.challengeViewpager.adapter = adapter
-        val tabTitles = listOf("내 챌린지", "새로운 챌린지", "해낸 챌린지")
-        TabLayoutMediator(
-            binding.challengetaplayout,
-            binding.challengeViewpager
-        ) { tab, position ->
-            tab.text = tabTitles[position]
-        }.attach()
+
+        ReplaceChallengeFragment(FLAG_NEW_CHALLENGELIST)
+        binding.radiogroup.setOnCheckedChangeListener { group, checkedId ->
+            when (checkedId){
+                R.id.radio1-> ReplaceChallengeFragment(FLAG_SUCCESS_CHALLENGELIST)
+                R.id.radio2->ReplaceChallengeFragment(FLAG_NEW_CHALLENGELIST)
+                R.id.radio3->ReplaceChallengeFragment(FLAG_MY_CHALLENGELIST)
+            }
+        }
     }
 
 
