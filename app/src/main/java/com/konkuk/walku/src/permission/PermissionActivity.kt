@@ -1,13 +1,9 @@
 package com.konkuk.walku.src.permission
 
 import android.Manifest
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.fitness.FitnessOptions
-import com.google.android.gms.fitness.data.DataType
 import com.konkuk.walku.R
 import com.konkuk.walku.config.BaseActivityForPermission
 import com.konkuk.walku.databinding.ActivityPermissionBinding
@@ -25,8 +21,6 @@ class PermissionActivity : BaseActivityForPermission<ActivityPermissionBinding>(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
 
         // 모든 권한이 설정되었는지 확인하는 변수
         val isAllPermissionGranted = permissionList.all {

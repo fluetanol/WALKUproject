@@ -198,15 +198,77 @@ class WeatherFragment :
                 fragmentWeatherHumidityTitleTextValueView.text = "${weatherArr[0].humidity}%"
                 fragmentWeatherHumidityProgressView.progress = weatherArr[0].humidity.toFloat()
                 fragmentWeatherHumidityProgressView.animate()
+                fragmentWeatherRecommendStyleLayout.visibility = View.VISIBLE
+
+                when(weatherArr[0].temp.toInt()) {
+                    in -100..-13 -> {
+                        fragmentWeatherRecommendedImage.setImageResource(R.drawable.gloves)
+                        fragmentWeatherRecommendedDescription.text = "장갑을 챙겨가시는 걸 추천해요!"
+                        fragmentWeatherRecommendedHashTags.text = "#롱패딩 #목도리 #장갑"
+                    }
+                    in -13..-7 -> {
+                        fragmentWeatherRecommendedImage.setImageResource(R.drawable.scarf)
+                        fragmentWeatherRecommendedDescription.text = "목을 따뜻하게 해주세요!"
+                        fragmentWeatherRecommendedHashTags.text = "#롱패딩 #터틀넥 #목도리"
+                    }
+                    in -7..0 -> {
+                        fragmentWeatherRecommendedImage.setImageResource(R.drawable.long_padding)
+                        fragmentWeatherRecommendedDescription.text = "추울 수 있으니 따뜻하게 입고가세요!"
+                        fragmentWeatherRecommendedHashTags.text = "#롱패딩 #터틀넥 #내복"
+                    }
+                    in 0..6 -> {
+                        fragmentWeatherRecommendedImage.setImageResource(R.drawable.short_padding)
+                        fragmentWeatherRecommendedDescription.text = "내복을 입고 나가시는 걸 추천해요!"
+                        fragmentWeatherRecommendedHashTags.text = "#숏패딩 #터틀넥 #내복"
+                    }
+                    in 6..10 -> {
+                        fragmentWeatherRecommendedImage.setImageResource(R.drawable.coat)
+                        fragmentWeatherRecommendedDescription.text = "두꺼운 니트를 입고가는게 좋아요!"
+                        fragmentWeatherRecommendedHashTags.text = "#코트 #니트 #청바지"
+                    }
+                    in 10..12 -> {
+                        fragmentWeatherRecommendedImage.setImageResource(R.drawable.trench_coat)
+                        fragmentWeatherRecommendedDescription.text = "저녁엔 추울 수 있어요!"
+                        fragmentWeatherRecommendedHashTags.text = "#트렌치코트 #맨투맨 #청바지"
+                    }
+                    in 12..17 -> {
+                        fragmentWeatherRecommendedImage.setImageResource(R.drawable.jacket)
+                        fragmentWeatherRecommendedDescription.text = "저녁엔 추울 수 있어요!"
+                        fragmentWeatherRecommendedHashTags.text = "#자켓 #긴팔티 #청바지"
+                    }
+                    in 17..20 -> {
+                        fragmentWeatherRecommendedImage.setImageResource(R.drawable.cardigan)
+                        fragmentWeatherRecommendedDescription.text = "실내에서 겉옷은 더울 수 있어요!"
+                        fragmentWeatherRecommendedHashTags.text = "#가디건 #긴팔티 #청바지"
+                    }
+                    in 20..23 -> {
+                        fragmentWeatherRecommendedImage.setImageResource(R.drawable.man_to_man)
+                        fragmentWeatherRecommendedDescription.text = "얇은 맨투맨 하나 입기 적당해요!"
+                        fragmentWeatherRecommendedHashTags.text = "#맨투맨 #청바지 #운동화"
+                    }
+                    in 23..28 -> {
+                        fragmentWeatherRecommendedImage.setImageResource(R.drawable.short_sleeve)
+                        fragmentWeatherRecommendedDescription.text = "얇은 반팔 하나 입기 적당해요!"
+                        fragmentWeatherRecommendedHashTags.text = "#반팔티 #반바지 #운동화"
+                    }
+                    in 28.. 40 -> {
+                        fragmentWeatherRecommendedImage.setImageResource(R.drawable.short_sleeve)
+                        fragmentWeatherRecommendedDescription.text = "날씨가 더우니 조심하세요!"
+                        fragmentWeatherRecommendedHashTags.text = "#반팔티 #반바지 #샌들"
+                    }
+                }
 
                 // 알파값 조정으로 fade in 구현하였습니다.
                 ObjectAnimator.ofFloat(this.fragmentWeatherIsItGoodToGoOutsideLayout, View.ALPHA, 0f,1f).apply {
                     duration = 2000
                     start()
                 }
+                ObjectAnimator.ofFloat(this.fragmentWeatherRecommendStyleLayout, View.ALPHA, 0f,1f).apply {
+                    duration = 2000
+                    start()
 
 
-
+                }
             }
         }
     }

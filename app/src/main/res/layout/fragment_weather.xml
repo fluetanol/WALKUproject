@@ -166,7 +166,7 @@
                 android:id="@+id/fragment_weather_humidity_title_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
+                android:layout_marginEnd="12dp"
                 android:fontFamily="@font/roboto_regular"
                 android:text="습도"
                 android:textColor="#2178EF"
@@ -199,6 +199,7 @@
                 android:layout_marginStart="6dp"
                 android:layout_marginTop="50dp"
                 android:layout_marginEnd="6dp"
+                android:visibility="invisible"
                 app:layout_constraintDimensionRatio="1:8"
                 app:layout_constraintEnd_toEndOf="@id/fragment_weather_current_possibility_rain_value_text_view"
                 app:layout_constraintStart_toStartOf="@id/fragment_weather_current_possibility_rain_value_text_view"
@@ -213,23 +214,22 @@
                 app:progressView_min="0"
                 app:progressView_orientation="vertical"
                 app:progressView_padding="1dp"
-                android:visibility="invisible"
-                tools:visibility="visible"
                 app:progressView_progressFromPrevious="true"
-                app:progressView_radius="12dp" />
+                app:progressView_radius="12dp"
+                tools:visibility="visible" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/fragment_weather_is_it_good_to_go_outside_layout"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:visibility="invisible"
-                tools:visibility="visible"
                 android:layout_marginStart="25dp"
                 android:background="@drawable/good_to_go_outside_background"
+                android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="@id/fragment_weather_humidity_progress_view"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/fragment_weather_humidity_progress_view"
-                app:layout_constraintTop_toTopOf="@id/fragment_weather_humidity_progress_view">
+                app:layout_constraintTop_toTopOf="@id/fragment_weather_humidity_progress_view"
+                tools:visibility="visible">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -243,6 +243,63 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/fragment_weather_recommend_style_layout"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/recommend_style_background"
+                android:visibility="invisible"
+                app:layout_constraintDimensionRatio="3:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fragment_weather_is_it_good_to_go_outside_layout"
+                tools:visibility="visible">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/fragment_weather_recommended_image"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@drawable/short_sleeve" />
+
+                <TextView
+                    android:id="@+id/fragment_weather_recommended_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/roboto_bold"
+                    android:text="얇은 셔츠를 입기에 적당해요!"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toTopOf="@id/fragment_weather_recommended_hash_tags"
+                    app:layout_constraintStart_toEndOf="@id/fragment_weather_recommended_image"
+                    app:layout_constraintTop_toTopOf="@id/fragment_weather_recommended_image"
+                    app:layout_constraintVertical_chainStyle="packed" />
+
+                <TextView
+                    android:id="@+id/fragment_weather_recommended_hash_tags"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/roboto_bold"
+                    android:text="#반팔티 #반바지 #운동화"
+                    android:textColor="#B0E8EF"
+                    android:textSize="13sp"
+                    app:layout_constraintBottom_toBottomOf="@id/fragment_weather_recommended_image"
+                    app:layout_constraintStart_toEndOf="@id/fragment_weather_recommended_image"
+                    app:layout_constraintTop_toBottomOf="@id/fragment_weather_recommended_description" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
