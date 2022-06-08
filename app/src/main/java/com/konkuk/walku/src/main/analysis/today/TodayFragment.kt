@@ -17,6 +17,9 @@ import com.google.android.gms.fitness.FitnessOptions
 import com.google.android.gms.fitness.data.DataType
 import com.google.android.gms.fitness.request.OnDataPointListener
 import com.google.android.gms.fitness.request.SensorRequest
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.konkuk.walku.R
 import com.konkuk.walku.config.BaseFragment
 import com.konkuk.walku.databinding.FragmentTodayBinding
@@ -27,8 +30,11 @@ import kotlin.properties.Delegates
 class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::bind, R.layout.fragment_today) {
     val circleBarView: CircleBarView by lazy { binding.customCircleBarView }
     var stepgoal:Int by Delegates.notNull<Int>()
-    lateinit var mainActivity: MainActivity
     var step by Delegates.notNull<Int>()
+
+    lateinit var mainActivity: MainActivity
+    lateinit var rdb: DatabaseReference
+
     private val fitnessOptions = FitnessOptions.builder()
         .addDataType(DataType.TYPE_STEP_COUNT_CUMULATIVE, FitnessOptions.ACCESS_WRITE)
         .addDataType(DataType.TYPE_STEP_COUNT_CUMULATIVE, FitnessOptions.ACCESS_READ)
@@ -46,6 +52,9 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i("asd","OnCreate!!")
+        rdb= Firebase.database.getReference("Customer/ksho0925@gmail.com/analysisData")
+        rdb.child("stepData")
+        rdb.get()
         step = 1230 //파이어베이스에서 해당 사용자의 마지막 걸음수 가져오기
         getDataStep()
     }
