@@ -19,9 +19,6 @@ import kotlin.collections.ArrayList
 import com.google.android.material.tabs.TabLayoutMediator
 import com.konkuk.walku.databinding.FragmentChallengeBinding
 import com.konkuk.walku.src.main.analysis.ChallengefragmentAdapter
-import com.konkuk.walku.src.main.challenge.ChallengeFragmentView.Companion.FLAG_MY_CHALLENGELIST
-import com.konkuk.walku.src.main.challenge.ChallengeFragmentView.Companion.FLAG_NEW_CHALLENGELIST
-
 
 class ChallengeFragment : BaseFragment<FragmentChallengeBinding>(FragmentChallengeBinding::bind, R.layout.fragment_challenge),
     ChallengeFragmentView {
