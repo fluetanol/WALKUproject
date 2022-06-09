@@ -5,7 +5,7 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import java.text.DecimalFormat
 
 class DecimalValueFormatter:ValueFormatter() {
-    private val format = DecimalFormat("###,##")
+    private val format = DecimalFormat("###,###")
 
     // override this for BarChart
     override fun getBarLabel(barEntry: BarEntry?): String {

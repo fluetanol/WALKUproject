@@ -7,6 +7,6 @@ import java.time.LocalDate
 data class Step(
     var stepCount: Int, // 걸음 수
     var stepGoal: Int, // 목표 걸음 수
-    val distance: Double, // 거리
+    var distance: Double, // 거리
     val date: String //날짜
 ) : Parcelable

@@ -12,6 +12,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.fitness.Fitness
 import com.google.android.gms.fitness.FitnessOptions
 import com.google.android.gms.fitness.data.DataType
+import com.google.android.gms.fitness.data.Field
 import com.google.android.gms.fitness.request.OnDataPointListener
 import com.google.android.gms.fitness.request.SensorRequest
 import com.konkuk.walku.R
@@ -26,16 +27,14 @@ import kotlin.properties.Delegates
 
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
     var todayOnPause by Delegates.notNull<Boolean>()
-    var stepC by Delegates.notNull<Int>()
+    var recordStart:Boolean=false
     private val step_listener = OnDataPointListener { dataPoint ->
         val bundle = Bundle()
-        bundle.putInt("step",stepC)
+        bundle.putInt("step",1)
         if(todayOnPause){
-            stepC += 1
         }else{
             this.supportFragmentManager.setFragmentResult("step",bundle)
             this.supportFragmentManager.setFragmentResult("step2",bundle)
-            stepC=1
         }
     }
 
@@ -44,6 +43,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         .addDataType(DataType.TYPE_STEP_COUNT_CUMULATIVE,FitnessOptions.ACCESS_READ)
         .addDataType(DataType.TYPE_STEP_COUNT_DELTA)
         .addDataType(DataType.TYPE_LOCATION_SAMPLE)
+        .addDataType(DataType.AGGREGATE_DISTANCE_DELTA)
+        .addDataType(DataType.TYPE_DISTANCE_DELTA)
         .build()
 
     private var doubleBackToExit = false
@@ -87,6 +88,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                         .replace(R.id.main_frm, HomeFragment())
                         .commitAllowingStateLoss()
                 }
+                R.id.main_btm_fab -> {
+                    recordStart = recordStart != true
+                    val bundle = Bundle()
+                    bundle.putBoolean("recordStart",recordStart)
+                    this.supportFragmentManager.setFragmentResult("recordStart",bundle)
+                }
             }
             false
         }
@@ -95,7 +102,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
     private fun recieveTodayOnPause() {
         todayOnPause=false
-        stepC=1
+//        stepC=1
         this.supportFragmentManager.setFragmentResultListener("onPause",this
         ) { requestKey, result ->
             todayOnPause = result.getBoolean("onPause")

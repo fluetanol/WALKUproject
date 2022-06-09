@@ -80,11 +80,16 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
             searchTodayIndex()
             circleBarDraw()
         }
-        requireActivity().supportFragmentManager.setFragmentResultListener("step",mainActivity
+        requireActivity().supportFragmentManager.setFragmentResultListener("step3",mainActivity
         ) { requestKey, result ->
-            analysisData.stepData[todayIndex].stepCount += result.get("step").toString().toInt()
+            analysisData.stepData[todayIndex].stepCount = result.get("step3").toString().toInt()
             circleBarDraw()
-            Log.i("asd","step bundle 받았습니다")
+            insertDB()
+        }
+        requireActivity().supportFragmentManager.setFragmentResultListener("distance",mainActivity
+        ) { requestKey, result ->
+            analysisData.stepData[todayIndex].distance = result.get("distance").toString().toDouble()
+            circleBarDraw()
             insertDB()
         }
     }
@@ -122,7 +127,7 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
     private fun insertDB(){
         rdb= Firebase.database.reference
         try {
-            rdb.child("Customer/ksho0925").child("analysis").setValue(analysisData).addOnSuccessListener {
+            rdb.child("Customer/ksho0925").child("analysis").child("walkData").setValue().addOnSuccessListener {
                 Log.i("asd","Data insert success")
             }.addOnFailureListener {
                 Log.i("asd","Data insert fail")
