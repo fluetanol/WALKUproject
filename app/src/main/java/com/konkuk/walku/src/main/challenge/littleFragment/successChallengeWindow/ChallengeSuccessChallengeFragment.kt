@@ -69,6 +69,7 @@ class ChallengeSuccessChallengeFragment : BaseFragment<FragmentChallengeMychalle
                             j.child("day").value.toString(),
                             j.child("context").value.toString(),
                             0,
+                            0,
                             "00:00:00",
                             "00 00 00",
                             Timer())
@@ -82,6 +83,7 @@ class ChallengeSuccessChallengeFragment : BaseFragment<FragmentChallengeMychalle
                              j.child("challengetype").value.toString(),
                              j.child("day").value.toString(),
                              j.child("context").value.toString(),
+                             0,
                              0,
                              "00:00:00",
                              "00 00 00",

@@ -5,6 +5,8 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ListAdapter
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
@@ -126,6 +128,16 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
             }
         }
         binding.recyclerview.adapter = adapter
+        binding.spinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long, ) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+
+        }
     }
 
     //데이터 가져오는 리스너, 프레그먼트가 실행될떄, 재실행(resume)될때, 데이터베이스에 변동이 있을때 모두 작동
@@ -157,6 +169,7 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
                                 j.child("challengetype").value.toString(),
                                 j.child("day").value.toString(),
                                 j.child("context").value.toString(),
+                                0,
                                 j.child("achivement").value.toString().toInt(),
                                 j.child("starttime").value.toString(),
                             j.child("remaintime").value.toString(),
@@ -173,6 +186,7 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
                                 j.child("challengetype").value.toString(),
                                 j.child("day").value.toString(),
                                 j.child("context").value.toString(),
+                                0,
                                 j.child("achivement").value.toString().toInt(),
                                 j.child("starttime").value.toString(),
                                 j.child("remaintime").value.toString(),

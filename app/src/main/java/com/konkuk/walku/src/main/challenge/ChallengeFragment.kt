@@ -81,13 +81,4 @@ class ChallengeFragment : BaseFragment<FragmentChallengeBinding>(FragmentChallen
         }.attach()
     }
 
-
-    fun ReplaceChallengeFragment(flag:Int){
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.framelayout, if(flag==FLAG_NEW_CHALLENGELIST) ChallengeNewChallengeFragment()
-            else if(flag==FLAG_MY_CHALLENGELIST)   ChallengeMyChallengeFragment()
-            else ChallengeSuccessChallengeFragment())
-            .commit()
-    }
-
 }

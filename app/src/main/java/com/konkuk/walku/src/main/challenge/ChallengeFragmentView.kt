@@ -8,13 +8,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 
 interface ChallengeFragmentView {
-    companion object{
-        const val FLAG_SUCCESS_CHALLENGELIST =0
-        const val FLAG_NEW_CHALLENGELIST = 1
-        const val FLAG_MY_CHALLENGELIST = 2
-    }
-
-
     //그냥 챌린지 리스트 리사이클러뷰 꾸미려고 만들어 놓은 클래스, 너무 딱 달라붙어있을때 위아래로 간격 두는 작업함
     //스타일을 적용시키고 싶은 리사이클러 뷰에
     //        val decoration = RecyclerDecoadpater()

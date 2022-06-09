@@ -121,6 +121,7 @@ class ChallengeNewChallengeFragment: BaseFragment<FragmentChallengeMychallengeBi
                                 i.child("day").value.toString(),
                                 i.child("context").value.toString(),
                                 0,
+                                0,
                                 "00:00:00",
                                 "00 00 00",
                                 Timer())
@@ -134,6 +135,7 @@ class ChallengeNewChallengeFragment: BaseFragment<FragmentChallengeMychallengeBi
                                     "WalkCountChallenge",
                                     j.child("day").value.toString(),
                                     j.child("context").value.toString(),
+                                    0,
                                     0,
                                     "00:00:00",
                                     "00 00 00",
