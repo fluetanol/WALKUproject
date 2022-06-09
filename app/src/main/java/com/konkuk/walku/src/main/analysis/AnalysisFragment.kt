@@ -52,13 +52,7 @@ class AnalysisFragment : BaseFragment<FragmentAnalysisBinding>(FragmentAnalysisB
         .addDataType(DataType.TYPE_DISTANCE_DELTA)
         .build()
 
-    private val location_listener = OnDataPointListener { dataPoint ->
-        for (field in dataPoint.dataType.fields) {
-            val value = dataPoint.getValue(field)
-            Log.i("asd", "Detected DataPoint field: ${field.name}")
-            Log.i("asd", "Detected DataPoint value: $value")
-        }
-    }
+
 
     // 1. Context를 할당할 변수를 프로퍼티로 선언(어디서든 사용할 수 있게)
     lateinit var mainActivity: MainActivity
@@ -148,12 +142,12 @@ class AnalysisFragment : BaseFragment<FragmentAnalysisBinding>(FragmentAnalysisB
                     val locationList =data.child("locationArrayList").children
                     val ll = ArrayList<Walk>()
                     for(value in locationList){
-                        val latitude:Double = if(data.child("latitude").exists())
-                            data.child("latitude").value.toString().toDouble()
+                        val latitude:Double = if(value.child("latitude").exists())
+                            value.child("latitude").value.toString().toDouble()
                         else
                             0.0
-                        val longitude:Double = if(data.child("longitude").exists())
-                            data.child("longitude").value.toString().toDouble()
+                        val longitude:Double = if(value.child("longitude").exists())
+                            value.child("longitude").value.toString().toDouble()
                         else
                             0.0
                         ll.add(Walk(latitude,longitude))
@@ -172,6 +166,10 @@ class AnalysisFragment : BaseFragment<FragmentAnalysisBinding>(FragmentAnalysisB
             //to todayFragment
             bundle.putParcelable("analysisData",anData)
             requireActivity().supportFragmentManager.setFragmentResult("analysisData",bundle)
+            val bundle2 = Bundle()
+            //to recorMapFragment
+            bundle2.putParcelableArrayList("walkData",walkList)
+            requireActivity().supportFragmentManager.setFragmentResult("walkData",bundle2)
 
         }.addOnFailureListener {
             Log.i("asd","해당하는 사용자 없음")
@@ -195,28 +193,6 @@ class AnalysisFragment : BaseFragment<FragmentAnalysisBinding>(FragmentAnalysisB
         //getDataLocation()
     }
 
-    private fun getDataLocation() {  //10초간격으로 listener(위치데이터 받아옴)
-        Fitness.getSensorsClient(mainActivity, GoogleSignIn.getAccountForExtension(mainActivity, fitnessOptions))
-            .add(
-                SensorRequest.Builder()
-                    //.setDataSource(dataSource) // Optional but recommended for custom
-                    // data sets.
-                    .setDataType(DataType.TYPE_LOCATION_SAMPLE) // Can't be omitted.
-                    .setSamplingRate(10, TimeUnit.SECONDS)
-                    .build(),
-                location_listener
-            )
-    }
-    private fun removeDataLocation() { // 위치데이터 리스너 제거
-        Fitness.getSensorsClient(mainActivity, GoogleSignIn.getAccountForExtension(mainActivity, fitnessOptions))
-            .remove(location_listener)
-            .addOnSuccessListener {
-                Log.i("asd", "Listener was removed!")
-            }
-            .addOnFailureListener {
-                Log.i("asd", "Listener was not removed.")
-            }
-    }
 //
 //    private fun getDistanceData() {
 //        val startTime = LocalDate.now().atStartOfDay(ZoneId.systemDefault())
