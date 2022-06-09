@@ -19,6 +19,7 @@ import com.konkuk.walku.R
 import com.konkuk.walku.config.BaseActivity
 import com.konkuk.walku.databinding.ActivityMainBinding
 import com.konkuk.walku.src.main.analysis.AnalysisFragment
+import com.konkuk.walku.src.main.analysis.model.Walk
 import com.konkuk.walku.src.main.challenge.ChallengeFragment
 import com.konkuk.walku.src.main.home.HomeFragment
 import com.konkuk.walku.src.main.settings.SettingsFragment
@@ -26,6 +27,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.properties.Delegates
 
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
+    val locationList = ArrayList<Walk>()
     var todayOnPause by Delegates.notNull<Boolean>()
     var recordStart:Boolean=false
     private val step_listener = OnDataPointListener { dataPoint ->
@@ -35,6 +37,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         }else{
             this.supportFragmentManager.setFragmentResult("step",bundle)
             this.supportFragmentManager.setFragmentResult("step2",bundle)
+        }
+    }
+    private val location_listener = OnDataPointListener { dataPoint ->
+        for (field in dataPoint.dataType.fields) {
+            val value = dataPoint.getValue(field)
+            Log.i("asd", "Detected DataPoint field: ${field.name}")
+            Log.i("asd", "Detected DataPoint value: $value")
         }
     }
 
@@ -52,7 +61,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         recieveTodayOnPause()
-
+        getDataLocation()
         supportFragmentManager.beginTransaction().replace(R.id.main_frm, HomeFragment()).commitAllowingStateLoss()
 
         binding.mainBtmNav.setOnItemSelectedListener{ item ->
@@ -83,16 +92,20 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                     return@setOnItemSelectedListener true
 
                 }
+                R.id.main_btm_fab -> {
+                    Log.i("asd","in fab btn")
+                    recordStart = recordStart != true
+                    if(recordStart){
+
+                    }else{
+                        removeDataLocation()
+                    }
+                    return@setOnItemSelectedListener true
+                }
                 R.id.action_empty -> {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.main_frm, HomeFragment())
                         .commitAllowingStateLoss()
-                }
-                R.id.main_btm_fab -> {
-                    recordStart = recordStart != true
-                    val bundle = Bundle()
-                    bundle.putBoolean("recordStart",recordStart)
-                    this.supportFragmentManager.setFragmentResult("recordStart",bundle)
                 }
             }
             false
@@ -157,7 +170,31 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                     .build(),
                 step_listener
             ).addOnSuccessListener {
-                Log.i("asd","success listener")
+                Log.i("asd","success step listener")
+            }
+    }
+    private fun getDataLocation() {  //10초간격으로 listener(위치데이터 받아옴)
+        Fitness.getSensorsClient(this, GoogleSignIn.getAccountForExtension(this, fitnessOptions))
+            .add(
+                SensorRequest.Builder()
+                    //.setDataSource(dataSource) // Optional but recommended for custom
+                    // data sets.
+                    .setDataType(DataType.TYPE_LOCATION_SAMPLE) // Can't be omitted.
+                    .setSamplingRate(10, TimeUnit.SECONDS)
+                    .build(),
+                location_listener
+            ).addOnSuccessListener {
+                Log.i("asd","success location listener")
+            }
+    }
+    private fun removeDataLocation() { // 위치데이터 리스너 제거
+        Fitness.getSensorsClient(this, GoogleSignIn.getAccountForExtension(this, fitnessOptions))
+            .remove(location_listener)
+            .addOnSuccessListener {
+                Log.i("asd", "Listener was removed!")
+            }
+            .addOnFailureListener {
+                Log.i("asd", "Listener was not removed.")
             }
     }
 }
