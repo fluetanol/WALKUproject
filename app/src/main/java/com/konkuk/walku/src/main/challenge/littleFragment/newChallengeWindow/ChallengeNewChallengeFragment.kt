@@ -42,11 +42,11 @@ class ChallengeNewChallengeFragment: BaseFragment<FragmentChallengeMychallengeBi
         super.onResume()
         binding.loadingbar.visibility=View.VISIBLE
         if(count1!=0)
-        binding.counttext.text= "새로운 챌린지: "+data.size.toString()
+            binding.counttext.text= "새로운 챌린지: "+data.size.toString()
     }
 
     //리사이클러뷰 초기화 + 버튼리스너
-     fun challengeinit() {
+    fun challengeinit() {
         binding.recyclerview.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL,false)
         val decoration = RecyclerDecoadpater()
         binding.recyclerview.addItemDecoration(decoration)
@@ -113,38 +113,38 @@ class ChallengeNewChallengeFragment: BaseFragment<FragmentChallengeMychallengeBi
             }
             //이미 내 계정의 챌린지 리스트가 있는 경우, 그 안에서 꺼내옴
             if(accountchallengeflag.value == true){
-                    for (i in accountchallengenewdistance.children.iterator()) {
-                        if (i.child("context").value.toString() != "null") {
-                            val newvalue = ChallengeData(
-                                i.key!!.toInt(),
-                                "WalkDistanceChallenge",
-                                i.child("day").value.toString(),
-                                i.child("context").value.toString(),
-                                0,
-                                0,
-                                "00:00:00",
-                                "00 00 00",
-                                Timer())
-                            count1 += 1
-                            data.add(newvalue)
-                        }
+                for (i in accountchallengenewdistance.children.iterator()) {
+                    if (i.child("context").value.toString() != "null") {
+                        val newvalue = ChallengeData(
+                            i.key!!.toInt(),
+                            "WalkDistanceChallenge",
+                            i.child("day").value.toString(),
+                            i.child("context").value.toString(),
+                            0,
+                            0,
+                            "00:00:00",
+                            "00 00 00",
+                            Timer())
+                        count1 += 1
+                        data.add(newvalue)
                     }
-                        for (j in accountchallengenewcount.children.iterator()) {
-                            if (j.child("context").value.toString() != "null") {
-                                val newvalue = ChallengeData(j.key!!.toInt(),
-                                    "WalkCountChallenge",
-                                    j.child("day").value.toString(),
-                                    j.child("context").value.toString(),
-                                    0,
-                                    0,
-                                    "00:00:00",
-                                    "00 00 00",
-                                    Timer())
-                                count2 += 1
-                                data.add(newvalue)
-                            }
-                        }
+                }
+                for (j in accountchallengenewcount.children.iterator()) {
+                    if (j.child("context").value.toString() != "null") {
+                        val newvalue = ChallengeData(j.key!!.toInt(),
+                            "WalkCountChallenge",
+                            j.child("day").value.toString(),
+                            j.child("context").value.toString(),
+                            0,
+                            0,
+                            "00:00:00",
+                            "00 00 00",
+                            Timer())
+                        count2 += 1
+                        data.add(newvalue)
                     }
+                }
+            }
 
             //fragment에서 벗어났다가 다시 create될때 view가 생성되기 전에 이 함수가 비동기식으로 빨리 호출되버리는건지
             //counttext같은 뷰객체에 무슨 짓을 하려고 하면 null exception으로 인식 못하는 경우가 있더라구용...

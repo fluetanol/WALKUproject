@@ -130,11 +130,11 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
         binding.recyclerview.adapter = adapter
         binding.spinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long, ) {
-                TODO("Not yet implemented")
+//                TODO("Not yet implemented")
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                TODO("Not yet implemented")
+//                TODO("Not yet implemented")
             }
 
         }
@@ -149,32 +149,32 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
             val accountchallengeDistancecount = snapshot.child("mike415415").child("Challenge").child("My").child("WalkDistanceChallenge")
             challengeviewmodel.datalist.value=data
             if(flagremove==true){
-            if(data.size>0) {
-                for (i in 0..data.size - 1) {
-                    Log.i("timer","삭제: "+data[i].timer.toString())
-                    data[i].timer.cancel()
-                    data[i].timer.purge()
+                if(data.size>0) {
+                    for (i in 0..data.size - 1) {
+                        Log.i("timer","삭제: "+data[i].timer.toString())
+                        data[i].timer.cancel()
+                        data[i].timer.purge()
+                    }
                 }
-            }
-            data.clear()
-            if(challengeviewmodel.datalist.value!!.size>0) {
-                for (i in 0..   challengeviewmodel.datalist.value!!.size - 1) {
-                    challengeviewmodel.datalist.value!![i].timer.cancel()
-                    challengeviewmodel.datalist.value!![i].timer.purge()
+                data.clear()
+                if(challengeviewmodel.datalist.value!!.size>0) {
+                    for (i in 0..   challengeviewmodel.datalist.value!!.size - 1) {
+                        challengeviewmodel.datalist.value!![i].timer.cancel()
+                        challengeviewmodel.datalist.value!![i].timer.purge()
+                    }
                 }
-            }
                 for (j in accountchallengeWalkcount.children.iterator()) {
                     if (j.child("context").value.toString() != "null") {
-                            val newvalue = ChallengeData(j.key!!.toInt(),
-                                j.child("challengetype").value.toString(),
-                                j.child("day").value.toString(),
-                                j.child("context").value.toString(),
-                                0,
-                                j.child("achivement").value.toString().toInt(),
-                                j.child("starttime").value.toString(),
+                        val newvalue = ChallengeData(j.key!!.toInt(),
+                            j.child("challengetype").value.toString(),
+                            j.child("day").value.toString(),
+                            j.child("context").value.toString(),
+                            0,
+                            j.child("achivement").value.toString().toInt(),
+                            j.child("starttime").value.toString(),
                             j.child("remaintime").value.toString(),
-                                Timer())
-                            data.add(newvalue)
+                            Timer())
+                        data.add(newvalue)
                         data[data.size-1].timer = timerthread(data.size-1)
                     }
                 }
@@ -256,10 +256,10 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
                     date-=1
                 }
                 try {
-                        var difday = data[position].day.toInt() - (date - startdate) - 1
-                        flagtime=true
-                        data[position].remaintime= "$difday $difhour $difminute $difsecond"
-                        challengemy.child(data[position].challengetype).child(data[position].num.toString()).child("remaintime").setValue("$difday $difhour $difminute $difsecond")
+                    var difday = data[position].day.toInt() - (date - startdate) - 1
+                    flagtime=true
+                    data[position].remaintime= "$difday $difhour $difminute $difsecond"
+                    challengemy.child(data[position].challengetype).child(data[position].num.toString()).child("remaintime").setValue("$difday $difhour $difminute $difsecond")
                 }
                 catch(e:Exception) {
                     Log.e("timer","$e")

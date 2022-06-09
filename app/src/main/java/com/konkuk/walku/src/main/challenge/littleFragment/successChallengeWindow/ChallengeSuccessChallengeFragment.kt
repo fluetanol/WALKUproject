@@ -61,37 +61,35 @@ class ChallengeSuccessChallengeFragment : BaseFragment<FragmentChallengeMychalle
             //챌린지 목록을 처음 꺼내올때, 내 계정의 챌린지 리스트로 정보를 옮긴다. 챌린지 리스트는 데베에 저장되어있다.
             //이미 내 계정의 챌린지 리스트가 있는 경우, 그 안에서 꺼내옴
              if (data.size == 0) {
-                for (j in accountchallengesuccess.child("WalkDistanceChallenge").children.iterator()) {
-                    if (j.child("context").value.toString() != "null") {
-                        val newvalue = ChallengeData(
-                            j.key!!.toInt(),
-                            j.child("challengetype").value.toString(),
-                            j.child("day").value.toString(),
-                            j.child("context").value.toString(),
-                            0,
-                            0,
-                            "00:00:00",
-                            "00 00 00",
-                            Timer())
-                        count += 1
-                        data.add(newvalue)
-                    }
-                }
-                 for (j in accountchallengesuccess.child("WalkCountChallenge").children.iterator()) {
-                     if (j.child("context").value.toString() != "null") {
-                         val newvalue = ChallengeData(j.key!!.toInt(),
-                             j.child("challengetype").value.toString(),
-                             j.child("day").value.toString(),
-                             j.child("context").value.toString(),
-                             0,
-                             0,
-                             "00:00:00",
-                             "00 00 00",
-                            Timer())
-                         count2 += 1
-                         data.add(newvalue)
-                     }
-                 }
+//                for (j in accountchallengesuccess.child("WalkDistanceChallenge").children.iterator()) {
+//                    if (j.child("context").value.toString() != "null") {
+//                        val newvalue = ChallengeData(
+//                            j.key!!.toInt(),
+//                            j.child("challengetype").value.toString(),
+//                            j.child("day").value.toString(),
+//                            j.child("context").value.toString(),
+//                            0,
+//                            "00:00:00",
+//                            "00 00 00",
+//                            Timer())
+//                        count += 1
+//                        data.add(newvalue)
+//                    }
+//                }
+//                 for (j in accountchallengesuccess.child("WalkCountChallenge").children.iterator()) {
+//                     if (j.child("context").value.toString() != "null") {
+//                         val newvalue = ChallengeData(j.key!!.toInt(),
+//                             j.child("challengetype").value.toString(),
+//                             j.child("day").value.toString(),
+//                             j.child("context").value.toString(),
+//                             0,
+//                             "00:00:00",
+//                             "00 00 00",
+//                            Timer())
+//                         count2 += 1
+//                         data.add(newvalue)
+//                     }
+//                 }
             }
             try {
                 binding.counttext.text = "성공한 챌린지: "+(count+count2).toString()
