@@ -14,10 +14,16 @@ import com.google.android.gms.fitness.data.*
 import com.google.android.gms.fitness.request.*
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.konkuk.walku.R
 import com.konkuk.walku.config.BaseFragment
 import com.konkuk.walku.databinding.FragmentAnalysisBinding
 import com.konkuk.walku.src.main.MainActivity
+import com.konkuk.walku.src.main.analysis.model.AnalysisData
+import com.konkuk.walku.src.main.analysis.model.LocationList
+import com.konkuk.walku.src.main.analysis.model.Step
+import com.konkuk.walku.src.main.analysis.model.Walk
 import com.konkuk.walku.src.main.analysis.recordmap.RecordMapFragment
 import com.konkuk.walku.src.main.analysis.statistics.StatisticsFragment
 import com.konkuk.walku.src.main.analysis.today.TodayFragment
@@ -52,16 +58,101 @@ class AnalysisFragment : BaseFragment<FragmentAnalysisBinding>(FragmentAnalysisB
 
     // 1. Context를 할당할 변수를 프로퍼티로 선언(어디서든 사용할 수 있게)
     lateinit var mainActivity: MainActivity
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initDB()
+
         setSwipeView()
         accessGoogleFit()
     }
 
     private fun initDB() {
+        rdb= Firebase.database.reference
+        val userid = "ksho0925"
+        rdb.child("Customer").child(userid).get().addOnSuccessListener {
+            val analysisData =it.child("analysis")
+            val stepData = analysisData.child("stepData")
+            val walkData = analysisData.child("walkData")
 
+            //step데이터 얻음
+            val stepList = ArrayList<Step>()
+            if(stepData.exists()){
+                for(data in stepData.children){
+                    val stepgoal:Int = if(data.child("stepGoal").exists())
+                        data.child("stepGoal").value.toString().toInt()
+                    else
+                        6000
+                    val step:Int = if(data.child("stepCount").exists())
+                        data.child("stepCount").value.toString().toInt()
+                    else
+                        0
+                    val distance:Double = if(data.child("distance").exists())
+                        data.child("distance").value.toString().toDouble()
+                    else
+                        0.0
+                    val date:String = if(data.child("date").exists())
+                        data.child("date").value.toString()
+                    else
+                        LocalDate.now().toString()
+                    stepList.add(Step(step,stepgoal,distance,date))
+                    Log.i("asd","$step $stepgoal $distance")
+                }
+            }else{
+                val stepgoal= 6000
+                val step=  0
+                val distance = 0.0
+                val date = LocalDate.now().toString()
+                stepList.add(Step(step,stepgoal,distance,date))
+                Log.i("asd","$step $stepgoal $distance $date")
+            }
+            if(stepList.find {
+                it.date==LocalDate.now().toString()
+            }==null)else{
+                val stepgoal= 6000
+                val step=  0
+                val distance = 0.0
+                val date = LocalDate.now().toString()
+                stepList.add(Step(step,stepgoal,distance,date))
+            }
+            //walkdata얻음
+            val walkList = ArrayList<LocationList>()
+            if(walkData.exists()){
+                for(data in walkData.children){
+                    val locationList =data.child("locationArrayList").children
+                    val ll = ArrayList<Walk>()
+                    for(value in locationList){
+                        val latitude:Double = if(data.child("latitude").exists())
+                            data.child("latitude").value.toString().toDouble()
+                        else
+                            0.0
+                        val longitude:Double = if(data.child("longitude").exists())
+                            data.child("longitude").value.toString().toDouble()
+                        else
+                            0.0
+                        ll.add(Walk(latitude,longitude))
+                    }
+                    walkList.add(LocationList(ll))
+                }
+            }else{
+                val ll = ArrayList<Walk>()
+                val latitude:Double = 0.0
+                val longitude:Double = 0.0
+                ll.add(Walk(latitude,longitude))
+                walkList.add(LocationList(ll))
+            }
+            val anData = AnalysisData(stepList,walkList)
+            val bundle = Bundle()
+            bundle.putParcelable("analysisData",anData)
+            requireActivity().supportFragmentManager.setFragmentResult("analysisData",bundle)
+            requireActivity().supportFragmentManager.setFragmentResult("analysisData",bundle)
+        }.addOnFailureListener {
+            Log.i("asd","해당하는 사용자 없음")
+        }
     }
 
     private fun accessGoogleFit() {

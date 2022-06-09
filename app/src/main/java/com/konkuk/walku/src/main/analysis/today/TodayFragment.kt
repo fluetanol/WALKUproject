@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
+import android.os.Parcelable
+import android.provider.Contacts.SettingsColumns.KEY
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
@@ -11,6 +13,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentResultListener
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.fitness.Fitness
 import com.google.android.gms.fitness.FitnessOptions
@@ -24,17 +28,32 @@ import com.konkuk.walku.R
 import com.konkuk.walku.config.BaseFragment
 import com.konkuk.walku.databinding.FragmentTodayBinding
 import com.konkuk.walku.src.main.MainActivity
+import com.konkuk.walku.src.main.analysis.model.AnalysisData
+import com.konkuk.walku.src.main.analysis.model.LocationList
+import com.konkuk.walku.src.main.analysis.model.Step
+import com.konkuk.walku.src.main.analysis.model.Walk
+import kotlinx.parcelize.Parcelize
+import java.time.LocalDate
 import java.util.concurrent.TimeUnit
 import kotlin.properties.Delegates
 
 class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::bind, R.layout.fragment_today) {
     val circleBarView: CircleBarView by lazy { binding.customCircleBarView }
-    var stepgoal:Int by Delegates.notNull<Int>()
-    var step by Delegates.notNull<Int>()
-
+    var todayIndex by Delegates.notNull<Int>()
     lateinit var mainActivity: MainActivity
     lateinit var rdb: DatabaseReference
-
+    val KEY = "analysisData"
+//    companion object {
+//        const
+//        fun newInstance(data: Parcelable) = TodayFragment().apply {
+//            arguments = Bundle().apply {
+//                putParcelable(KEY,data)
+//            }
+//        }
+//    }
+//
+//    val analysisData by lazy<AnalysisData> { requireArguments().getParcelable(KEY)!! }
+    private lateinit var analysisData:AnalysisData
     private val fitnessOptions = FitnessOptions.builder()
         .addDataType(DataType.TYPE_STEP_COUNT_CUMULATIVE, FitnessOptions.ACCESS_WRITE)
         .addDataType(DataType.TYPE_STEP_COUNT_CUMULATIVE, FitnessOptions.ACCESS_READ)
@@ -43,28 +62,47 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
         .build()
 
     private val step_listener = OnDataPointListener { dataPoint ->
-        step +=1
-        val progress = (step.toFloat())/stepgoal * 360
-        Log.i("asd", "Detected DataPoint value: $step $progress")
-        circleBarView.setProgress(progress,"$step / $stepgoal")
+        analysisData.stepData[todayIndex].stepCount +=1
+        val progress = (analysisData.stepData[todayIndex].stepCount.toFloat())/analysisData.stepData[todayIndex].stepGoal.toFloat() * 360
+        circleBarView.setProgress(progress,analysisData.stepData[todayIndex].stepCount.toString()+"/"+analysisData.stepData[todayIndex].stepGoal.toString())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i("asd","OnCreate!!")
-        rdb= Firebase.database.getReference("Customer/ksho0925@gmail.com/analysisData")
-        rdb.child("stepData")
-        rdb.get()
-        step = 1230 //파이어베이스에서 해당 사용자의 마지막 걸음수 가져오기
-        getDataStep()
+        val al = ArrayList<Step>()
+        al.add(Step(0,0,0.0,"0"))
+        val al3 = ArrayList<Walk>()
+        al3.add(Walk(0.0,0.0))
+        val ll= LocationList(al3)
+        val al2 =  ArrayList<LocationList>()
+        al2.add(ll)
+        analysisData= AnalysisData(al, al2)
+        todayIndex=0
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().supportFragmentManager.setFragmentResultListener("analysisData",mainActivity
+        ) { requestKey, result ->
+            analysisData = result.getParcelable("analysisData")!!
+            Log.i("asd제바라라라랄","bundle 받았습니다")
+            val progress = (analysisData.stepData[todayIndex].stepCount.toFloat())/analysisData.stepData[todayIndex].stepGoal.toFloat() * 360
+            circleBarView.setProgress(progress,analysisData.stepData[todayIndex].stepCount.toString()+"/"+analysisData.stepData[todayIndex].stepGoal.toString())
+        }
+
+        for(i in 0 until analysisData.stepData.size){
+            todayIndex = if(analysisData.stepData[i].date==LocalDate.now().toString()){
+                i
+            }else{
+                0
+            }
+        }
+        getDataStep()
         Log.i("asd","OnCreateView!!")
-        stepgoal = 6000
         setGoal()
-        circleBarView.setProgress((step.toFloat())/stepgoal.toFloat() * 360,"$step / $stepgoal")
+        val progress = (analysisData.stepData[todayIndex].stepCount.toFloat())/analysisData.stepData[todayIndex].stepGoal.toFloat() * 360
+        circleBarView.setProgress(progress,analysisData.stepData[todayIndex].stepCount.toString()+"/"+analysisData.stepData[todayIndex].stepGoal.toString())
     }
 
     private fun setGoal() {
@@ -77,9 +115,10 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
             if(binding.goalInput.textSize.toInt()!=0){
                 val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(requireActivity().currentFocus?.windowToken, 0)
-                stepgoal = binding.goalInput.text.toString().toInt()
+                analysisData.stepData[todayIndex].stepGoal = binding.goalInput.text.toString().toInt()
                 binding.goalInput.text.clear()
-                circleBarView.setProgress((step.toFloat())/stepgoal.toFloat() * 360,"$step / $stepgoal")
+                val progress = (analysisData.stepData[todayIndex].stepCount.toFloat())/analysisData.stepData[todayIndex].stepGoal.toFloat() * 360
+                circleBarView.setProgress(progress,analysisData.stepData[todayIndex].stepCount.toString()+"/"+analysisData.stepData[todayIndex].stepGoal.toString())
             }
         }
     }
@@ -100,6 +139,15 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
             }
     }
 
+    private fun insertDB(){
+        rdb= Firebase.database.reference
+        rdb.child("Customer/ksho0925").child("analysis").setValue(analysisData).addOnSuccessListener {
+            Log.i("asd","Data insert success")
+        }.addOnFailureListener {
+            Log.i("asd","Data insert fail")
+        }
+
+    }
     override fun onAttach(context: Context) {
         super.onAttach(context)
         // 2. Context를 액티비티로 형변환해서 할당
@@ -108,6 +156,7 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
 
     override fun onDetach() {
         super.onDetach()
+        insertDB()
         Fitness.getSensorsClient(mainActivity, GoogleSignIn.getAccountForExtension(mainActivity, fitnessOptions))
             .remove(step_listener)
             .addOnSuccessListener {

@@ -4,7 +4,8 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class Walk(
-    val latitude: Double,
-    val longitude: Double
+data class LocationList(
+    val locationArrayList: ArrayList<Walk>
 ) : Parcelable
+
+
