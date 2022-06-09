@@ -14,7 +14,7 @@ import com.google.firebase.ktx.Firebase
 import com.konkuk.walku.R
 import com.konkuk.walku.config.BaseFragment
 import com.konkuk.walku.databinding.FragmentChallengeMychallengeBinding
-import com.konkuk.walku.src.main.challenge.ChallengeData
+import com.konkuk.walku.src.main.challenge.littleFragment.myChallengeWindow.ChallengeMyData
 import com.konkuk.walku.src.main.challenge.ChallengeFragmentView.RecyclerDecoadpater
 import java.util.*
 
@@ -25,7 +25,7 @@ class ChallengeSuccessChallengeFragment : BaseFragment<FragmentChallengeMychalle
     val Customer = Firebase.database.getReference("Customer")
     val challengenew = Firebase.database.getReference("Customer/mike415415/Challenge/Success")
 
-    var data = ArrayList<ChallengeData>()
+    var data = ArrayList<ChallengeMyData>()
     lateinit var adapter: ChallengeSuccessRecyclerAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -43,7 +43,7 @@ class ChallengeSuccessChallengeFragment : BaseFragment<FragmentChallengeMychalle
                 if (data.size == 0) {
                     for (j in accountchallengesuccess.child("WalkDistanceChallenge").children.iterator()) {
                         if (j.child("context").value.toString() != "null") {
-                            val newvalue = ChallengeData(
+                            val newvalue = ChallengeMyData(
                                 j.key!!.toInt(),
                                 j.child("challengetype").value.toString(),
                                 j.child("day").value.toString(),
@@ -58,7 +58,7 @@ class ChallengeSuccessChallengeFragment : BaseFragment<FragmentChallengeMychalle
                     }
                     for (j in accountchallengesuccess.child("WalkCountChallenge").children.iterator()) {
                         if (j.child("context").value.toString() != "null") {
-                            val newvalue = ChallengeData(j.key!!.toInt(),
+                            val newvalue = ChallengeMyData(j.key!!.toInt(),
                                 j.child("challengetype").value.toString(),
                                 j.child("day").value.toString(),
                                 j.child("context").value.toString(),

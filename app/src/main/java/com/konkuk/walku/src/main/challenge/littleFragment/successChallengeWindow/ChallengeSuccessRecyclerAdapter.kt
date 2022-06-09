@@ -5,10 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.konkuk.walku.R
 import com.konkuk.walku.databinding.FragmentChallengeSuccessrecyclerBinding
-import com.konkuk.walku.src.main.challenge.ChallengeData
+import com.konkuk.walku.src.main.challenge.littleFragment.myChallengeWindow.ChallengeMyData
 
 
-class ChallengeSuccessRecyclerAdapter(var data:ArrayList<ChallengeData>): RecyclerView.Adapter<ChallengeSuccessRecyclerAdapter.ViewHolder>() {
+class ChallengeSuccessRecyclerAdapter(var data:ArrayList<ChallengeMyData>): RecyclerView.Adapter<ChallengeSuccessRecyclerAdapter.ViewHolder>() {
 
     inner class ViewHolder(bind: FragmentChallengeSuccessrecyclerBinding):RecyclerView.ViewHolder(bind.root){
         var binding = bind

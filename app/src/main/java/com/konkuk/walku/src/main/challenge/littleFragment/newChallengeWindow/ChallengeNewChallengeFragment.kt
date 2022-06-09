@@ -8,6 +8,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -16,8 +17,8 @@ import com.google.firebase.ktx.Firebase
 import com.konkuk.walku.R
 import com.konkuk.walku.config.BaseFragment
 import com.konkuk.walku.databinding.FragmentChallengeMychallengeBinding
-import com.konkuk.walku.src.main.challenge.ChallengeData
 import com.konkuk.walku.src.main.challenge.ChallengeFragmentView.RecyclerDecoadpater
+import com.konkuk.walku.src.main.challenge.littleFragment.myChallengeWindow.ChallengeMyViewModel
 import java.util.*
 
 
@@ -25,12 +26,14 @@ class ChallengeNewChallengeFragment: BaseFragment<FragmentChallengeMychallengeBi
     FragmentChallengeMychallengeBinding::bind,
     R.layout.fragment_challenge_mychallenge){
     val database = Firebase.database.getReference()
-    val Customer = Firebase.database.getReference("Customer")
     val challengeflag = Firebase.database.getReference("Customer/mike415415/Challenge/flag")
     val challengenew = Firebase.database.getReference("Customer/mike415415/Challenge/New")
     val challengemy = Firebase.database.getReference("Customer/mike415415/Challenge/My")
-    var data = ArrayList<ChallengeData>()
+    var data = ArrayList<ChallengeNewData>()
+    var callflag = true
     lateinit var adapter: ChallengeNewRecyclerAdapter
+    var challengeviewmodel = ChallengeNewViewModel()
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -41,54 +44,48 @@ class ChallengeNewChallengeFragment: BaseFragment<FragmentChallengeMychallengeBi
         val walk= database.addValueEventListener(object:ValueEventListener{
             //데이터가 바뀔떄 호출하거나 처음에 자동 호출되는 콜백함수
             override fun onDataChange(snapshot: DataSnapshot) {
+                challengeviewmodel.newdatalist.value = data
                 val walkchallengelist = snapshot.child("Challenge").child("Challengelist")
                 val accountchallengenewcount = snapshot.child("Customer").child("mike415415").child("Challenge").child("New").child("WalkCountChallenge")
                 val accountchallengenewdistance = snapshot.child("Customer").child("mike415415").child("Challenge").child("New").child("WalkDistanceChallenge")
                 val accountchallengeflag = snapshot.child("Customer").child("mike415415").child("Challenge").child("flag")
-
-                data.clear()
                 //챌린지 목록을 처음 꺼내올때, 내 계정의 챌린지 리스트로 정보를 옮긴다. 챌린지 리스트는 데베에 저장되어있다.
                 if (accountchallengeflag.value == false) {
+                    Log.i("test","call1")
                     challengenew.setValue(walkchallengelist.value)
                     challengeflag.setValue(true)
                 }
-                //이미 내 계정의 챌린지 리스트가 있는 경우, 그 안에서 꺼내옴
-                if(accountchallengeflag.value == true){
+                //이미 내 계정의 챌린지 리스트가 있는 경우, 처음 프레그먼트에서 호출시 그 안에서 꺼내옴
+
+                if(accountchallengeflag.value == true && callflag) {
+                    Log.i("test","call2")
+                    data.clear()
                     for (i in accountchallengenewdistance.children.iterator()) {
                         if (i.child("context").value.toString() != "null") {
-                            val newvalue = ChallengeData(
+                            val newvalue = ChallengeNewData(
                                 i.key!!.toInt(),
                                 "WalkDistanceChallenge",
                                 i.child("day").value.toString(),
                                 i.child("context").value.toString(),
                                 i.child("achiveamount").value.toString(),
-                                0,
-                                "00:00:00",
-                                "00 00 00",
                                 Timer())
                             data.add(newvalue)
                         }
                     }
                     for (j in accountchallengenewcount.children.iterator()) {
                         if (j.child("context").value.toString() != "null") {
-                            val newvalue = ChallengeData(j.key!!.toInt(),
+                            val newvalue = ChallengeNewData(j.key!!.toInt(),
                                 "WalkCountChallenge",
                                 j.child("day").value.toString(),
                                 j.child("context").value.toString(),
                                 j.child("achiveamount").value.toString(),
-                                0,
-                                "00:00:00",
-                                "00 00 00",
                                 Timer())
                             data.add(newvalue)
                         }
                     }
+                    callflag = false;
                 }
-                //fragment에서 벗어났다가 다시 create될때 view가 생성되기 전에 이 함수가 비동기식으로 빨리 호출되버리는건지
-                //counttext같은 뷰객체에 무슨 짓을 하려고 하면 null exception으로 인식 못하는 경우가 있더라구용...
-                //그래서 try catch로 잡아줬는데 동작엔 문제 없음
                     binding.counttext.text = "새로운 챌린지: " + data.size.toString()
-                    adapter.notifyDataSetChanged()
                     recyclernone()
                     dismissLoadingDialog()
             }
@@ -101,6 +98,7 @@ class ChallengeNewChallengeFragment: BaseFragment<FragmentChallengeMychallengeBi
 
     override fun onResume() {
         super.onResume()
+        callflag = true
         if(data.size!=0)
             binding.counttext.text= "새로운 챌린지: "+data.size.toString()
     }
@@ -110,7 +108,12 @@ class ChallengeNewChallengeFragment: BaseFragment<FragmentChallengeMychallengeBi
         binding.recyclerview.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL,false)
         val decoration = RecyclerDecoadpater()
         binding.recyclerview.addItemDecoration(decoration)
-        adapter  = ChallengeNewRecyclerAdapter(data)
+        var animation = binding.recyclerview.itemAnimator
+        (animation as SimpleItemAnimator).supportsChangeAnimations = false
+        challengeviewmodel.newdatalist.observe(viewLifecycleOwner) {
+            adapter.submitList(it.toMutableList())
+        }
+        adapter  = ChallengeNewRecyclerAdapter()
         adapter.onclickbuttonlistener=   object: ChallengeNewRecyclerAdapter.OnclickButtonListener {
             //버튼을 누를시 해당 리스트가 "내 챌린지"로 가고 리스트가 삭제된다.
             override fun clickbuttonlistener(pos: Int) {
@@ -134,10 +137,7 @@ class ChallengeNewChallengeFragment: BaseFragment<FragmentChallengeMychallengeBi
                         challengemy.child(temp.challengetype).child(temp.num.toString()).child("starttime").setValue("$date $hour $minute $second") //내 챌린지 리스트 추가(목표 시작 시간)
                         challengemy.child(temp.challengetype).child(temp.num.toString()).child("remaintime").setValue("$date $hour $minute $second")
                         binding.counttext.text = "새로운 챌린지: " + data.size.toString()
-                        recyclernone()
-                        Toast.makeText(context, "추가완료! -> " + temp.context, Toast.LENGTH_SHORT)
-                            .show()
-                        adapter.notifyDataSetChanged()
+                        Toast.makeText(context, "추가완료! -> " + temp.context, Toast.LENGTH_SHORT).show()
                     }
                 builder.setNegativeButton("취소") { dialog, which ->
                     Toast.makeText(context,  "취소하였습니다", Toast.LENGTH_SHORT).show()

@@ -1,8 +1,8 @@
-package com.konkuk.walku.src.main.challenge
+package com.konkuk.walku.src.main.challenge.littleFragment.myChallengeWindow
 
 import java.util.*
 
-data class ChallengeData(
+data class ChallengeMyData(
     var num: Int,
     var challengetype: String,
     var day: String,

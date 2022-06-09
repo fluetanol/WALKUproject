@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
-import android.widget.ListAdapter
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
@@ -18,7 +17,6 @@ import com.google.firebase.ktx.Firebase
 import com.konkuk.walku.R
 import com.konkuk.walku.config.BaseFragment
 import com.konkuk.walku.databinding.FragmentChallengeMychallengeBinding
-import com.konkuk.walku.src.main.challenge.ChallengeData
 import com.konkuk.walku.src.main.challenge.ChallengeFragmentView
 import java.util.*
 import kotlin.collections.ArrayList
@@ -30,7 +28,7 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
     val challengenew = Firebase.database.getReference("Customer/mike415415/Challenge/New")
     val challengemy = Firebase.database.getReference("Customer/mike415415/Challenge/My")
     val challengesuccess = Firebase.database.getReference("Customer/mike415415/Challenge/Success")
-    var data =ArrayList<ChallengeData>()
+    var data =ArrayList<ChallengeMyData>()
     var flagremove = true
     var successremove = false
     var flagtime = true
@@ -60,7 +58,7 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
                     data.clear()
                     for (j in accountchallengeWalkcount.children.iterator()) {
                         if (j.child("context").value.toString() != "null") {
-                            val newvalue = ChallengeData(j.key!!.toInt(),
+                            val newvalue = ChallengeMyData(j.key!!.toInt(),
                                 j.child("challengetype").value.toString(),
                                 j.child("day").value.toString(),
                                 j.child("context").value.toString(),
@@ -76,7 +74,7 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
                     for (j in accountchallengeDistancecount.children.iterator()) {
                         if (j.child("context").value.toString() != "null") {
                             try {
-                                val newvalue = ChallengeData(
+                                val newvalue = ChallengeMyData(
                                     j.key!!.toInt(),
                                     j.child("challengetype").value.toString(),
                                     j.child("day").value.toString(),
