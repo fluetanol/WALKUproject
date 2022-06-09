@@ -18,10 +18,11 @@ android {
         targetSdk 32
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
         buildConfigField("String", "HOME_WEATHER_API_KEY", properties.getProperty("home_weather_api_key"))
         buildConfigField("String", "KAKAO_APP_KEY", properties.getProperty("kakao_app_key"))
+        buildConfigField("String", "SEOUL_PARK_API_KEY", properties.getProperty("seoul_park_api_key"))
     }
 
     buildTypes {

@@ -43,16 +43,7 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
     lateinit var mainActivity: MainActivity
     lateinit var rdb: DatabaseReference
     val KEY = "analysisData"
-//    companion object {
-//        const
-//        fun newInstance(data: Parcelable) = TodayFragment().apply {
-//            arguments = Bundle().apply {
-//                putParcelable(KEY,data)
-//            }
-//        }
-//    }
-//
-//    val analysisData by lazy<AnalysisData> { requireArguments().getParcelable(KEY)!! }
+
     private lateinit var analysisData:AnalysisData
     private val fitnessOptions = FitnessOptions.builder()
         .addDataType(DataType.TYPE_STEP_COUNT_CUMULATIVE, FitnessOptions.ACCESS_WRITE)
@@ -61,10 +52,9 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
         .addDataType(DataType.TYPE_LOCATION_SAMPLE)
         .build()
 
-    private val step_listener = OnDataPointListener { dataPoint ->
-        analysisData.stepData[todayIndex].stepCount +=1
-        circleBarDraw()
-    }
+//    private val step_listener = OnDataPointListener { dataPoint ->
+//
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,22 +68,33 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
         al2.add(ll)
         analysisData= AnalysisData(al, al2)
         todayIndex=0
+        //getDataStep()
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().supportFragmentManager.setFragmentResultListener("analysisData",mainActivity
         ) { requestKey, result ->
+            analysisData.stepData.clear()
+            analysisData.walkData.clear()
             analysisData = result.getParcelable("analysisData")!!
             Log.i("asd제바라라라랄","bundle 받았습니다")
-            circleBarDraw()
-            Log.i("asd",analysisData.toString())
             searchTodayIndex()
+            insertDB()
+            circleBarDraw()
         }
-        getDataStep()
+        requireActivity().supportFragmentManager.setFragmentResultListener("step",mainActivity
+        ) { requestKey, result ->
+            analysisData.stepData[todayIndex].stepCount += result.get("step").toString().toInt()
+            circleBarDraw()
+            Log.i("asd제바라라라랄","step bundle 받았습니다")
+            insertDB()
+        }
         Log.i("asd","OnCreateView!!")
         setGoal()
         circleBarDraw()
+
     }
     private fun circleBarDraw(){
         val progress = (analysisData.stepData[todayIndex].stepCount.toFloat())/analysisData.stepData[todayIndex].stepGoal.toFloat() * 360
@@ -125,30 +126,17 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
         }
     }
 
-
-    private fun getDataStep() {  //1초간격으로 listener(걸음 데이터 받아옴)
-        Fitness.getSensorsClient(mainActivity, GoogleSignIn.getAccountForExtension(mainActivity, fitnessOptions))
-            .add(
-                SensorRequest.Builder()
-                    //.setDataSource(dataSource) // Optional but recommended for custom
-                    // data sets.
-                    .setDataType(DataType.TYPE_STEP_COUNT_DELTA) // Can't be omitted.
-                    .setSamplingRate(1, TimeUnit.SECONDS)
-                    .build(),
-                step_listener
-            ).addOnSuccessListener {
-                Log.i("asd","success listener")
-            }
-    }
-
     private fun insertDB(){
         rdb= Firebase.database.reference
-        rdb.child("Customer/ksho0925").child("analysis").setValue(analysisData).addOnSuccessListener {
-            Log.i("asd","Data insert success")
-        }.addOnFailureListener {
-            Log.i("asd","Data insert fail")
+        try {
+            rdb.child("Customer/ksho0925").child("analysis").setValue(analysisData).addOnSuccessListener {
+                Log.i("asd","Data insert success")
+            }.addOnFailureListener {
+                Log.i("asd","Data insert fail")
+            }
+        }catch (e:Exception){
+            Log.i("asd", e.message.toString())
         }
-
     }
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -159,14 +147,14 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
     override fun onDetach() {
         super.onDetach()
         insertDB()
-        Fitness.getSensorsClient(mainActivity, GoogleSignIn.getAccountForExtension(mainActivity, fitnessOptions))
-            .remove(step_listener)
-            .addOnSuccessListener {
-                Log.i("asd", "Listener was removed!")
-            }
-            .addOnFailureListener {
-                Log.i("asd", "Listener was not removed.")
-            }
+//        Fitness.getSensorsClient(mainActivity, GoogleSignIn.getAccountForExtension(mainActivity, fitnessOptions))
+//            .remove(step_listener)
+//            .addOnSuccessListener {
+//                Log.i("asd", "Listener was removed!")
+//            }
+//            .addOnFailureListener {
+//                Log.i("asd", "Listener was not removed.")
+//            }
 
     }
 
@@ -183,9 +171,19 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
     }
 
     override fun onPause() {
+        val bundle = Bundle()
+        bundle.putBoolean("onPause",true)
+        mainActivity.supportFragmentManager.setFragmentResult("onPause",bundle)
         super.onPause()
         Log.i("asd","TodayOnPause!!")
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val bundle = Bundle()
+        bundle.putBoolean("onPause",false)
+        mainActivity.supportFragmentManager.setFragmentResult("onPause",bundle)
     }
 
 
