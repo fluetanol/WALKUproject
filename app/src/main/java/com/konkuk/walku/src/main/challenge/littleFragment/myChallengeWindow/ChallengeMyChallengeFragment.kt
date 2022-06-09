@@ -211,9 +211,6 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
         }
     }
 
-    //데이터 가져오는 리스너, 프레그먼트가 실행될떄, 재실행(resume)될때, 데이터베이스에 변동이 있을때 모두 작동
-
-
     private fun recyclernone(){
         if(data.size==0){
             binding.nothing.visibility = View.VISIBLE
@@ -258,10 +255,10 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
                     date-=1
                 }
                 try {
-                        var difday = data[position].day.toInt() - (date - startdate) - 1
-                        flagtime=true
-                        data[position].remaintime= "$difday $difhour $difminute $difsecond"
-                        challengemy.child(data[position].challengetype).child(data[position].num.toString()).child("remaintime").setValue("$difday $difhour $difminute $difsecond")
+                    var difday = data[position].day.toInt() - (date - startdate) - 1
+                    flagtime=true
+                    data[position].remaintime= "$difday $difhour $difminute $difsecond"
+                    challengemy.child(data[position].challengetype).child(data[position].num.toString()).child("remaintime").setValue("$difday $difhour $difminute $difsecond")
                 }
                 catch(e:Exception) {
                     Log.e("timer","$e")

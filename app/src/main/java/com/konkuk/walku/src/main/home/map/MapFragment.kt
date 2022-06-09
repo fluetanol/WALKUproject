@@ -3,6 +3,7 @@ package com.konkuk.walku.src.main.home.map
 import android.animation.Animator
 import android.animation.TimeInterpolator
 import android.animation.ValueAnimator
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -12,11 +13,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.konkuk.walku.R
 import com.konkuk.walku.databinding.FragmentMapBinding
 import com.konkuk.walku.src.main.home.map.model.MapViewPagerItem
+import com.konkuk.walku.src.main.home.map.walkMap.WalkMapActivity
+import com.konkuk.walku.src.main.home.map.walkMap.WalkMapSplashActivity
 
 class MapFragment : Fragment() {
 
@@ -36,7 +41,7 @@ class MapFragment : Fragment() {
 
             if (msg.what == 0) {
                 binding?.fragmentMapViewpager?.setCurrentItemWithDuration(
-                    ++currentPosition,+700
+                    ++currentPosition, +700
                 ) // 다음 페이지로 이동
                 autoScrollStart(intervalTime) // 스크롤을 계속 이어서 한다.
             }
@@ -69,10 +74,28 @@ class MapFragment : Fragment() {
         val mapAdapter = MapAdapter(getItemList())
         mapAdapter.itemClickListener = object : MapAdapter.OnItemClickListener {
             override fun OnItemClick(position: Int) {
-                when(position%3) {
-                    0 -> Toast.makeText(requireActivity(), "따릉이", Toast.LENGTH_SHORT).show()
-                    1 -> Toast.makeText(requireActivity(), "산책로", Toast.LENGTH_SHORT).show()
-                    2 -> Toast.makeText(requireActivity(), "등산로", Toast.LENGTH_SHORT).show()
+                when (position % 3) {
+                    0 -> {
+                        Toast.makeText(requireActivity(), "따릉이", Toast.LENGTH_SHORT).show()
+                    }
+                    1 -> {
+                        val intent = Intent(requireActivity(), WalkMapSplashActivity::class.java)
+                        val activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            requireActivity(),
+                            androidx.core.util.Pair<View, String>(
+                                view?.findViewById(R.id.fragment_map_image_view),
+                                "background_image"
+                            )
+                        )
+                        ActivityCompat.startActivity(
+                            requireActivity(),
+                            intent,
+                            activityOptions.toBundle()
+                        )
+                    }
+                    2 -> {
+                        Toast.makeText(requireActivity(), "등산로", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
@@ -158,10 +181,19 @@ class MapFragment : Fragment() {
             previousValue = currentValue
         }
         animator.addListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(animation: Animator?) { beginFakeDrag() }
-            override fun onAnimationEnd(animation: Animator?) { endFakeDrag() }
-            override fun onAnimationCancel(animation: Animator?) { /* Ignored */ }
-            override fun onAnimationRepeat(animation: Animator?) { /* Ignored */ }
+            override fun onAnimationStart(animation: Animator?) {
+                beginFakeDrag()
+            }
+
+            override fun onAnimationEnd(animation: Animator?) {
+                endFakeDrag()
+            }
+
+            override fun onAnimationCancel(animation: Animator?) { /* Ignored */
+            }
+
+            override fun onAnimationRepeat(animation: Animator?) { /* Ignored */
+            }
         })
         animator.interpolator = interpolator
         animator.duration = duration

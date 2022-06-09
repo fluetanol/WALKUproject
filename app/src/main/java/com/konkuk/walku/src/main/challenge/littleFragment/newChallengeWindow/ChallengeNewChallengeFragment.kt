@@ -105,11 +105,11 @@ class ChallengeNewChallengeFragment: BaseFragment<FragmentChallengeMychallengeBi
     override fun onResume() {
         super.onResume()
         if(count1!=0)
-        binding.counttext.text= "새로운 챌린지: "+data.size.toString()
+            binding.counttext.text= "새로운 챌린지: "+data.size.toString()
     }
 
     //리사이클러뷰 초기화 + 버튼리스너
-     fun challengeinit() {
+    fun challengeinit() {
         binding.recyclerview.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL,false)
         val decoration = RecyclerDecoadpater()
         binding.recyclerview.addItemDecoration(decoration)
@@ -158,7 +158,6 @@ class ChallengeNewChallengeFragment: BaseFragment<FragmentChallengeMychallengeBi
         }
         binding.recyclerview.adapter = adapter
     }
-
 
     //리사이클러 뷰에 아무것도 없을때...
     private fun recyclernone(){

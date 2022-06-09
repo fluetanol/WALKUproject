@@ -27,5 +27,6 @@
     <!-- 기타 -->
     <color name="kakao_background">#FDE101</color>
     <color name="kakao_text">#3C1E1C</color>
+    <color name="transparent">#00FF0000</color>
 
 </resources>
