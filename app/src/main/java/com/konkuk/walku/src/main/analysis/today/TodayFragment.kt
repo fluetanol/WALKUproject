@@ -127,7 +127,7 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
     private fun insertDB(){
         rdb= Firebase.database.reference
         try {
-            rdb.child("Customer/ksho0925").child("analysis").child("walkData").setValue().addOnSuccessListener {
+            rdb.child("Customer/ksho0925").child("analysis").setValue(analysisData).addOnSuccessListener {
                 Log.i("asd","Data insert success")
             }.addOnFailureListener {
                 Log.i("asd","Data insert fail")
