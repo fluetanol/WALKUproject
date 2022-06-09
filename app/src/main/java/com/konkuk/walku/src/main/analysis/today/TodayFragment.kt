@@ -42,60 +42,53 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
     var todayIndex by Delegates.notNull<Int>()
     lateinit var mainActivity: MainActivity
     lateinit var rdb: DatabaseReference
-    val KEY = "analysisData"
-
     private lateinit var analysisData:AnalysisData
-    private val fitnessOptions = FitnessOptions.builder()
-        .addDataType(DataType.TYPE_STEP_COUNT_CUMULATIVE, FitnessOptions.ACCESS_WRITE)
-        .addDataType(DataType.TYPE_STEP_COUNT_CUMULATIVE, FitnessOptions.ACCESS_READ)
-        .addDataType(DataType.TYPE_STEP_COUNT_DELTA)
-        .addDataType(DataType.TYPE_LOCATION_SAMPLE)
-        .build()
-
-//    private val step_listener = OnDataPointListener { dataPoint ->
-//
-//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i("asd","OnCreate!!")
+        initAnalysisData()
+        todayIndex=0
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Log.i("asd","OnCreateView!!")
+        bundleReciever()
+        setGoal()
+        circleBarDraw()
+    }
+
+    private fun initAnalysisData() {
         val al = ArrayList<Step>()
-        al.add(Step(0,0,0.0,"0"))
+        al.add(Step(0,6000,0.0,LocalDate.now().toString()))
         val al3 = ArrayList<Walk>()
         al3.add(Walk(0.0,0.0))
         val ll= LocationList(al3)
         val al2 =  ArrayList<LocationList>()
         al2.add(ll)
         analysisData= AnalysisData(al, al2)
-        todayIndex=0
-        //getDataStep()
-
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    private fun bundleReciever() {
         requireActivity().supportFragmentManager.setFragmentResultListener("analysisData",mainActivity
         ) { requestKey, result ->
             analysisData.stepData.clear()
             analysisData.walkData.clear()
             analysisData = result.getParcelable("analysisData")!!
-            Log.i("asd제바라라라랄","bundle 받았습니다")
+            Log.i("asd","bundle 받았습니다")
             searchTodayIndex()
-            insertDB()
             circleBarDraw()
         }
         requireActivity().supportFragmentManager.setFragmentResultListener("step",mainActivity
         ) { requestKey, result ->
             analysisData.stepData[todayIndex].stepCount += result.get("step").toString().toInt()
             circleBarDraw()
-            Log.i("asd제바라라라랄","step bundle 받았습니다")
+            Log.i("asd","step bundle 받았습니다")
             insertDB()
         }
-        Log.i("asd","OnCreateView!!")
-        setGoal()
-        circleBarDraw()
-
     }
+
     private fun circleBarDraw(){
         val progress = (analysisData.stepData[todayIndex].stepCount.toFloat())/analysisData.stepData[todayIndex].stepGoal.toFloat() * 360
         circleBarView.setProgress(progress,analysisData.stepData[todayIndex].stepCount.toString()+"/"+analysisData.stepData[todayIndex].stepGoal.toString())
@@ -147,27 +140,16 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
     override fun onDetach() {
         super.onDetach()
         insertDB()
-//        Fitness.getSensorsClient(mainActivity, GoogleSignIn.getAccountForExtension(mainActivity, fitnessOptions))
-//            .remove(step_listener)
-//            .addOnSuccessListener {
-//                Log.i("asd", "Listener was removed!")
-//            }
-//            .addOnFailureListener {
-//                Log.i("asd", "Listener was not removed.")
-//            }
-
     }
 
     override fun onDestroy() {
         super.onDestroy()
         Log.i("asd","TodayOnDestroy!!")
-
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         Log.i("asd","TodayOnDestroyView!!")
-
     }
 
     override fun onPause() {
@@ -177,6 +159,10 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
         super.onPause()
         Log.i("asd","TodayOnPause!!")
 
+        //to statisticsFragment
+        val bundle2 = Bundle()
+        bundle2.putParcelable("analysisData2",analysisData)
+        requireActivity().supportFragmentManager.setFragmentResult("analysisData2",bundle2)
     }
 
     override fun onResume() {

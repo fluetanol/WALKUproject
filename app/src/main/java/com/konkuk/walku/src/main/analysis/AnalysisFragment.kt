@@ -152,11 +152,14 @@ class AnalysisFragment : BaseFragment<FragmentAnalysisBinding>(FragmentAnalysisB
             }
             val anData = AnalysisData(stepList,walkList)
             val bundle = Bundle()
+            //to todayFragment
             bundle.putParcelable("analysisData",anData)
             requireActivity().supportFragmentManager.setFragmentResult("analysisData",bundle)
+
         }.addOnFailureListener {
             Log.i("asd","해당하는 사용자 없음")
         }
+
     }
 
     private fun accessGoogleFit() {

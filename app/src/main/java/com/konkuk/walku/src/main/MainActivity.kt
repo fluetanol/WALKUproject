@@ -34,6 +34,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             stepC += 1
         }else{
             this.supportFragmentManager.setFragmentResult("step",bundle)
+            this.supportFragmentManager.setFragmentResult("step2",bundle)
             stepC=1
         }
     }
@@ -49,24 +50,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        todayOnPause=false
-        stepC=1
-        this.supportFragmentManager.setFragmentResultListener("onPause",this
-        ) { requestKey, result ->
-            todayOnPause = result.getBoolean("onPause")
-            Log.i("asdmain","bundle 받았습니다")
-        }
-
-        val account = GoogleSignIn.getAccountForExtension(this, fitnessOptions)
-        if (!GoogleSignIn.hasPermissions(account, fitnessOptions)) {
-            GoogleSignIn.requestPermissions(
-                this, // your activity
-                99, // e.g. 1
-                account,
-                fitnessOptions)
-        }else {
-            getDataStep()
-        }
+        recieveTodayOnPause()
 
         supportFragmentManager.beginTransaction().replace(R.id.main_frm, HomeFragment()).commitAllowingStateLoss()
 
@@ -107,6 +91,27 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             false
         }
 
+    }
+
+    private fun recieveTodayOnPause() {
+        todayOnPause=false
+        stepC=1
+        this.supportFragmentManager.setFragmentResultListener("onPause",this
+        ) { requestKey, result ->
+            todayOnPause = result.getBoolean("onPause")
+            Log.i("asdmain","bundle 받았습니다")
+        }
+
+        val account = GoogleSignIn.getAccountForExtension(this, fitnessOptions)
+        if (!GoogleSignIn.hasPermissions(account, fitnessOptions)) {
+            GoogleSignIn.requestPermissions(
+                this, // your activity
+                99, // e.g. 1
+                account,
+                fitnessOptions)
+        }else {
+            getDataStep()
+        }
     }
 
     override fun onBackPressed() {
