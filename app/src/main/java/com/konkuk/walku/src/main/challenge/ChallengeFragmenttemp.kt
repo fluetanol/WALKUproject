@@ -10,12 +10,10 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.konkuk.walku.R
 import com.konkuk.walku.config.BaseFragment
-import com.konkuk.walku.databinding.FragmentChallengeBinding
 import com.konkuk.walku.databinding.FragmentChallengetempBinding
-import com.konkuk.walku.src.main.challenge.Littlefragment.MyChallengeWindow.ChallengeMyChallengeFragment
-import com.konkuk.walku.src.main.challenge.Littlefragment.NewChallengeWindow.ChallengeNewChallengeFragment
-import com.konkuk.walku.src.main.challenge.Littlefragment.SuccessChallengeWindow.ChallengeSuccessChallengeFragment
-import kotlinx.coroutines.*
+import com.konkuk.walku.src.main.challenge.littleFragment.myChallengeWindow.ChallengeMyChallengeFragment
+import com.konkuk.walku.src.main.challenge.littleFragment.newChallengeWindow.ChallengeNewChallengeFragment
+import com.konkuk.walku.src.main.challenge.littleFragment.successChallengeWindow.ChallengeSuccessChallengeFragment
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList

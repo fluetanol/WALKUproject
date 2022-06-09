@@ -1,4 +1,4 @@
-package com.konkuk.walku.src.main.challenge.Littlefragment.SuccessChallengeWindow
+package com.konkuk.walku.src.main.challenge.littleFragment.successChallengeWindow
 
 import android.os.Bundle
 import android.view.View
@@ -15,10 +15,7 @@ import com.konkuk.walku.R
 import com.konkuk.walku.config.BaseFragment
 import com.konkuk.walku.databinding.FragmentChallengeMychallengeBinding
 import com.konkuk.walku.src.main.challenge.ChallengeData
-import com.konkuk.walku.src.main.challenge.ChallengeFragmentView
 import com.konkuk.walku.src.main.challenge.ChallengeFragmentView.RecyclerDecoadpater
-import com.konkuk.walku.src.main.challenge.Littlefragment.NewChallengeWindow.ChallengeNewRecyclerAdapter
-import kotlinx.coroutines.NonCancellable.children
 import java.util.*
 
 

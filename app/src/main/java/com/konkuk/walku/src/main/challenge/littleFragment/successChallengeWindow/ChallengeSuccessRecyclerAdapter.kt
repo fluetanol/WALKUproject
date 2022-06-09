@@ -1,10 +1,9 @@
-package com.konkuk.walku.src.main.challenge.Littlefragment.SuccessChallengeWindow
+package com.konkuk.walku.src.main.challenge.littleFragment.successChallengeWindow
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.konkuk.walku.R
-import com.konkuk.walku.databinding.FragmentChallengeNewrecyclerBinding
 import com.konkuk.walku.databinding.FragmentChallengeSuccessrecyclerBinding
 import com.konkuk.walku.src.main.challenge.ChallengeData
 

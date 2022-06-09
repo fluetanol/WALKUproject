@@ -1,19 +1,11 @@
-package com.konkuk.walku.src.main.challenge.Littlefragment.MyChallengeWindow
+package com.konkuk.walku.src.main.challenge.littleFragment.myChallengeWindow
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.os.Bundle
-import android.system.Os.bind
-import android.text.TextUtils.split
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.ListAdapter
-import android.widget.TextView
 import android.widget.Toast
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.ViewModel
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.google.firebase.database.DataSnapshot
@@ -26,8 +18,6 @@ import com.konkuk.walku.config.BaseFragment
 import com.konkuk.walku.databinding.FragmentChallengeMychallengeBinding
 import com.konkuk.walku.src.main.challenge.ChallengeData
 import com.konkuk.walku.src.main.challenge.ChallengeFragmentView
-import okhttp3.Challenge
-import okhttp3.internal.notify
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.concurrent.timer

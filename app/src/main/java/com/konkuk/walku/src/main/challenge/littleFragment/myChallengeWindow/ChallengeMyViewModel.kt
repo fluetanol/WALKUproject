@@ -1,4 +1,4 @@
-package com.konkuk.walku.src.main.challenge.Littlefragment.MyChallengeWindow
+package com.konkuk.walku.src.main.challenge.littleFragment.myChallengeWindow
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

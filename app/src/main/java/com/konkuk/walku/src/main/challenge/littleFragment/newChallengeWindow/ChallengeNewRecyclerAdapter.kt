@@ -1,6 +1,5 @@
-package com.konkuk.walku.src.main.challenge.Littlefragment.NewChallengeWindow
+package com.konkuk.walku.src.main.challenge.littleFragment.newChallengeWindow
 
-import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView

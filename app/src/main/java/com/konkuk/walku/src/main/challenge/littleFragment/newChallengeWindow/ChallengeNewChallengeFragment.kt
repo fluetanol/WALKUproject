@@ -1,9 +1,7 @@
-package com.konkuk.walku.src.main.challenge.Littlefragment.NewChallengeWindow
+package com.konkuk.walku.src.main.challenge.littleFragment.newChallengeWindow
 
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.os.Bundle
-import android.system.Os.bind
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -18,7 +16,6 @@ import com.konkuk.walku.R
 import com.konkuk.walku.config.BaseFragment
 import com.konkuk.walku.databinding.FragmentChallengeMychallengeBinding
 import com.konkuk.walku.src.main.challenge.ChallengeData
-import com.konkuk.walku.src.main.challenge.ChallengeFragmentView
 import com.konkuk.walku.src.main.challenge.ChallengeFragmentView.RecyclerDecoadpater
 import java.util.*
 
