@@ -63,8 +63,7 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
 
     private val step_listener = OnDataPointListener { dataPoint ->
         analysisData.stepData[todayIndex].stepCount +=1
-        val progress = (analysisData.stepData[todayIndex].stepCount.toFloat())/analysisData.stepData[todayIndex].stepGoal.toFloat() * 360
-        circleBarView.setProgress(progress,analysisData.stepData[todayIndex].stepCount.toString()+"/"+analysisData.stepData[todayIndex].stepGoal.toString())
+        circleBarDraw()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,24 +86,28 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
         ) { requestKey, result ->
             analysisData = result.getParcelable("analysisData")!!
             Log.i("asd제바라라라랄","bundle 받았습니다")
-            val progress = (analysisData.stepData[todayIndex].stepCount.toFloat())/analysisData.stepData[todayIndex].stepGoal.toFloat() * 360
-            circleBarView.setProgress(progress,analysisData.stepData[todayIndex].stepCount.toString()+"/"+analysisData.stepData[todayIndex].stepGoal.toString())
-        }
-
-        for(i in 0 until analysisData.stepData.size){
-            todayIndex = if(analysisData.stepData[i].date==LocalDate.now().toString()){
-                i
-            }else{
-                0
-            }
+            circleBarDraw()
+            Log.i("asd",analysisData.toString())
+            searchTodayIndex()
         }
         getDataStep()
         Log.i("asd","OnCreateView!!")
         setGoal()
+        circleBarDraw()
+    }
+    private fun circleBarDraw(){
         val progress = (analysisData.stepData[todayIndex].stepCount.toFloat())/analysisData.stepData[todayIndex].stepGoal.toFloat() * 360
         circleBarView.setProgress(progress,analysisData.stepData[todayIndex].stepCount.toString()+"/"+analysisData.stepData[todayIndex].stepGoal.toString())
     }
-
+    private fun searchTodayIndex(){
+        for(i in 0 until analysisData.stepData.size){
+            if(analysisData.stepData[i].date==LocalDate.now().toString()){
+                todayIndex = i
+                val todaydate = analysisData.stepData[i].date
+                Log.i("asd","$todayIndex today :$todaydate ")
+            }
+        }
+    }
     private fun setGoal() {
         binding.setgoal.isEnabled= false
         binding.goalInput.addTextChangedListener{
@@ -117,8 +120,7 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
                 imm.hideSoftInputFromWindow(requireActivity().currentFocus?.windowToken, 0)
                 analysisData.stepData[todayIndex].stepGoal = binding.goalInput.text.toString().toInt()
                 binding.goalInput.text.clear()
-                val progress = (analysisData.stepData[todayIndex].stepCount.toFloat())/analysisData.stepData[todayIndex].stepGoal.toFloat() * 360
-                circleBarView.setProgress(progress,analysisData.stepData[todayIndex].stepCount.toString()+"/"+analysisData.stepData[todayIndex].stepGoal.toString())
+                circleBarDraw()
             }
         }
     }

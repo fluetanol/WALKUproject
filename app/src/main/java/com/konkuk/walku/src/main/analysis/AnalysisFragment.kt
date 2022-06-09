@@ -110,15 +110,20 @@ class AnalysisFragment : BaseFragment<FragmentAnalysisBinding>(FragmentAnalysisB
                 stepList.add(Step(step,stepgoal,distance,date))
                 Log.i("asd","$step $stepgoal $distance $date")
             }
-            if(stepList.find {
-                it.date==LocalDate.now().toString()
-            }==null)else{
+            var flag = 0
+            for(i in 0 until stepList.size){
+                if(stepList[i].date==LocalDate.now().toString()){
+                    flag = 1
+                }
+            }
+            if(flag == 0 ){
                 val stepgoal= 6000
                 val step=  0
                 val distance = 0.0
                 val date = LocalDate.now().toString()
                 stepList.add(Step(step,stepgoal,distance,date))
             }
+
             //walkdata얻음
             val walkList = ArrayList<LocationList>()
             if(walkData.exists()){
