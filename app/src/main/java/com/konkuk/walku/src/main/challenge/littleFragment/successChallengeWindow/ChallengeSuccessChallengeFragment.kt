@@ -32,8 +32,59 @@ class ChallengeSuccessChallengeFragment : BaseFragment<FragmentChallengeMychalle
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        showLoadingDialog(requireContext())
         challengeinit()
+        //데이터 가져오는 리스너, 프레그먼트가 실행될떄, 재실행(resume)될때, 데이터베이스에 변동이 있을때 모두 작동
+        val walk = Customer.addValueEventListener(object : ValueEventListener {
+            //데이터가 바뀔떄 호출하거나 처음에 자동 호출되는 콜백함수
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val accountchallengesuccess = snapshot.child("mike415415").child("Challenge").child("Success")
+                val accountchallengeflag = snapshot.child("mike415415").child("Challenge").child("flag")
+                //챌린지 목록을 처음 꺼내올때, 내 계정의 챌린지 리스트로 정보를 옮긴다. 챌린지 리스트는 데베에 저장되어있다.
+                //이미 내 계정의 챌린지 리스트가 있는 경우, 그 안에서 꺼내옴
+                if (data.size == 0) {
+                    for (j in accountchallengesuccess.child("WalkDistanceChallenge").children.iterator()) {
+                        if (j.child("context").value.toString() != "null") {
+                            val newvalue = ChallengeData(
+                                j.key!!.toInt(),
+                                j.child("challengetype").value.toString(),
+                                j.child("day").value.toString(),
+                                j.child("context").value.toString(),
+                                0,
+                                0,
+                                "00:00:00",
+                                "00 00 00",
+                                Timer())
+                            count += 1
+                            data.add(newvalue)
+                        }
+                    }
+                    for (j in accountchallengesuccess.child("WalkCountChallenge").children.iterator()) {
+                        if (j.child("context").value.toString() != "null") {
+                            val newvalue = ChallengeData(j.key!!.toInt(),
+                                j.child("challengetype").value.toString(),
+                                j.child("day").value.toString(),
+                                j.child("context").value.toString(),
+                                0,
+                                0,
+                                "00:00:00",
+                                "00 00 00",
+                                Timer())
+                            count2 += 1
+                            data.add(newvalue)
+                        }
+                    }
+                }
+                binding.counttext.text = "성공한 챌린지: "+(count+count2).toString()
+                adapter.notifyDataSetChanged()
+                recyclernone()
+                dismissLoadingDialog()
+            }
+            //모종의 이유로 데베쪽에서 문제가 생겨서 데이터 가져오는 것에 실패했을때 처리할 일
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     override fun onResume() {
@@ -51,60 +102,6 @@ class ChallengeSuccessChallengeFragment : BaseFragment<FragmentChallengeMychalle
         adapter = ChallengeSuccessRecyclerAdapter(data)
         binding.recyclerview.adapter = adapter
     }
-
-    //데이터 가져오는 리스너, 프레그먼트가 실행될떄, 재실행(resume)될때, 데이터베이스에 변동이 있을때 모두 작동
-    val walk = Customer.addValueEventListener(object : ValueEventListener {
-        //데이터가 바뀔떄 호출하거나 처음에 자동 호출되는 콜백함수
-        override fun onDataChange(snapshot: DataSnapshot) {
-            val accountchallengesuccess = snapshot.child("mike415415").child("Challenge").child("Success")
-            val accountchallengeflag = snapshot.child("mike415415").child("Challenge").child("flag")
-            //챌린지 목록을 처음 꺼내올때, 내 계정의 챌린지 리스트로 정보를 옮긴다. 챌린지 리스트는 데베에 저장되어있다.
-            //이미 내 계정의 챌린지 리스트가 있는 경우, 그 안에서 꺼내옴
-             if (data.size == 0) {
-                for (j in accountchallengesuccess.child("WalkDistanceChallenge").children.iterator()) {
-                    if (j.child("context").value.toString() != "null") {
-                        val newvalue = ChallengeData(
-                            j.key!!.toInt(),
-                            j.child("challengetype").value.toString(),
-                            j.child("day").value.toString(),
-                            j.child("context").value.toString(),
-                            0,
-                            0,
-                            "00:00:00",
-                            "00 00 00",
-                            Timer())
-                        count += 1
-                        data.add(newvalue)
-                    }
-                }
-                 for (j in accountchallengesuccess.child("WalkCountChallenge").children.iterator()) {
-                     if (j.child("context").value.toString() != "null") {
-                         val newvalue = ChallengeData(j.key!!.toInt(),
-                             j.child("challengetype").value.toString(),
-                             j.child("day").value.toString(),
-                             j.child("context").value.toString(),
-                             0,
-                             0,
-                             "00:00:00",
-                             "00 00 00",
-                            Timer())
-                         count2 += 1
-                         data.add(newvalue)
-                     }
-                 }
-            }
-            try {
-                binding.counttext.text = "성공한 챌린지: "+(count+count2).toString()
-                adapter.notifyDataSetChanged()
-                recyclernone()
-            } catch (e: Exception) {
-            }
-        }
-        //모종의 이유로 데베쪽에서 문제가 생겨서 데이터 가져오는 것에 실패했을때 처리할 일
-        override fun onCancelled(error: DatabaseError) {
-            Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
-        }
-    })
 
     //리사이클러 뷰에 아무것도 없을때...
     private fun recyclernone() {

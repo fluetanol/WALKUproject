@@ -42,7 +42,6 @@ class ChallengeFragment : BaseFragment<FragmentChallengeBinding>(FragmentChallen
             val date = Date(today)
             val t_dateFormat = SimpleDateFormat("E", Locale("ko", "KR"))
             val str_date = t_dateFormat.format(date)
-
             val accountchallengeflag = snapshot.child("mike415415").child("Challenge").child("flag")
             val accountupdateflag = snapshot.child("mike415415").child("Challenge").child("update")
 

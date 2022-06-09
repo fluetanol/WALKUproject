@@ -35,12 +35,75 @@ class ChallengeNewChallengeFragment: BaseFragment<FragmentChallengeMychallengeBi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        showLoadingDialog(requireContext())
         challengeinit()
+        //데이터 가져오는 리스너, 프레그먼트가 실행될떄, 재실행(resume)될때, 데이터베이스에 변동이 있을때 모두 작동
+        val walk= database.addValueEventListener(object:ValueEventListener{
+            //데이터가 바뀔떄 호출하거나 처음에 자동 호출되는 콜백함수
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val walkchallengelist = snapshot.child("Challenge").child("Challengelist")
+                val accountchallengenewcount = snapshot.child("Customer").child("mike415415").child("Challenge").child("New").child("WalkCountChallenge")
+                val accountchallengenewdistance = snapshot.child("Customer").child("mike415415").child("Challenge").child("New").child("WalkDistanceChallenge")
+                val accountchallengeflag = snapshot.child("Customer").child("mike415415").child("Challenge").child("flag")
+
+                data.clear()
+                //챌린지 목록을 처음 꺼내올때, 내 계정의 챌린지 리스트로 정보를 옮긴다. 챌린지 리스트는 데베에 저장되어있다.
+                if (accountchallengeflag.value == false) {
+                    challengenew.setValue(walkchallengelist.value)
+                    challengeflag.setValue(true)
+                }
+                //이미 내 계정의 챌린지 리스트가 있는 경우, 그 안에서 꺼내옴
+                if(accountchallengeflag.value == true){
+                    for (i in accountchallengenewdistance.children.iterator()) {
+                        if (i.child("context").value.toString() != "null") {
+                            val newvalue = ChallengeData(
+                                i.key!!.toInt(),
+                                "WalkDistanceChallenge",
+                                i.child("day").value.toString(),
+                                i.child("context").value.toString(),
+                                0,
+                                0,
+                                "00:00:00",
+                                "00 00 00",
+                                Timer())
+                            count1 += 1
+                            data.add(newvalue)
+                        }
+                    }
+                    for (j in accountchallengenewcount.children.iterator()) {
+                        if (j.child("context").value.toString() != "null") {
+                            val newvalue = ChallengeData(j.key!!.toInt(),
+                                "WalkCountChallenge",
+                                j.child("day").value.toString(),
+                                j.child("context").value.toString(),
+                                0,
+                                0,
+                                "00:00:00",
+                                "00 00 00",
+                                Timer())
+                            count2 += 1
+                            data.add(newvalue)
+                        }
+                    }
+                }
+
+                //fragment에서 벗어났다가 다시 create될때 view가 생성되기 전에 이 함수가 비동기식으로 빨리 호출되버리는건지
+                //counttext같은 뷰객체에 무슨 짓을 하려고 하면 null exception으로 인식 못하는 경우가 있더라구용...
+                //그래서 try catch로 잡아줬는데 동작엔 문제 없음
+                    binding.counttext.text = "새로운 챌린지: " + data.size.toString()
+                    adapter.notifyDataSetChanged()
+                    recyclernone()
+                    dismissLoadingDialog()
+            }
+            //모종의 이유로 데베쪽에서 문제가 생겨서 데이터 가져오는 것에 실패했을때 처리할 일
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(context,error.toString(),Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     override fun onResume() {
         super.onResume()
-        binding.loadingbar.visibility=View.VISIBLE
         if(count1!=0)
         binding.counttext.text= "새로운 챌린지: "+data.size.toString()
     }
@@ -96,73 +159,6 @@ class ChallengeNewChallengeFragment: BaseFragment<FragmentChallengeMychallengeBi
         binding.recyclerview.adapter = adapter
     }
 
-    //데이터 가져오는 리스너, 프레그먼트가 실행될떄, 재실행(resume)될때, 데이터베이스에 변동이 있을때 모두 작동
-    val walk= database.addValueEventListener(object:ValueEventListener{
-        //데이터가 바뀔떄 호출하거나 처음에 자동 호출되는 콜백함수
-        override fun onDataChange(snapshot: DataSnapshot) {
-            val walkchallengelist = snapshot.child("Challenge").child("Challengelist")
-            val accountchallengenewcount = snapshot.child("Customer").child("mike415415").child("Challenge").child("New").child("WalkCountChallenge")
-            val accountchallengenewdistance = snapshot.child("Customer").child("mike415415").child("Challenge").child("New").child("WalkDistanceChallenge")
-            val accountchallengeflag = snapshot.child("Customer").child("mike415415").child("Challenge").child("flag")
-
-            data.clear()
-            //챌린지 목록을 처음 꺼내올때, 내 계정의 챌린지 리스트로 정보를 옮긴다. 챌린지 리스트는 데베에 저장되어있다.
-            if (accountchallengeflag.value == false) {
-                challengenew.setValue(walkchallengelist.value)
-                challengeflag.setValue(true)
-            }
-            //이미 내 계정의 챌린지 리스트가 있는 경우, 그 안에서 꺼내옴
-            if(accountchallengeflag.value == true){
-                    for (i in accountchallengenewdistance.children.iterator()) {
-                        if (i.child("context").value.toString() != "null") {
-                            val newvalue = ChallengeData(
-                                i.key!!.toInt(),
-                                "WalkDistanceChallenge",
-                                i.child("day").value.toString(),
-                                i.child("context").value.toString(),
-                                0,
-                                0,
-                                "00:00:00",
-                                "00 00 00",
-                                Timer())
-                            count1 += 1
-                            data.add(newvalue)
-                        }
-                    }
-                        for (j in accountchallengenewcount.children.iterator()) {
-                            if (j.child("context").value.toString() != "null") {
-                                val newvalue = ChallengeData(j.key!!.toInt(),
-                                    "WalkCountChallenge",
-                                    j.child("day").value.toString(),
-                                    j.child("context").value.toString(),
-                                    0,
-                                    0,
-                                    "00:00:00",
-                                    "00 00 00",
-                                    Timer())
-                                count2 += 1
-                                data.add(newvalue)
-                            }
-                        }
-                    }
-
-            //fragment에서 벗어났다가 다시 create될때 view가 생성되기 전에 이 함수가 비동기식으로 빨리 호출되버리는건지
-            //counttext같은 뷰객체에 무슨 짓을 하려고 하면 null exception으로 인식 못하는 경우가 있더라구용...
-            //그래서 try catch로 잡아줬는데 동작엔 문제 없음
-            try {
-                binding.counttext.text = "새로운 챌린지: " + data.size.toString()
-                adapter.notifyDataSetChanged()
-                binding.loadingbar.visibility=View.GONE
-                recyclernone()
-            }catch(e:Exception){ }
-
-        }
-
-        //모종의 이유로 데베쪽에서 문제가 생겨서 데이터 가져오는 것에 실패했을때 처리할 일
-        override fun onCancelled(error: DatabaseError) {
-            Toast.makeText(context,error.toString(),Toast.LENGTH_SHORT).show()
-        }
-    })
 
     //리사이클러 뷰에 아무것도 없을때...
     private fun recyclernone(){
