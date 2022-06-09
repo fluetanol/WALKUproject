@@ -1,5 +1,6 @@
 package com.konkuk.walku.src.main.challenge.littleFragment.newChallengeWindow
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +8,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.google.firebase.database.DataSnapshot
@@ -21,7 +23,7 @@ import com.konkuk.walku.src.main.challenge.ChallengeFragmentView.RecyclerDecoadp
 import com.konkuk.walku.src.main.challenge.littleFragment.myChallengeWindow.ChallengeMyViewModel
 import java.util.*
 
-
+@SuppressLint("SetTextI18n")
 class ChallengeNewChallengeFragment: BaseFragment<FragmentChallengeMychallengeBinding>(
     FragmentChallengeMychallengeBinding::bind,
     R.layout.fragment_challenge_mychallenge){
@@ -34,12 +36,28 @@ class ChallengeNewChallengeFragment: BaseFragment<FragmentChallengeMychallengeBi
     lateinit var adapter: ChallengeNewRecyclerAdapter
     var challengeviewmodel = ChallengeNewViewModel()
 
+    companion object {
+        const val HANGUEL_FIRST_UNICODE = '가'.code
+        const val HANGUEL_LAST_UNICODE = '힣'.code
+        const val HANGUEL_DIFFERENCE_UNICODE = '까'.code-'가'.code
+        const val HANGUEL_MIDDLECOUNT_UNICODE = 28
+
+        const val SEARCHFUNC_FLAG_INPUTSIZE_BIGGER = 0
+        const val SEARCHFUNC_FLAG_INPUTSIZE_SMALLER = 1
+    }
+
+    var initialarray = arrayOf ('ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ',
+        'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ' )
+    var middlearray = arrayOf('ㅏ' ,'ㅐ' ,'ㅑ', 'ㅒ', 'ㅓ' ,'ㅔ' ,'ㅕ' ,'ㅖ' ,
+        'ㅗ', 'ㅘ' ,'ㅙ' ,'ㅚ' ,'ㅛ', 'ㅜ' ,'ㅝ', 'ㅞ' ,'ㅟ' ,'ㅠ' ,'ㅡ' ,'ㅢ', 'ㅣ')
+    var lastarray =arrayOf('ㄱ','ㄲ','ㄳ','ㄴ','ㄵ','ㄶ','ㄷ','ㄹ','ㄺ','ㄻ','ㄼ',
+        'ㄽ','ㄾ','ㄿ','ㅀ','ㅁ','ㅂ','ㅄ','ㅅ','ㅆ','ㅇ','ㅈ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ')
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         showLoadingDialog(requireContext())
         challengeinit()
-
 
         val walk= database.addValueEventListener(object:ValueEventListener{
             //데이터가 바뀔떄 호출하거나 처음에 자동 호출되는 콜백함수
@@ -96,11 +114,12 @@ class ChallengeNewChallengeFragment: BaseFragment<FragmentChallengeMychallengeBi
         })
     }
 
+
     override fun onResume() {
         super.onResume()
         callflag = true
         if(data.size!=0)
-            binding.counttext.text= "새로운 챌린지: "+data.size.toString()
+            binding.counttext.text= "새로운 챌린지: ${data.size}"
     }
 
     //리사이클러뷰 초기화 + 버튼리스너
@@ -110,9 +129,11 @@ class ChallengeNewChallengeFragment: BaseFragment<FragmentChallengeMychallengeBi
         binding.recyclerview.addItemDecoration(decoration)
         var animation = binding.recyclerview.itemAnimator
         (animation as SimpleItemAnimator).supportsChangeAnimations = false
+
         challengeviewmodel.newdatalist.observe(viewLifecycleOwner) {
             adapter.submitList(it.toMutableList())
         }
+
         adapter  = ChallengeNewRecyclerAdapter()
         adapter.onclickbuttonlistener=   object: ChallengeNewRecyclerAdapter.OnclickButtonListener {
             //버튼을 누를시 해당 리스트가 "내 챌린지"로 가고 리스트가 삭제된다.
@@ -146,7 +167,24 @@ class ChallengeNewChallengeFragment: BaseFragment<FragmentChallengeMychallengeBi
             }
         }
         binding.recyclerview.adapter = adapter
+        binding.spinner.visibility = View.GONE
+        binding.searchwindow.visibility=View.VISIBLE
+
+
+        val searching = Searching()
+        //searching.initarray(data)
+        var nowsize=0
+        var latesize=-1
+        binding.searchwindow.addTextChangedListener {
+            val inputstr=it.toString()
+            latesize = nowsize
+            nowsize = inputstr.length
+            if(nowsize>latesize) searching.SearchFunction(inputstr, SEARCHFUNC_FLAG_INPUTSIZE_BIGGER,data)
+            else searching.SearchFunction(inputstr, SEARCHFUNC_FLAG_INPUTSIZE_SMALLER,data)
+        }
     }
+
+
 
     //리사이클러 뷰에 아무것도 없을때...
     private fun recyclernone(){

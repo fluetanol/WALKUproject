@@ -16,11 +16,12 @@
         android:layout_height="match_parent"
         android:layout_weight="1.5"
         android:entries="@array/challenge_sortingarray"/>
-    <TextView
-        android:id="@+id/testtext"
+    <AutoCompleteTextView
+        android:id="@+id/searchwindow"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="0.5" />
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:visibility="gone"/>
     <TextView
         android:id="@+id/counttext"
         android:layout_width="0dp"

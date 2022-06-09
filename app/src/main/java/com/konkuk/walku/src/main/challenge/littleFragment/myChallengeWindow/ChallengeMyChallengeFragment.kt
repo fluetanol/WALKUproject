@@ -28,11 +28,16 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
     val challengenew = Firebase.database.getReference("Customer/mike415415/Challenge/New")
     val challengemy = Firebase.database.getReference("Customer/mike415415/Challenge/My")
     val challengesuccess = Firebase.database.getReference("Customer/mike415415/Challenge/Success")
-    var data =ArrayList<ChallengeMyData>()
-    var flagremove = true
-    var successremove = false
+    private var data =ArrayList<ChallengeMyData>()
+    private var challengeviewmodel = ChallengeMyViewModel()
+
     var flagtime = true
-    var challengeviewmodel = ChallengeMyViewModel()
+    private var flagremove = true
+    private var successremove = false
+    private var flagstarttimesort = false
+    private var flagremaintimesort = false
+    private var flagachivementsort = false
+
 
     lateinit var adapter: ChallengeMyRecyclerAdapter
 
@@ -47,7 +52,9 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
                 val accountchallengeWalkcount = snapshot.child("mike415415").child("Challenge").child("My").child("WalkCountChallenge")
                 val accountchallengeDistancecount = snapshot.child("mike415415").child("Challenge").child("My").child("WalkDistanceChallenge")
                 challengeviewmodel.datalist.value=data
+
                 if(flagremove==true){
+                    Log.i("sort","remove")
                     if(data.size>0) {
                         for (i in 0..data.size - 1) {
                             Log.i("timer","삭제: "+data[i].timer.toString())
@@ -66,7 +73,8 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
                                 j.child("achivement").value.toString().toInt(),
                                 j.child("starttime").value.toString(),
                                 j.child("remaintime").value.toString(),
-                                Timer())
+                                Timer(),
+                                "삭제")
                             data.add(newvalue)
                             data[data.size-1].timer = timerthread(data.size-1)
                         }
@@ -83,7 +91,8 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
                                     j.child("achivement").value.toString().toInt(),
                                     j.child("starttime").value.toString(),
                                     j.child("remaintime").value.toString(),
-                                    Timer())
+                                    Timer(),
+                                    "삭제")
                                 data.add(newvalue)
                                 data[data.size-1].timer = timerthread(data.size-1)
                             }catch(e:Exception){}
@@ -94,6 +103,18 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
                         binding.counttext.text = "내 챌린지: " + data.size.toString()
                         recyclernone()
                 }
+                else if (flagstarttimesort){
+                    sortingstarttime()
+                    flagstarttimesort = false
+                }
+                else if (flagremaintimesort){
+                    sortingremaintime()
+                    flagremaintimesort = false
+                }
+                else if (flagachivementsort){
+                    sortingremainprogress()
+                    flagachivementsort = false
+                }
             }
             //모종의 이유로 데베쪽에서 문제가 생겨서 데이터 가져오는 것에 실패했을때 처리할 일
             override fun onCancelled(error: DatabaseError) {
@@ -102,14 +123,22 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
         })
     }
 
+    //resume시 초기화 작업
     override fun onResume() {
         super.onResume()
-        flagremove=true
-        Log.i("test","test")
+        when (binding.spinner.selectedItemPosition) {
+            0-> flagremove = true
+            1->flagstarttimesort = true
+            2->flagremove = true
+            3->flagachivementsort=true
+            else->{}
+         }
+
         if (data.size != 0)
             binding.counttext.text = "내 챌린지: " + data.size.toString()
     }
 
+    //안해주면 다른 프레그먼트 옮겨갈때 타이머들이 계속 뒤에서 작동해서 메모리 누수가 난다.
     override fun onDestroyView() {
         super.onDestroyView()
         for (i in 0..data.size-1){
@@ -120,17 +149,20 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
     }
 
 
-    //리사이클러뷰 초기화 + 버튼리스너
     fun challengeinit() {
+        //리사이클러뷰 디자인 초기화
         binding.recyclerview.layoutManager  = LinearLayoutManager(context, LinearLayoutManager.VERTICAL,false)
         val decoration = ChallengeFragmentView.RecyclerDecoadpater()
         binding.recyclerview.addItemDecoration(decoration)
         var animation = binding.recyclerview.itemAnimator
         (animation as SimpleItemAnimator).supportsChangeAnimations = false
 
+        //계속 추적할 데이터 리스트 뷰모델에 등록
         challengeviewmodel.datalist.observe(viewLifecycleOwner) {
             adapter.submitList(it.toMutableList())
         }
+
+        //리사이클러뷰 어뎁터 초기화
         adapter = ChallengeMyRecyclerAdapter()
         adapter.onclickbuttonlistener =   object: ChallengeMyRecyclerAdapter.OnclickButtonListener {
             //버튼을 누를시 해당 리스트가 "새 챌린지"로 가고 리스트가 삭제된다.
@@ -175,27 +207,38 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
                 }
             }
         }
+        /*
         adapter.ontimechangelistener = object:ChallengeMyRecyclerAdapter.OnTimeChangeListener{
             override fun Timechangelistener(pos: Int, timetext: String, achivetext: String) {
                 try {
                     var splitremaintime = data[pos].remaintime.split(" ")
                     if (splitremaintime[0].toInt() <= 2 && splitremaintime[1].toInt() <= 23 && splitremaintime[2].toInt() <= 54 && splitremaintime[3].toInt() <= 55) {
-
                     }
                 }catch(e:Exception){}
-
             }
-        }
+        }*/
         binding.recyclerview.adapter = adapter
+
+        //정렬을 위한 스피너 리스너
         binding.spinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long, ) {
-
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                when(position){
+                    //정렬은 이 플래그 값에 따라서 datachange함수에서 처리합니다
+                    0->  flagremove = true
+                    //그냥 일반 순서
+                    1-> flagstarttimesort = true
+                    //시작 시간 순
+                    2->  flagremaintimesort = true
+                    //남은 시간 순
+                    3->  flagachivementsort = true
+                    //달성도 순
+                    else->{}
+                    //그 외의것은 아무런 처리 안함
+                }
+                Toast.makeText(context,"정렬 완료!",Toast.LENGTH_SHORT).show()
             }
-
             override fun onNothingSelected(parent: AdapterView<*>?) {
-
             }
-
         }
     }
 
@@ -256,5 +299,121 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
         Log.i("timer?","생성 완료 -> "+timer.toString())
         return timer
     }
+
+    // 이 아래부터는 sorting알고리즘들입니다
+    // 그런데 저는 알고리즘에 너무 쥐약이니 시간 복잡도를 더 줄일수 있는 좋은 소팅 알고리즘을 생각하시는 분들은
+    // 여기에서 수정해주시면 감사드리겠습니다...
+
+    fun sortingstarttime(){
+        for(i in data.size-1 downTo 0){
+            var maxday = -1
+            var maxtime =-1
+            var maxminute = -1
+            var maxsecond= -1
+            var maxindex = -1
+            for(j in 0..i) {
+                val starttimesplit = data[j].starttime.split(" ")
+                val day = starttimesplit[0].toInt()
+                val time = starttimesplit[1].toInt()
+                val minute = starttimesplit[2].toInt()
+                val second = starttimesplit[3].toInt()
+
+                if (day>maxday){                    //날짜 비교, 날짜가 크다 = 더 늦게 선택한 챌린지다
+                    maxday  = day
+                    maxtime = time
+                    maxminute = minute
+                    maxsecond = second
+                    maxindex = j                    //가장 최근에 신청한 챌린지가 담긴 인덱스 번호 저장
+                    Log.i("sort","1")
+                }
+                else if (time >maxtime && day==maxday){            //위 논리대로 날짜가 같은 경우 시간비교
+                    maxtime = time
+                    maxminute = minute
+                    maxsecond = second
+                    maxindex = j
+                }
+                else if (minute >maxminute && day==maxday && time == maxtime){        //분 비교
+                    maxminute = minute
+                    maxsecond = second
+                    maxindex = j
+                }
+                else if (second > maxsecond && day==maxday && time == maxtime && minute == maxminute){       //초 비교
+                    maxsecond = second
+                    maxindex = j
+                }
+            }
+            if(maxindex != -1) {
+                var temp = data[i]
+                data[i] = data[maxindex]            //그래서 가장 오래된 데이터는 맨 뒤로 보내준다
+                data[maxindex] = temp
+            }
+        }
+    }
+
+    fun sortingremaintime(){
+        for(i in data.size-1 downTo 0){
+            var maxday = -1
+            var maxtime =-1
+            var maxminute = -1
+            var maxsecond= -1
+            var maxindex = -1
+            for(j in 0..i) {
+                val starttimesplit = data[j].remaintime.split(" ")
+                val day = starttimesplit[0].toInt()
+                val time = starttimesplit[1].toInt()
+                val minute = starttimesplit[2].toInt()
+                val second = starttimesplit[3].toInt()
+
+                if (day>maxday){                    //날짜 비교, 날짜가 크다 = 더 늦게 선택한 챌린지다
+                    maxday  = day
+                    maxtime = time
+                    maxminute = minute
+                    maxsecond = second
+                    maxindex = j                    //가장 최근에 신청한 챌린지가 담긴 인덱스 번호 저장
+                    Log.i("sort","1")
+                }
+                else if (time >maxtime && day==maxday){            //위 논리대로 날짜가 같은 경우 시간비교
+                    maxtime = time
+                    maxminute = minute
+                    maxsecond = second
+                    maxindex = j
+                }
+                else if (minute >maxminute && day==maxday && time == maxtime){        //분 비교
+                    maxminute = minute
+                    maxsecond = second
+                    maxindex = j
+                }
+                else if (second > maxsecond && day==maxday && time == maxtime && minute == maxminute){       //초 비교
+                    maxsecond = second
+                    maxindex = j
+                }
+            }
+            if(maxindex != -1) {
+                var temp = data[i]
+                data[i] = data[maxindex]            //그래서 가장 오래된 데이터는 맨 뒤로 보내준다
+                data[maxindex] = temp
+            }
+        }
+    }
+
+    fun sortingremainprogress(){
+        for(i in data.size-1 downTo 0){
+            var maxachivement = -1
+            var maxindex = -1
+            for(j in 0..i) {
+                val achivement =  data[j].achivement
+                if (achivement>=maxachivement) {                    //날짜 비교, 날짜가 크다 = 더 늦게 선택한 챌린지다
+                    maxachivement = achivement
+                    maxindex = j                    //가장 최근에 신청한 챌린지가 담긴 인덱스 번호 저장
+                }
+            }
+            if(maxindex != -1) {
+                var temp = data[i]
+                data[i] = data[maxindex]            //그래서 가장 오래된 데이터는 맨 뒤로 보내준다
+                data[maxindex] = temp
+            }
+        }
+    }
+
 
 }

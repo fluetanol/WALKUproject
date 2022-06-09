@@ -52,7 +52,8 @@ class ChallengeSuccessChallengeFragment : BaseFragment<FragmentChallengeMychalle
                                 0,
                                 "00:00:00",
                                 "00 00 00",
-                                Timer())
+                                Timer(),
+                                "삭제")
                             data.add(newvalue)
                         }
                     }
@@ -66,7 +67,8 @@ class ChallengeSuccessChallengeFragment : BaseFragment<FragmentChallengeMychalle
                                 0,
                                 "00:00:00",
                                 "00 00 00",
-                                Timer())
+                                Timer(),
+                                "삭제")
                             data.add(newvalue)
                         }
                     }
