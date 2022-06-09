@@ -5,6 +5,7 @@ import android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
 import android.graphics.Color
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.util.Log
 import android.view.View
 import androidx.core.view.ViewCompat
 import com.konkuk.walku.R
@@ -12,6 +13,8 @@ import com.konkuk.walku.config.BaseActivity
 import com.konkuk.walku.databinding.ActivityWalkMapBinding
 import com.konkuk.walku.src.main.MainActivity
 import com.konkuk.walku.src.main.home.map.walkMap.model.GetWalkResponse
+import com.konkuk.walku.src.main.home.map.walkMap.model.ModelPark
+import com.konkuk.walku.src.main.home.weather.model.ModelWeather
 import com.naver.maps.map.MapView
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
@@ -76,8 +79,25 @@ class WalkMapActivity : BaseActivity<ActivityWalkMapBinding>(ActivityWalkMapBind
 
     override fun onGetWalkSuccess(response: GetWalkResponse) {
         dismissLoadingDialog()
-        showCustomToast("공원 API 연결 성공")
-        showCustomToast(response.SearchParkInfoService.row[0].P_PARK)
+        if (response.SearchParkInfoService.RESULT.CODE == "INFO-000") {
+            showCustomToast("공원 API 연결 성공")
+            val parkArr = mutableListOf<ModelPark>()
+            response.SearchParkInfoService.row.forEach {
+                parkArr.add(
+                    ModelPark(
+                        parkName = it.P_PARK,
+                        parkDescription = it.P_LIST_CONTENT,
+                        parkMainEquip = it.MAIN_EQUIP,
+                        parkImage = it.P_IMG,
+                        parkZone = it.P_ZONE,
+                        parkAddress = it.P_ADDR,
+                        parkLongitude = it.LONGITUDE,
+                        parkLatitude = it.LATITUDE
+                    )
+                )
+            }
+            Log.d("okhttp", "$parkArr")
+        }
     }
 
     override fun onGetWalkFailure(message: String) {
