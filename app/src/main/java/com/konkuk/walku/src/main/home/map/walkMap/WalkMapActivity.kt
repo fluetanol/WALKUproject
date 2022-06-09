@@ -11,24 +11,21 @@ import com.konkuk.walku.R
 import com.konkuk.walku.config.BaseActivity
 import com.konkuk.walku.databinding.ActivityWalkMapBinding
 import com.konkuk.walku.src.main.MainActivity
+import com.konkuk.walku.src.main.home.map.walkMap.model.GetWalkResponse
 import com.naver.maps.map.MapView
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 
 class WalkMapActivity : BaseActivity<ActivityWalkMapBinding>(ActivityWalkMapBinding::inflate),
-    OnMapReadyCallback {
+    OnMapReadyCallback, WalkMapActivityView {
     private lateinit var mapView: MapView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        this.window?.apply {
-            this.statusBarColor = Color.TRANSPARENT
-            decorView.systemUiVisibility =
-                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-            supportActionBar?.hide()
-        }
         mapView = binding.activityWalkMapMapView
         mapView.onCreate(savedInstanceState)
+        WalkMapService(this).tryGetWalk()
+        showLoadingDialog(this)
     }
 
     override fun onStart() {
@@ -75,6 +72,17 @@ class WalkMapActivity : BaseActivity<ActivityWalkMapBinding>(ActivityWalkMapBind
 
     override fun onMapReady(map: NaverMap) {
         showCustomToast("onMapReady")
+    }
+
+    override fun onGetWalkSuccess(response: GetWalkResponse) {
+        dismissLoadingDialog()
+        showCustomToast("공원 API 연결 성공")
+        showCustomToast(response.SearchParkInfoService.row[0].P_PARK)
+    }
+
+    override fun onGetWalkFailure(message: String) {
+        dismissLoadingDialog()
+        showCustomToast("오류 : $message")
     }
 
 }
