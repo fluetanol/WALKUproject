@@ -26,8 +26,6 @@ class ChallengeSuccessChallengeFragment : BaseFragment<FragmentChallengeMychalle
     val challengenew = Firebase.database.getReference("Customer/mike415415/Challenge/Success")
 
     var data = ArrayList<ChallengeData>()
-    var count = 0                        //counttext에 출력될 리스트 목록 갯수
-    var count2 = 0
     lateinit var adapter: ChallengeSuccessRecyclerAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -50,12 +48,11 @@ class ChallengeSuccessChallengeFragment : BaseFragment<FragmentChallengeMychalle
                                 j.child("challengetype").value.toString(),
                                 j.child("day").value.toString(),
                                 j.child("context").value.toString(),
-                                0,
+                                "0",
                                 0,
                                 "00:00:00",
                                 "00 00 00",
                                 Timer())
-                            count += 1
                             data.add(newvalue)
                         }
                     }
@@ -65,17 +62,16 @@ class ChallengeSuccessChallengeFragment : BaseFragment<FragmentChallengeMychalle
                                 j.child("challengetype").value.toString(),
                                 j.child("day").value.toString(),
                                 j.child("context").value.toString(),
-                                0,
+                                "0",
                                 0,
                                 "00:00:00",
                                 "00 00 00",
                                 Timer())
-                            count2 += 1
                             data.add(newvalue)
                         }
                     }
                 }
-                binding.counttext.text = "성공한 챌린지: "+(count+count2).toString()
+                binding.counttext.text = "성공한 챌린지: "+data.size.toString()
                 adapter.notifyDataSetChanged()
                 recyclernone()
                 dismissLoadingDialog()
@@ -89,8 +85,8 @@ class ChallengeSuccessChallengeFragment : BaseFragment<FragmentChallengeMychalle
 
     override fun onResume() {
         super.onResume()
-        if (count != 0)
-            binding.counttext.text = "새로운 챌린지: $count"
+        if (data.size != 0)
+            binding.counttext.text = "새로운 챌린지: "+data.size
     }
 
     //리사이클러뷰 초기화 + 버튼리스너
@@ -105,7 +101,7 @@ class ChallengeSuccessChallengeFragment : BaseFragment<FragmentChallengeMychalle
 
     //리사이클러 뷰에 아무것도 없을때...
     private fun recyclernone() {
-        if (count == 0 && count2==0) {
+        if (data.size == 0) {
             binding.nothing.visibility = VISIBLE
             binding.recyclerview.visibility = GONE
         } else {

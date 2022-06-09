@@ -26,7 +26,6 @@ import kotlin.concurrent.timer
 
 
 class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBinding>(FragmentChallengeMychallengeBinding::bind, R.layout.fragment_challenge_mychallenge){
-    val database = Firebase.database
     val Customer = Firebase.database.getReference("Customer")
     val challengenew = Firebase.database.getReference("Customer/mike415415/Challenge/New")
     val challengemy = Firebase.database.getReference("Customer/mike415415/Challenge/My")
@@ -43,7 +42,6 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
         super.onViewCreated(view, savedInstanceState)
         showLoadingDialog(requireContext())
         challengeinit()
-
         val walk= Customer.addValueEventListener(object:ValueEventListener{
             //데이터가 바뀔떄 호출하거나 처음에 자동 호출되는 콜백함수
             @SuppressLint("SetTextI18n")
@@ -60,19 +58,13 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
                         }
                     }
                     data.clear()
-                    if(challengeviewmodel.datalist.value!!.size>0) {
-                        for (i in 0..   challengeviewmodel.datalist.value!!.size - 1) {
-                            challengeviewmodel.datalist.value!![i].timer.cancel()
-                            challengeviewmodel.datalist.value!![i].timer.purge()
-                        }
-                    }
                     for (j in accountchallengeWalkcount.children.iterator()) {
                         if (j.child("context").value.toString() != "null") {
                             val newvalue = ChallengeData(j.key!!.toInt(),
                                 j.child("challengetype").value.toString(),
                                 j.child("day").value.toString(),
                                 j.child("context").value.toString(),
-                                0,
+                                j.child("achiveamount").value.toString(),
                                 j.child("achivement").value.toString().toInt(),
                                 j.child("starttime").value.toString(),
                                 j.child("remaintime").value.toString(),
@@ -89,7 +81,7 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
                                     j.child("challengetype").value.toString(),
                                     j.child("day").value.toString(),
                                     j.child("context").value.toString(),
-                                    0,
+                                    j.child("achiveamount").value.toString(),
                                     j.child("achivement").value.toString().toInt(),
                                     j.child("starttime").value.toString(),
                                     j.child("remaintime").value.toString(),
@@ -99,24 +91,22 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
                             }catch(e:Exception){}
                         }
                     }
-                    flagremove=false
+                        flagremove = false
                         dismissLoadingDialog()
-                        binding.counttext.text = "내 챌린지: "+data.size.toString()
+                        binding.counttext.text = "내 챌린지: " + data.size.toString()
                         recyclernone()
                 }
             }
-
             //모종의 이유로 데베쪽에서 문제가 생겨서 데이터 가져오는 것에 실패했을때 처리할 일
             override fun onCancelled(error: DatabaseError) {
                 Toast.makeText(context,error.toString(),Toast.LENGTH_SHORT).show()
             }
         })
-
-
     }
 
     override fun onResume() {
         super.onResume()
+        flagremove=true
         Log.i("test","test")
         if (data.size != 0)
             binding.counttext.text = "내 챌린지: " + data.size.toString()
@@ -129,7 +119,6 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
             data[i].timer.purge()
         }
         data.clear()
-
     }
 
 
@@ -159,6 +148,7 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
                             val temp = data[pos]
                             challengemy.child(temp!!.challengetype).child(temp?.num.toString()).removeValue()
                             challengenew.child(temp!!.challengetype).child(temp?.num.toString()).child("context").setValue(temp.context)
+                            challengenew.child(temp!!.challengetype).child(temp?.num.toString()).child("achiveamount").setValue(temp.achivementamount)
                             challengenew.child(temp!!.challengetype).child(temp?.num.toString()).child("day").setValue(temp.day)
                             recyclernone()
                         }

@@ -22,7 +22,6 @@ class ChallengeMyRecyclerAdapter : ListAdapter<ChallengeData, ChallengeMyRecycle
 
     companion object {
         lateinit var challengeview:FragmentChallengeMyrecyclerBinding
-
         val diffUtil = object : DiffUtil.ItemCallback<ChallengeData>() {
             override fun areItemsTheSame(oldItem: ChallengeData, newItem: ChallengeData): Boolean {
                 return oldItem.remaintime == newItem.remaintime

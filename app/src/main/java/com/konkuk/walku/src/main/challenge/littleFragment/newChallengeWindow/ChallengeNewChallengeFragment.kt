@@ -2,6 +2,7 @@ package com.konkuk.walku.src.main.challenge.littleFragment.newChallengeWindow
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -29,15 +30,14 @@ class ChallengeNewChallengeFragment: BaseFragment<FragmentChallengeMychallengeBi
     val challengenew = Firebase.database.getReference("Customer/mike415415/Challenge/New")
     val challengemy = Firebase.database.getReference("Customer/mike415415/Challenge/My")
     var data = ArrayList<ChallengeData>()
-    var count1 = 0;                        //counttext에 출력될 리스트 목록 갯수
-    var count2 = 0;
     lateinit var adapter: ChallengeNewRecyclerAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         showLoadingDialog(requireContext())
         challengeinit()
-        //데이터 가져오는 리스너, 프레그먼트가 실행될떄, 재실행(resume)될때, 데이터베이스에 변동이 있을때 모두 작동
+
+
         val walk= database.addValueEventListener(object:ValueEventListener{
             //데이터가 바뀔떄 호출하거나 처음에 자동 호출되는 콜백함수
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -61,12 +61,11 @@ class ChallengeNewChallengeFragment: BaseFragment<FragmentChallengeMychallengeBi
                                 "WalkDistanceChallenge",
                                 i.child("day").value.toString(),
                                 i.child("context").value.toString(),
-                                0,
+                                i.child("achiveamount").value.toString(),
                                 0,
                                 "00:00:00",
                                 "00 00 00",
                                 Timer())
-                            count1 += 1
                             data.add(newvalue)
                         }
                     }
@@ -76,17 +75,15 @@ class ChallengeNewChallengeFragment: BaseFragment<FragmentChallengeMychallengeBi
                                 "WalkCountChallenge",
                                 j.child("day").value.toString(),
                                 j.child("context").value.toString(),
-                                0,
+                                j.child("achiveamount").value.toString(),
                                 0,
                                 "00:00:00",
                                 "00 00 00",
                                 Timer())
-                            count2 += 1
                             data.add(newvalue)
                         }
                     }
                 }
-
                 //fragment에서 벗어났다가 다시 create될때 view가 생성되기 전에 이 함수가 비동기식으로 빨리 호출되버리는건지
                 //counttext같은 뷰객체에 무슨 짓을 하려고 하면 null exception으로 인식 못하는 경우가 있더라구용...
                 //그래서 try catch로 잡아줬는데 동작엔 문제 없음
@@ -104,7 +101,7 @@ class ChallengeNewChallengeFragment: BaseFragment<FragmentChallengeMychallengeBi
 
     override fun onResume() {
         super.onResume()
-        if(count1!=0)
+        if(data.size!=0)
             binding.counttext.text= "새로운 챌린지: "+data.size.toString()
     }
 
@@ -128,22 +125,14 @@ class ChallengeNewChallengeFragment: BaseFragment<FragmentChallengeMychallengeBi
                         val minute = day.get(Calendar.MINUTE).toString()
                         val second = day.get(Calendar.SECOND).toString()
 
-                        challengenew.child(temp.challengetype).child(temp.num.toString())
-                            .removeValue()
-                        challengemy.child(temp.challengetype).child(temp.num.toString())
-                            .child("challengetype").setValue(temp.challengetype)
-                        challengemy.child(temp.challengetype).child(temp.num.toString())
-                            .child("day").setValue(temp.day)
-                        challengemy.child(temp.challengetype).child(temp.num.toString())
-                            .child("context").setValue(temp.context)  //내 챌린지 리스트 추가(챌린지 내용)
-                        challengemy.child(temp.challengetype).child(temp.num.toString())
-                            .child("achivement").setValue(0)  //내 챌린지 리스트 추가(달성도 내용)
-                        challengemy.child(temp.challengetype).child(temp.num.toString())
-                            .child("starttime")
-                            .setValue("$date $hour $minute $second") //내 챌린지 리스트 추가(목표 시작 시간)
-                        challengemy.child(temp.challengetype).child(temp.num.toString())
-                            .child("remaintime").setValue("$date $hour $minute $second")
-                        count1--
+                        challengenew.child(temp.challengetype).child(temp.num.toString()).removeValue()
+                        challengemy.child(temp.challengetype).child(temp.num.toString()).child("challengetype").setValue(temp.challengetype)
+                        challengemy.child(temp.challengetype).child(temp.num.toString()).child("day").setValue(temp.day)
+                        challengemy.child(temp.challengetype).child(temp.num.toString()).child("context").setValue(temp.context)  //내 챌린지 리스트 추가(챌린지 내용)
+                        challengemy.child(temp.challengetype).child(temp.num.toString()).child("achiveamount").setValue(temp.achivementamount)
+                        challengemy.child(temp.challengetype).child(temp.num.toString()).child("achivement").setValue(0)  //내 챌린지 리스트 추가(달성도 내용)
+                        challengemy.child(temp.challengetype).child(temp.num.toString()).child("starttime").setValue("$date $hour $minute $second") //내 챌린지 리스트 추가(목표 시작 시간)
+                        challengemy.child(temp.challengetype).child(temp.num.toString()).child("remaintime").setValue("$date $hour $minute $second")
                         binding.counttext.text = "새로운 챌린지: " + data.size.toString()
                         recyclernone()
                         Toast.makeText(context, "추가완료! -> " + temp.context, Toast.LENGTH_SHORT)
