@@ -99,7 +99,6 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
                         }
                     }
                         flagremove = false
-                        dismissLoadingDialog()
                         binding.counttext.text = "내 챌린지: " + data.size.toString()
                         recyclernone()
                 }
@@ -138,21 +137,19 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
                     }
                 }
                 //challengeviewmodel.datalist.value=data
-
+                dismissLoadingDialog()
             }
             //모종의 이유로 데베쪽에서 문제가 생겨서 데이터 가져오는 것에 실패했을때 처리할 일
             override fun onCancelled(error: DatabaseError) {
                 Toast.makeText(context,error.toString(),Toast.LENGTH_SHORT).show()
             }
         })
-        dismissLoadingDialog()
     }
 
     //resume시 초기화 작업
     override fun onResume() {
         super.onResume()
         showLoadingDialog(requireContext())
-        dismissLoadingDialog()
         flagremove = true
         when (binding.spinner.selectedItemPosition) {
             0-> flagremove = true
