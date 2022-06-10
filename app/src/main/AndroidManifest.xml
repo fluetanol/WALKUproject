@@ -56,6 +56,11 @@
             android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".src.main.home.map.bikeMap.BikeMapSplashActivity"
+            android:exported="true"
+            android:screenOrientation="fullSensor"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".src.main.home.map.walkMap.WalkMapActivity"
             android:exported="true"
             android:screenOrientation="fullSensor"
