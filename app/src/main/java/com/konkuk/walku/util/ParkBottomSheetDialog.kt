@@ -43,14 +43,26 @@ class ParkBottomSheetDialog(val itemId: Int, val parkArr: MutableList<ModelPark>
         equipTextView = view.findViewById(R.id.park_bottom_sheet_dialog_equip_content_text_view)
         roadTextView = view.findViewById(R.id.park_bottom_sheet_dialog_road_content_text_view)
 
-        Glide.with(view).load(parkArr[itemId-1].parkImage).into(parkImageView)
+        Glide.with(view).load(parkArr[itemId-1].parkImage).placeholder(R.drawable.placeholder).into(parkImageView)
         titleTextView.text = parkArr[itemId-1].parkName
         addressTextView.text = parkArr[itemId-1].parkAddress
         areaAndOpenDateTextView.text = "${parkArr[itemId-1].parkArea}  ·  ${parkArr[itemId-1].parkOpenDate} 개원"
         tellTextView.text = parkArr[itemId-1].parkNumber
-        descriptionTextView.text = parkArr[itemId-1].parkDescription
-        equipTextView.text = parkArr[itemId-1].parkMainEquip
-        roadTextView.text = parkArr[itemId-1].parkRoad
+        descriptionTextView.text = if(parkArr[itemId-1].parkDescription=="") {
+            "정보가 존재하지 않습니다."
+        } else {
+            parkArr[itemId-1].parkDescription
+        }
+        equipTextView.text = if(parkArr[itemId-1].parkMainEquip=="") {
+            "정보가 존재하지 않습니다."
+        } else {
+            parkArr[itemId-1].parkDescription
+        }
+        roadTextView.text = if(parkArr[itemId-1].parkRoad=="") {
+            "정보가 존재하지 않습니다."
+        } else {
+            parkArr[itemId-1].parkDescription
+        }
     }
     override fun getTheme(): Int {
         return R.style.AppBottomSheetDialogTheme

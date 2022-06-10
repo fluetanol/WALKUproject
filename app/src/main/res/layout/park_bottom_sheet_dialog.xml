@@ -94,7 +94,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:ellipsize="end"
-                android:fontFamily="@font/roboto_regular"
+                android:fontFamily="@font/roboto_bold"
                 android:maxLines="1"
                 android:textColor="@color/medium_gray"
                 android:textSize="13sp"
