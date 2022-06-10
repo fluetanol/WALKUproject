@@ -6,16 +6,21 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.fitness.Fitness
 import com.google.android.gms.fitness.FitnessOptions
 import com.google.android.gms.fitness.data.DataType
 import com.google.android.gms.fitness.data.Field
 import com.google.android.gms.fitness.request.OnDataPointListener
 import com.google.android.gms.fitness.request.SensorRequest
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.konkuk.walku.R
 import com.konkuk.walku.config.BaseActivity
 import com.konkuk.walku.databinding.ActivityMainBinding
 import com.konkuk.walku.src.main.analysis.AnalysisFragment
+import com.konkuk.walku.src.main.analysis.model.LocationList
 import com.konkuk.walku.src.main.analysis.model.Walk
 import com.konkuk.walku.src.main.challenge.ChallengeFragment
 import com.konkuk.walku.src.main.home.HomeFragment
@@ -27,6 +32,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     val locationList = ArrayList<Walk>()
     var todayOnPause by Delegates.notNull<Boolean>()
     var recordStart:Boolean=false
+    var lat = 0.0
+    var lon = 0.0
     private val step_listener = OnDataPointListener { dataPoint ->
         val bundle = Bundle()
         bundle.putInt("step",1)
@@ -39,9 +46,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     private val location_listener = OnDataPointListener { dataPoint ->
         for (field in dataPoint.dataType.fields) {
             val value = dataPoint.getValue(field)
+            if(field.name=="latitude") lat = value.toString().toDoubleOrNull()!!
+            if(field.name=="longitude") lon = value.toString().toDoubleOrNull()!!
             Log.i("asd", "Detected DataPoint field: ${field.name}")
             Log.i("asd", "Detected DataPoint value: $value")
         }
+        locationList.add(Walk(lat,lon))
     }
 
     private val fitnessOptions = FitnessOptions.builder()
@@ -58,9 +68,19 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         recieveTodayOnPause()
-        getDataLocation()
-        supportFragmentManager.beginTransaction().replace(R.id.main_frm, HomeFragment()).commitAllowingStateLoss()
+        subscribeData()
+        supportFragmentManager.beginTransaction().replace(R.id.main_frm, AnalysisFragment()).commitAllowingStateLoss()
+        binding.mainBtmFab.setOnClickListener {
+            Log.i("asd","in fab btn")
+            recordStart = recordStart != true
+            if(recordStart){
+                getDataLocation()
 
+            }else{
+                insertDB(locationList)
+                removeDataLocation()
+            }
+        }
         binding.mainBtmNav.setOnItemSelectedListener{ item ->
             when (item.itemId) {
                 R.id.menu_main_btm_nav_home -> {
@@ -88,16 +108,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                         .commitAllowingStateLoss()
                     return@setOnItemSelectedListener true
 
-                }
-                R.id.main_btm_fab -> {
-                    Log.i("asd","in fab btn")
-                    recordStart = recordStart != true
-                    if(recordStart){
-
-                    }else{
-                        removeDataLocation()
-                    }
-                    return@setOnItemSelectedListener true
                 }
                 R.id.action_empty -> {
                     supportFragmentManager.beginTransaction()
@@ -193,5 +203,52 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             .addOnFailureListener {
                 Log.i("asd", "Listener was not removed.")
             }
+    }
+    private fun subscribeData() {//사용자별로 최초 한번 subscribe해야 google fit 이용 가능!! step & distance
+        Fitness.getRecordingClient(this, GoogleSignIn.getAccountForExtension(this, fitnessOptions))
+            // This example shows subscribing to a DataType, across all possible data
+            // sources. Alternatively, a specific DataSource can be used.
+            .subscribe(DataType.TYPE_STEP_COUNT_DELTA)
+            .addOnSuccessListener {
+                Log.i("asd2", "Successfully subscribed!")
+            }
+            .addOnFailureListener { e ->
+                Log.i("asd", "There was a problem subscribing.", e)
+            }
+        Fitness.getRecordingClient(this, GoogleSignIn.getAccountForExtension(this, fitnessOptions))
+            // This example shows subscribing to a DataType, across all possible data
+            // sources. Alternatively, a specific DataSource can be used.
+            .subscribe(DataType.TYPE_DISTANCE_DELTA)
+            .addOnSuccessListener {
+                Log.i("asd2", "Successfully subscribed!")
+            }
+            .addOnFailureListener { e ->
+                Log.i("asd", "There was a problem subscribing.", e)
+            }
+        Fitness.getRecordingClient(this, GoogleSignIn.getAccountForExtension(this, fitnessOptions))
+            .listSubscriptions()
+            .addOnSuccessListener { subscriptions ->
+                for (sc in subscriptions) {
+                    val dt = sc.dataType
+                    Log.i("asd3", "Active subscription for data type: ${dt?.name}")
+                }
+            }
+    }
+    private fun insertDB(locList: ArrayList<Walk>){
+        val rdb= Firebase.database.reference
+        try {
+            val key=rdb.child("Customer/ksho0925").child("analysis").child("walkData").push().key
+
+            val username = "ksho0925"
+            val locLista = LocationList(locList)
+            val locListb = locLista.toMap()
+
+            val childUpdate = hashMapOf<String,Any>(
+                "/Customer/$username/analysis/walkData/$key" to locListb
+            )
+            rdb.updateChildren(childUpdate)
+        }catch (e:Exception){
+            Log.i("asd", e.message.toString())
+        }
     }
 }

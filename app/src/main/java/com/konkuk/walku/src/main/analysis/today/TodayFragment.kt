@@ -144,7 +144,7 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
 
     override fun onDetach() {
         super.onDetach()
-        insertDB()
+        //insertDB()
     }
 
     override fun onDestroy() {

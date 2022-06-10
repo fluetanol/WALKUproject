@@ -55,24 +55,10 @@ class RecordMapFragment : BaseFragment<FragmentRecordMapBinding>(FragmentRecordM
         getBundle()
         init()
     }
-    private fun insertDB(locList: ArrayList<Walk>){
-        rdb= Firebase.database.reference
-        try {
-            val key=rdb.child("Customer/ksho0925").child("analysis").child("walkData").push().key
 
-            val username = "ksho0925"
-            val locLista = LocationList(locList)
-            val locListb = locLista.toMap()
-
-            val childUpdate = hashMapOf<String,Any>(
-                "/Customer/$username/analysis/walkData/$key" to locListb
-            )
-
-            rdb.updateChildren(childUpdate)
-
-        }catch (e:Exception){
-            Log.i("asd", e.message.toString())
-        }
+    override fun onResume() {
+        super.onResume()
+        init()
     }
     private fun getBundle() {
         requireActivity().supportFragmentManager.setFragmentResultListener("walkData",mainActivity
@@ -85,7 +71,7 @@ class RecordMapFragment : BaseFragment<FragmentRecordMapBinding>(FragmentRecordM
     private fun init(){
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
         val mapView = binding.fragmentMapMapView
-
+        Log.i("asdmap",walkList.toString())
         mapView.getMapAsync {
             it.locationSource = locationSource
             it.locationTrackingMode = LocationTrackingMode.Follow
@@ -96,6 +82,8 @@ class RecordMapFragment : BaseFragment<FragmentRecordMapBinding>(FragmentRecordM
             naverMap = it
 
             val polyline =ArrayList<PolylineOverlay>()
+            val startMarker =ArrayList<Marker>()
+            val endMarker =ArrayList<Marker>()
             var index = 0
             for(list in walkList){
                 val tmpList = ArrayList<LatLng>()
@@ -106,16 +94,23 @@ class RecordMapFragment : BaseFragment<FragmentRecordMapBinding>(FragmentRecordM
                     polyline.add(PolylineOverlay())
                     polyline[index].coords = tmpList.toList()
                     polyline[index].width=10
-                    polyline[index].color= Color.GREEN
+                    polyline[index].color= Color.rgb(16,163,114)
                     polyline[index].capType = PolylineOverlay.LineCap.Round
                     polyline[index].joinType = PolylineOverlay.LineJoin.Round
                     polyline[index].map = naverMap
 
-                    val marker = Marker()
-                    marker.position = LatLng(polyline[index].coords[0].latitude,polyline[index].coords[0].longitude)
-                    marker.map = naverMap
+                    startMarker.add(Marker())
+                    startMarker[index].position = LatLng(polyline[index].coords[0].latitude,polyline[index].coords[0].longitude)
+                    startMarker[index].captionText = "산책 시작"
+                    startMarker[index].map = naverMap
+                    endMarker.add(Marker())
+                    val size = polyline[index].coords.size
+                    endMarker[index].position = LatLng(polyline[index].coords[size-1].latitude,polyline[index].coords[size-1].longitude)
+                    endMarker[index].captionText = "산책 끝"
+                    endMarker[index].map = naverMap
+                    index += 1
                 }
-                index += 1
+
             }
         }
 

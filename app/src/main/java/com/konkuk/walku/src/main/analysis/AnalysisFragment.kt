@@ -52,13 +52,10 @@ class AnalysisFragment : BaseFragment<FragmentAnalysisBinding>(FragmentAnalysisB
         .addDataType(DataType.TYPE_DISTANCE_DELTA)
         .build()
 
-
-
     // 1. Context를 할당할 변수를 프로퍼티로 선언(어디서든 사용할 수 있게)
     lateinit var mainActivity: MainActivity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -89,7 +86,7 @@ class AnalysisFragment : BaseFragment<FragmentAnalysisBinding>(FragmentAnalysisB
             val analysisData =it.child("analysis")
             val stepData = analysisData.child("stepData")
             val walkData = analysisData.child("walkData")
-
+            Log.i("asd initDB",walkData.toString())
             //step데이터 얻음
             val stepList = ArrayList<Step>()
             if(stepData.exists()){
@@ -167,7 +164,7 @@ class AnalysisFragment : BaseFragment<FragmentAnalysisBinding>(FragmentAnalysisB
             bundle.putParcelable("analysisData",anData)
             requireActivity().supportFragmentManager.setFragmentResult("analysisData",bundle)
             val bundle2 = Bundle()
-            //to recorMapFragment
+            //to recordMapFragment
             bundle2.putParcelableArrayList("walkData",walkList)
             requireActivity().supportFragmentManager.setFragmentResult("walkData",bundle2)
 
@@ -183,56 +180,16 @@ class AnalysisFragment : BaseFragment<FragmentAnalysisBinding>(FragmentAnalysisB
 //        updateStepData(2000)
 //
 //        subscribeData()
-        dailyDistanceData()
-        dailyStepData()
-        updateDistanceData(3000.0f)
-        //getDistanceData(2)
-//        //n일전 걸음수 가져오기\
-        getStepData(7)
+//        dailyDistanceData()
+//        dailyStepData()
+//        updateDistanceData(3000.0f)
+//        //getDistanceData(2)
+////        //n일전 걸음수 가져오기\
+//        getStepData(7)
 
         //getDataLocation()
     }
 
-//
-//    private fun getDistanceData() {
-//        val startTime = LocalDate.now().atStartOfDay(ZoneId.systemDefault())
-//        val endTime = LocalDateTime.now().atZone(ZoneId.systemDefault())
-//        //val endTime = LocalDateTime.now().atZone(ZoneId.systemDefault())
-//
-//        val datasource = DataSource.Builder()
-//            .setAppPackageName("com.google.android.gms")
-//            .setDataType(DataType.TYPE_DISTANCE_DELTA)
-//            .setType(DataSource.TYPE_DERIVED)
-//            .setStreamName("estimated_distance")
-//            .build()
-//
-//        val request = DataReadRequest.Builder()
-//            .aggregate(datasource)
-//            .bucketByTime(1, TimeUnit.DAYS)
-//            .setTimeRange(startTime.toEpochSecond(), endTime.toEpochSecond(), TimeUnit.SECONDS)
-//            .build()
-//
-//        Fitness.getHistoryClient(mainActivity, GoogleSignIn.getAccountForExtension(mainActivity, fitnessOptions))
-//            .readData(request)
-//            .addOnSuccessListener { response ->
-//                Log.i("asd","get distance success${response.getDataSet(DataType.TYPE_STEP_COUNT_DELTA)}")
-//
-//                for(ds in response.buckets.flatMap { it.dataSets }){
-//                    for(dp in ds.dataPoints){
-//                        Log.i("asd","Data point:")
-//                        Log.i("asd","\tType: ${dp.dataType.name}")
-//                        Log.i("asd","\tStart: ${dp.getStartTimeString()}")
-//                        Log.i("asd","\tEnd: ${dp.getEndTimeString()}")
-//                        for (field in dp.dataType.fields) {
-//                            Log.i("asd","\tField: ${field.name.toString()} Value: ${dp.getValue(field)}")
-//                        }
-//                    }
-//                }
-//
-//            }.addOnFailureListener {
-//                Log.i("asd","get distance fail")
-//            }
-//    }
     private fun getDistanceData(n:Long) {
         val startTime = LocalDate.now().minusDays(n).atStartOfDay(ZoneId.systemDefault())
         val endTime = LocalDate.now().minusDays(n-1).atStartOfDay(ZoneId.systemDefault())
@@ -309,33 +266,15 @@ class AnalysisFragment : BaseFragment<FragmentAnalysisBinding>(FragmentAnalysisB
                 val distance = result.dataPoints.firstOrNull()?.getValue(Field.FIELD_DISTANCE)
                 // Do something with totalSteps
                 Log.i("asd5","\ttoday distance: $distance")
-                dist=distance.toString().toDouble()
+                if(distance.toString()!="null")
+                    dist=distance.toString().toDouble()
             }
             .addOnFailureListener { e ->
                 Log.i("TAG", "There was a problem getting steps.", e)
             }
     }
 
-    private fun subscribeData() {//사용자별로 최초 한번 subscribe해야 google fit 이용 가능!! step & distance
-        Fitness.getRecordingClient(mainActivity, GoogleSignIn.getAccountForExtension(mainActivity, fitnessOptions))
-            // This example shows subscribing to a DataType, across all possible data
-            // sources. Alternatively, a specific DataSource can be used.
-            .subscribe(DataType.TYPE_DISTANCE_DELTA)
-            .addOnSuccessListener {
-                Log.i("asd2", "Successfully subscribed!")
-            }
-            .addOnFailureListener { e ->
-                Log.i("asd", "There was a problem subscribing.", e)
-            }
-        Fitness.getRecordingClient(mainActivity, GoogleSignIn.getAccountForExtension(mainActivity, fitnessOptions))
-            .listSubscriptions()
-            .addOnSuccessListener { subscriptions ->
-                for (sc in subscriptions) {
-                    val dt = sc.dataType
-                    Log.i("asd3", "Active subscription for data type: ${dt?.name}")
-                }
-            }
-    }
+
 
     private fun updateStepData(stepCountCumulative:Int) {
         // Declare that the historical data was collected during the past 50 minutes.
@@ -419,12 +358,9 @@ class AnalysisFragment : BaseFragment<FragmentAnalysisBinding>(FragmentAnalysisB
                 Log.w("asdUPDATE", "There was an error updating the DataSet", e)
             }
     }
-
-
     fun DataPoint.getStartTimeString() = Instant.ofEpochSecond(this.getStartTime(TimeUnit.SECONDS))
         .atZone(ZoneId.systemDefault())
         .toLocalDateTime().toString()
-
     fun DataPoint.getEndTimeString() = Instant.ofEpochSecond(this.getEndTime(TimeUnit.SECONDS))
         .atZone(ZoneId.systemDefault())
         .toLocalDateTime().toString()
