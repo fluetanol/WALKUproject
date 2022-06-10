@@ -44,12 +44,13 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        showLoadingDialog(requireContext())
         challengeinit()
+
         val walk= Customer.addValueEventListener(object:ValueEventListener{
             //데이터가 바뀔떄 호출하거나 처음에 자동 호출되는 콜백함수
             @SuppressLint("SetTextI18n")
             override fun onDataChange(snapshot: DataSnapshot) {
+                Log.i("들어왔노?","예아")
                 val accountchallengeWalkcount = snapshot.child("mike415415").child("Challenge").child("My").child("WalkCountChallenge")
                 val accountchallengeDistancecount = snapshot.child("mike415415").child("Challenge").child("My").child("WalkDistanceChallenge")
                 challengeviewmodel.datalist.value=data
@@ -109,7 +110,6 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
                 else if (flagremaintimesort){
                     sortingremaintime()
                     flagremaintimesort = false
-                    Log.i("toast","remian")
                 }
                 else if (flagachivementsort){
                     sortingremainprogress()
@@ -137,7 +137,6 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
                     }
                 }
                 //challengeviewmodel.datalist.value=data
-                dismissLoadingDialog()
             }
             //모종의 이유로 데베쪽에서 문제가 생겨서 데이터 가져오는 것에 실패했을때 처리할 일
             override fun onCancelled(error: DatabaseError) {
@@ -149,28 +148,13 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
     //resume시 초기화 작업
     override fun onResume() {
         super.onResume()
-        showLoadingDialog(requireContext())
         flagremove = true
-        when (binding.spinner.selectedItemPosition) {
-            0-> flagremove = true
-            1-> {
-                flagstarttimesort = true
-            }
-            2->{
-                flagremaintimesort=true
-            }
-            3->{
-                flagachivementsort=true
-            }
-            else->{}
-         }
-        if (data.size != 0)
-            binding.counttext.text = "내 챌린지: " + data.size.toString()
 
         val walk= Customer.addValueEventListener(object:ValueEventListener{
             //데이터가 바뀔떄 호출하거나 처음에 자동 호출되는 콜백함수
             @SuppressLint("SetTextI18n")
             override fun onDataChange(snapshot: DataSnapshot) {
+                Log.i("들어왔노?","예아")
                 val accountchallengeWalkcount = snapshot.child("mike415415").child("Challenge").child("My").child("WalkCountChallenge")
                 val accountchallengeDistancecount = snapshot.child("mike415415").child("Challenge").child("My").child("WalkDistanceChallenge")
                 challengeviewmodel.datalist.value=data
@@ -220,7 +204,6 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
                         }
                     }
                     flagremove = false
-                    dismissLoadingDialog()
                     binding.counttext.text = "내 챌린지: " + data.size.toString()
                     recyclernone()
                 }
@@ -231,7 +214,6 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
                 else if (flagremaintimesort){
                     sortingremaintime()
                     flagremaintimesort = false
-                    Log.i("toast","remian")
                 }
                 else if (flagachivementsort){
                     sortingremainprogress()
@@ -259,14 +241,27 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
                     }
                 }
                 //challengeviewmodel.datalist.value=data
-
             }
             //모종의 이유로 데베쪽에서 문제가 생겨서 데이터 가져오는 것에 실패했을때 처리할 일
             override fun onCancelled(error: DatabaseError) {
                 Toast.makeText(context,error.toString(),Toast.LENGTH_SHORT).show()
             }
         })
+        when (binding.spinner.selectedItemPosition) {
+            0-> flagremove = true
+            1-> { flagstarttimesort = true }
+            2->{ flagremaintimesort=true }
+            3->{ flagachivementsort=true }
+            else->{}
+         }
+        if (data.size != 0)
+            binding.counttext.text = "내 챌린지: " + data.size.toString()
+
     }
+
+
+
+
 
     //안해주면 다른 프레그먼트 옮겨갈때 타이머들이 계속 뒤에서 작동해서 메모리 누수가 난다.
     override fun onDestroyView() {
@@ -376,6 +371,7 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
             binding.recyclerview.visibility = View.VISIBLE
         }
     }
+
 
     @SuppressLint("NotifyDataSetChanged")
     fun timerthread(position:Int):Timer{

@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import com.google.android.material.tabs.TabLayoutMediator
+import com.konkuk.walku.config.ApplicationClass.Companion.K_USER_ACCOUNT
 import com.konkuk.walku.config.ApplicationClass.Companion.sSharedPreferences
 import com.konkuk.walku.databinding.FragmentChallengeBinding
 import com.konkuk.walku.src.main.analysis.ChallengefragmentAdapter
