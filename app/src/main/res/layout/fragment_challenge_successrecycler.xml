@@ -28,7 +28,7 @@
             android:id="@+id/counttext"
             android:layout_width="match_parent"
             android:layout_height="20dp"
-            android:text="성공 횟수: 10"
+            android:text="성공 횟수: 1"
             android:gravity="center"
             android:background="@drawable/border_challengebutton"
             android:textSize="15sp" />

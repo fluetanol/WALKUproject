@@ -54,10 +54,8 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
                 val accountchallengeDistancecount = snapshot.child("mike415415").child("Challenge").child("My").child("WalkDistanceChallenge")
                 challengeviewmodel.datalist.value=data
 
-                Log.i("test","test!")
                 if(flagremove==true){
-                    Log.i("sort","remove")
-                    if(data.size>0) {
+                    if(data.size>=0) {
                         for (i in 0..data.size - 1) {
                             Log.i("timer","삭제: "+data[i].timer.toString())
                             data[i].timer.cancel()
@@ -154,7 +152,7 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
     override fun onResume() {
         super.onResume()
         showLoadingDialog(requireContext())
-        if(data.size==0)
+        dismissLoadingDialog()
         flagremove = true
         when (binding.spinner.selectedItemPosition) {
             0-> flagremove = true
@@ -171,6 +169,106 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
          }
         if (data.size != 0)
             binding.counttext.text = "내 챌린지: " + data.size.toString()
+
+        val walk= Customer.addValueEventListener(object:ValueEventListener{
+            //데이터가 바뀔떄 호출하거나 처음에 자동 호출되는 콜백함수
+            @SuppressLint("SetTextI18n")
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val accountchallengeWalkcount = snapshot.child("mike415415").child("Challenge").child("My").child("WalkCountChallenge")
+                val accountchallengeDistancecount = snapshot.child("mike415415").child("Challenge").child("My").child("WalkDistanceChallenge")
+                challengeviewmodel.datalist.value=data
+
+                if(flagremove==true){
+                    if(data.size>=0) {
+                        for (i in 0..data.size - 1) {
+                            Log.i("timer","삭제: "+data[i].timer.toString())
+                            data[i].timer.cancel()
+                            data[i].timer.purge()
+                        }
+                    }
+                    data.clear()
+                    for (j in accountchallengeWalkcount.children.iterator()) {
+                        if (j.child("context").value.toString() != "null") {
+                            val newvalue = ChallengeMyData(j.key!!.toInt(),
+                                j.child("challengetype").value.toString(),
+                                j.child("day").value.toString(),
+                                j.child("context").value.toString(),
+                                j.child("achiveamount").value.toString(),
+                                j.child("achivement").value.toString().toInt(),
+                                j.child("starttime").value.toString(),
+                                j.child("remaintime").value.toString(),
+                                Timer(),
+                                "삭제")
+                            data.add(newvalue)
+                            data[data.size-1].timer = timerthread(data.size-1)
+                        }
+                    }
+                    for (j in accountchallengeDistancecount.children.iterator()) {
+                        if (j.child("context").value.toString() != "null") {
+                            try {
+                                val newvalue = ChallengeMyData(
+                                    j.key!!.toInt(),
+                                    j.child("challengetype").value.toString(),
+                                    j.child("day").value.toString(),
+                                    j.child("context").value.toString(),
+                                    j.child("achiveamount").value.toString(),
+                                    j.child("achivement").value.toString().toInt(),
+                                    j.child("starttime").value.toString(),
+                                    j.child("remaintime").value.toString(),
+                                    Timer(),
+                                    "삭제")
+                                data.add(newvalue)
+                                data[data.size-1].timer = timerthread(data.size-1)
+                            }catch(e:Exception){}
+                        }
+                    }
+                    flagremove = false
+                    dismissLoadingDialog()
+                    binding.counttext.text = "내 챌린지: " + data.size.toString()
+                    recyclernone()
+                }
+                else if (flagstarttimesort){
+                    sortingstarttime()
+                    flagstarttimesort = false
+                }
+                else if (flagremaintimesort){
+                    sortingremaintime()
+                    flagremaintimesort = false
+                    Log.i("toast","remian")
+                }
+                else if (flagachivementsort){
+                    sortingremainprogress()
+                    flagachivementsort = false
+                }
+
+                val walkinfo = snapshot.child("mike415415").child("analysis").child("stepData")
+                val distanceinfo = snapshot.child("mike415415").child("analysis").child("distance")
+
+                for(j in 0..data.size-1){
+                    data[j].achivement=0
+                }
+
+                for (i in walkinfo.children.iterator()){
+                    val step = i.child("stepCount").value
+                    val distance = i.child("distance").value
+                    for(j in 0..data.size-1){
+
+                        if(data[j].challengetype=="WalkCountChallenge")
+                            data[j].achivement+=step.toString().toInt()
+
+                        if(data[j].challengetype=="WalkDistanceChallenge")
+                            data[j].achivement+=distance.toString().toFloat().toInt()
+
+                    }
+                }
+                //challengeviewmodel.datalist.value=data
+
+            }
+            //모종의 이유로 데베쪽에서 문제가 생겨서 데이터 가져오는 것에 실패했을때 처리할 일
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(context,error.toString(),Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     //안해주면 다른 프레그먼트 옮겨갈때 타이머들이 계속 뒤에서 작동해서 메모리 누수가 난다.
