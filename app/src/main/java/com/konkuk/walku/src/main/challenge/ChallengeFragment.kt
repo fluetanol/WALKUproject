@@ -1,6 +1,7 @@
 package com.konkuk.walku.src.main.challenge
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.google.firebase.database.DataSnapshot
@@ -17,6 +18,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import com.google.android.material.tabs.TabLayoutMediator
+import com.konkuk.walku.config.ApplicationClass.Companion.sSharedPreferences
 import com.konkuk.walku.databinding.FragmentChallengeBinding
 import com.konkuk.walku.src.main.analysis.ChallengefragmentAdapter
 import com.konkuk.walku.src.main.challenge.littleFragment.myChallengeWindow.ChallengeMyData
@@ -25,18 +27,27 @@ class ChallengeFragment : BaseFragment<FragmentChallengeBinding>(FragmentChallen
     ChallengeFragmentView {
     val data = ArrayList<ChallengeMyData>()
     val Customer = Firebase.database.getReference("Customer")
+    val new = Firebase.database.getReference("Customer/mike415415/Challenge")
     val challengenew = Firebase.database.getReference("Customer/mike415415/Challenge/New")
     val challengemy = Firebase.database.getReference("Customer/mike415415/Challenge/My")
     val challengeflag = Firebase.database.getReference("Customer/mike415415/Challenge/flag")
     val challengeupdateflag = Firebase.database.getReference("Customer/mike415415/Challenge/update")
-
+    val newsetting = false
     private val fragmentList = listOf(ChallengeMyChallengeFragment(),ChallengeNewChallengeFragment(),ChallengeSuccessChallengeFragment())
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         challengeinit()
         val walk= Customer.addValueEventListener(object: ValueEventListener {
             //데이터가 바뀔떄 호출하거나 처음에 자동 호출되는 콜백함수
             override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.child("mike415415").child("Challenge").child("flag").value == null) {
+                    new.child("flag").setValue(false)
+                }
+                else if (snapshot.child("mike415415").child("Challenge").child("update").value == null) {
+                    new.child("update").setValue(false)
+                }
+
                 val today = System.currentTimeMillis()
                 val date = Date(today)
                 val t_dateFormat = SimpleDateFormat("E", Locale("ko", "KR"))
@@ -74,6 +85,15 @@ class ChallengeFragment : BaseFragment<FragmentChallengeBinding>(FragmentChallen
         ) { tab, position ->
             tab.text = tabTitles[position]
         }.attach()
+
+        var id = splitUserIdFromEmail()
     }
+
+
+    private fun splitUserIdFromEmail(email:String?):String{
+        val index = email?.indexOf("@")
+        return email!!.substring(0,index!!)
+    }
+
 
 }
