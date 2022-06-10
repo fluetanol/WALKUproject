@@ -12,6 +12,7 @@ import com.konkuk.walku.src.main.MainActivity
 import com.konkuk.walku.src.main.home.map.bikeMap.model.GetBikeResponse
 import com.konkuk.walku.src.main.home.map.bikeMap.model.ModelBike
 import com.konkuk.walku.src.main.home.map.walkMap.model.ModelPark
+import com.konkuk.walku.util.BikeBottomSheetDialog
 import com.konkuk.walku.util.ParkBottomSheetDialog
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
@@ -109,7 +110,7 @@ class BikeMapActivity : BaseActivity<ActivityBikeMapBinding>(ActivityBikeMapBind
         Handler(Looper.getMainLooper()).postDelayed({
             naverMap = map
             // 카메라 초기 위치 설정
-            val initialPosition = LatLng(37.506855, 127.066242)
+            val initialPosition = LatLng(37.542454, 127.076806)
             val cameraUpdate = CameraUpdate.scrollTo(initialPosition)
             naverMap.moveCamera(cameraUpdate)
 
@@ -121,9 +122,13 @@ class BikeMapActivity : BaseActivity<ActivityBikeMapBinding>(ActivityBikeMapBind
             // 마커를 클릭하면:
             val listener = Overlay.OnClickListener { overlay ->
                 val marker = overlay as Marker
-
-                showCustomToast("${bikeArr[marker.tag]?.shared}")
-
+                val bikeBottomSheetDialog = BikeBottomSheetDialog(marker.tag.toString(), bikeArr) {
+                    when (it) {
+                        0 -> {}
+                        1 -> {}
+                    }
+                }
+                bikeBottomSheetDialog.show(supportFragmentManager, bikeBottomSheetDialog.tag)
                 true
             }
 

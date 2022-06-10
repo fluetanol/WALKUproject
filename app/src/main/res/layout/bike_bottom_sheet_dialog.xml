@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/bike_bottom_sheet_station_name_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/roboto_bold"
+        android:textColor="@color/dark_gray"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="107. 신한은행 서교동지점" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bike_bottom_sheet_low_layout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="180dp"
+        android:visibility="invisible"
+        app:layout_constraintDimensionRatio="2:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bike_bottom_sheet_station_name_text_view"
+        tools:visibility="invisible">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/low_first_bike"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/bicycle"
+            android:tint="#F95E3E"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@id/low_second_bike"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/low_second_bike"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/bicycle"
+            android:tint="@color/medium_gray"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@id/low_third_bike"
+            app:layout_constraintStart_toEndOf="@id/low_first_bike"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/low_third_bike"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/bicycle"
+            android:tint="@color/medium_gray"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/low_second_bike"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bike_bottom_sheet_medium_layout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="180dp"
+        android:visibility="invisible"
+        app:layout_constraintDimensionRatio="2:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bike_bottom_sheet_station_name_text_view"
+        tools:visibility="invisible">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/medium_first_bike"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/bicycle"
+            android:tint="#F7D157"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@id/medium_second_bike"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/medium_second_bike"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/bicycle"
+            android:tint="#F7D157"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@id/medium_third_bike"
+            app:layout_constraintStart_toEndOf="@id/medium_first_bike"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/medium_third_bike"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/bicycle"
+            android:tint="@color/medium_gray"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/medium_second_bike"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bike_bottom_sheet_high_layout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="180dp"
+        android:visibility="invisible"
+        app:layout_constraintDimensionRatio="2:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bike_bottom_sheet_station_name_text_view"
+        tools:visibility="visible">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/high_first_bike"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/bicycle"
+            android:tint="#78FFA3"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@id/high_second_bike"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/high_second_bike"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/bicycle"
+            android:tint="#78FFA3"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@id/high_third_bike"
+            app:layout_constraintStart_toEndOf="@id/high_first_bike"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/high_third_bike"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/bicycle"
+            android:tint="#78FFA3"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/high_second_bike"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/bike_bottom_sheet_dialog_how_many_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:fontFamily="@font/roboto_bold"
+        android:textColor="@color/black"
+        android:textSize="30sp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toEndOf="@id/bike_bottom_sheet_high_layout"
+        app:layout_constraintTop_toTopOf="@id/bike_bottom_sheet_high_layout"
+        tools:text="충분" />
+
+
+    <TextView
+        android:id="@+id/bike_bottom_sheet_dialog_left_value_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:fontFamily="@font/roboto_regular"
+        android:textColor="@color/medium_gray"
+        android:textSize="13sp"
+        app:layout_constraintStart_toEndOf="@id/bike_bottom_sheet_high_layout"
+        app:layout_constraintTop_toBottomOf="@id/bike_bottom_sheet_dialog_how_many_text_view"
+        tools:text="자전거가 3대 남아있어요" />
+
+    <View
+        app:layout_constraintTop_toBottomOf="@id/bike_bottom_sheet_dialog_left_value_text_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="30dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
