@@ -7,17 +7,11 @@ import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import androidx.core.content.ContextCompat.startActivity
-import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
-import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.fitness.FitnessOptions
-import com.google.android.gms.fitness.data.DataType
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
@@ -28,6 +22,9 @@ import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
 import com.konkuk.walku.R
+import com.konkuk.walku.config.ApplicationClass.Companion.G_USER_ACCOUNT
+import com.konkuk.walku.config.ApplicationClass.Companion.G_USER_NAME
+import com.konkuk.walku.config.ApplicationClass.Companion.G_USER_THUMB
 import com.konkuk.walku.config.ApplicationClass.Companion.K_USER_ACCOUNT
 import com.konkuk.walku.config.ApplicationClass.Companion.K_USER_NAME
 import com.konkuk.walku.config.ApplicationClass.Companion.K_USER_THUMB
@@ -35,7 +32,6 @@ import com.konkuk.walku.config.ApplicationClass.Companion.sSharedPreferences
 import com.konkuk.walku.config.BaseActivity
 import com.konkuk.walku.databinding.ActivityLoginBinding
 import com.konkuk.walku.src.login.adapter.LoginAdapter
-import com.konkuk.walku.src.main.MainActivity
 import com.konkuk.walku.src.permission.PermissionActivity
 import com.konkuk.walku.util.LoginBottomSheetDialog
 import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator
@@ -140,7 +136,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
         // [START config_signin]
         // Configure Google Sign In
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestIdToken(getString(R.string.web_client_id))
             .requestEmail()
             .build()
 
@@ -183,10 +179,10 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
 
     private fun updateUI(user: FirebaseUser?) {
         editor = sSharedPreferences.edit()
-        editor.putString(K_USER_NAME, user?.displayName)
-        editor.putString(K_USER_ACCOUNT,user?.email)
+        editor.putString(G_USER_NAME, user?.displayName)
+        editor.putString(G_USER_ACCOUNT,user?.email)
         //user?.kakaoAccount?.profile?.profileImageUrl
-        editor.putString(K_USER_THUMB, user?.photoUrl.toString())
+        editor.putString(G_USER_THUMB, user?.photoUrl.toString())
         editor.apply()
 
         val intent = Intent(this, PermissionActivity::class.java)
@@ -204,10 +200,10 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
         // 카카오톡으로 로그인 할 수 없어 카카오계정으로 로그인할 경우 사용됨
         val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
             if (error != null) {
-                showCustomToast("카카오계정으로 로그인 실패")
+//                showCustomToast("카카오계정으로 로그인 실패")
             } else if (token != null) {
                 Log.i(TAG, "카카오계정으로 로그인 성공 ${token.accessToken}")
-                showCustomToast("카카오계정으로 로그인 성공")
+//                showCustomToast("카카오계정으로 로그인 성공")
                 loginMain()
             }
         }
@@ -217,7 +213,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
             UserApiClient.instance.loginWithKakaoTalk(this@LoginActivity) { token, error ->
                 if (error != null) {
                     Log.e(TAG, "카카오톡으로 로그인 실패", error)
-                    showCustomToast("카카오톡으로 로그인 실패")
+//                    showCustomToast("카카오톡으로 로그인 실패")
 
                     // 사용자가 카카오톡 설치 후 디바이스 권한 요청 화면에서 로그인을 취소한 경우,
                     // 의도적인 로그인 취소로 보고 카카오계정으로 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)
@@ -232,7 +228,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
                     )
                 } else if (token != null) {
                     Log.i(TAG, "카카오톡으로 로그인 성공 ${token.accessToken}")
-                    showCustomToast("카카오톡으로 로그인 성공")
+//                    showCustomToast("카카오톡으로 로그인 성공")
                     loginMain()
                 }
             }
@@ -245,9 +241,9 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
         runBlocking {
             UserApiClient.instance.me { user, error ->
                 if (error != null) {
-                    showCustomToast("사용자 정보 요청 실패")
+//                    showCustomToast("사용자 정보 요청 실패")
                 } else if (user != null) {
-                    showCustomToast("사용자 정보 요청 성공")
+//                    showCustomToast("사용자 정보 요청 성공")
                     showCustomToast("${user.kakaoAccount?.profile?.nickname}님 환영합니다!")
                     editor = sSharedPreferences.edit()
                     editor.putString(K_USER_NAME, user.kakaoAccount?.profile?.nickname)

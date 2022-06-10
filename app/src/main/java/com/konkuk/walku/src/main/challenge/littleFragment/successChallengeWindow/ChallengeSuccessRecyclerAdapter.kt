@@ -8,7 +8,7 @@ import com.konkuk.walku.databinding.FragmentChallengeSuccessrecyclerBinding
 import com.konkuk.walku.src.main.challenge.littleFragment.myChallengeWindow.ChallengeMyData
 
 
-class ChallengeSuccessRecyclerAdapter(var data:ArrayList<ChallengeMyData>): RecyclerView.Adapter<ChallengeSuccessRecyclerAdapter.ViewHolder>() {
+class ChallengeSuccessRecyclerAdapter(var data:ArrayList<ChallengeSuccessData>): RecyclerView.Adapter<ChallengeSuccessRecyclerAdapter.ViewHolder>() {
 
     inner class ViewHolder(bind: FragmentChallengeSuccessrecyclerBinding):RecyclerView.ViewHolder(bind.root){
         var binding = bind

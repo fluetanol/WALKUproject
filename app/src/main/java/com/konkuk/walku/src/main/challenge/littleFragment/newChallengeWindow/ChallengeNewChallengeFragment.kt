@@ -3,6 +3,7 @@ package com.konkuk.walku.src.main.challenge.littleFragment.newChallengeWindow
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.os.Bundle
+import android.os.SystemClock.sleep
 import android.util.Log
 import android.view.View
 import android.view.View.GONE
@@ -22,6 +23,8 @@ import com.konkuk.walku.databinding.FragmentChallengeMychallengeBinding
 import com.konkuk.walku.src.main.challenge.ChallengeFragmentView.RecyclerDecoadpater
 import com.konkuk.walku.src.main.challenge.littleFragment.myChallengeWindow.ChallengeMyViewModel
 import java.util.*
+import kotlin.concurrent.timer
+import kotlin.concurrent.timerTask
 
 @SuppressLint("SetTextI18n")
 class ChallengeNewChallengeFragment: BaseFragment<FragmentChallengeMychallengeBinding>(
@@ -36,47 +39,26 @@ class ChallengeNewChallengeFragment: BaseFragment<FragmentChallengeMychallengeBi
     lateinit var adapter: ChallengeNewRecyclerAdapter
     var challengeviewmodel = ChallengeNewViewModel()
 
-    companion object {
-        const val HANGUEL_FIRST_UNICODE = '가'.code
-        const val HANGUEL_LAST_UNICODE = '힣'.code
-        const val HANGUEL_DIFFERENCE_UNICODE = '까'.code-'가'.code
-        const val HANGUEL_MIDDLECOUNT_UNICODE = 28
-
-        const val SEARCHFUNC_FLAG_INPUTSIZE_BIGGER = 0
-        const val SEARCHFUNC_FLAG_INPUTSIZE_SMALLER = 1
-    }
-
-    var initialarray = arrayOf ('ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ',
-        'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ' )
-    var middlearray = arrayOf('ㅏ' ,'ㅐ' ,'ㅑ', 'ㅒ', 'ㅓ' ,'ㅔ' ,'ㅕ' ,'ㅖ' ,
-        'ㅗ', 'ㅘ' ,'ㅙ' ,'ㅚ' ,'ㅛ', 'ㅜ' ,'ㅝ', 'ㅞ' ,'ㅟ' ,'ㅠ' ,'ㅡ' ,'ㅢ', 'ㅣ')
-    var lastarray =arrayOf('ㄱ','ㄲ','ㄳ','ㄴ','ㄵ','ㄶ','ㄷ','ㄹ','ㄺ','ㄻ','ㄼ',
-        'ㄽ','ㄾ','ㄿ','ㅀ','ㅁ','ㅂ','ㅄ','ㅅ','ㅆ','ㅇ','ㅈ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ')
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         showLoadingDialog(requireContext())
         challengeinit()
-
         val walk= database.addValueEventListener(object:ValueEventListener{
             //데이터가 바뀔떄 호출하거나 처음에 자동 호출되는 콜백함수
             override fun onDataChange(snapshot: DataSnapshot) {
-                challengeviewmodel.newdatalist.value = data
                 val walkchallengelist = snapshot.child("Challenge").child("Challengelist")
                 val accountchallengenewcount = snapshot.child("Customer").child("mike415415").child("Challenge").child("New").child("WalkCountChallenge")
                 val accountchallengenewdistance = snapshot.child("Customer").child("mike415415").child("Challenge").child("New").child("WalkDistanceChallenge")
                 val accountchallengeflag = snapshot.child("Customer").child("mike415415").child("Challenge").child("flag")
                 //챌린지 목록을 처음 꺼내올때, 내 계정의 챌린지 리스트로 정보를 옮긴다. 챌린지 리스트는 데베에 저장되어있다.
                 if (accountchallengeflag.value == false) {
-                    Log.i("test","call1")
-                    challengenew.setValue(walkchallengelist.value)
                     challengeflag.setValue(true)
+                    challengenew.setValue(walkchallengelist.value)
                 }
                 //이미 내 계정의 챌린지 리스트가 있는 경우, 처음 프레그먼트에서 호출시 그 안에서 꺼내옴
 
                 if(accountchallengeflag.value == true && callflag) {
-                    Log.i("test","call2")
                     data.clear()
                     for (i in accountchallengenewdistance.children.iterator()) {
                         if (i.child("context").value.toString() != "null") {
@@ -88,6 +70,7 @@ class ChallengeNewChallengeFragment: BaseFragment<FragmentChallengeMychallengeBi
                                 i.child("achiveamount").value.toString(),
                                 Timer())
                             data.add(newvalue)
+                            Log.i("test","2 child: "+ newvalue.toString())
                         }
                     }
                     for (j in accountchallengenewcount.children.iterator()) {
@@ -101,8 +84,9 @@ class ChallengeNewChallengeFragment: BaseFragment<FragmentChallengeMychallengeBi
                             data.add(newvalue)
                         }
                     }
-                    callflag = false;
+                    callflag = false
                 }
+                    challengeviewmodel.newdatalist.value = data
                     binding.counttext.text = "새로운 챌린지: " + data.size.toString()
                     recyclernone()
                     dismissLoadingDialog()
@@ -142,7 +126,8 @@ class ChallengeNewChallengeFragment: BaseFragment<FragmentChallengeMychallengeBi
                 builder.setTitle("확인")
                     .setMessage(data[pos].context + ": 이 챌린지를 수락하시겠습니까?")
                     .setPositiveButton("확인") { dialog, which ->
-                        val temp = data.removeAt(pos)
+                        val temp = data[pos]
+                        callflag= true
                         val day = Calendar.getInstance()
                         val date = day.get(Calendar.DATE).toString()
                         val hour = day.get(Calendar.HOUR_OF_DAY).toString()
@@ -168,20 +153,7 @@ class ChallengeNewChallengeFragment: BaseFragment<FragmentChallengeMychallengeBi
         }
         binding.recyclerview.adapter = adapter
         binding.spinner.visibility = View.GONE
-        binding.searchwindow.visibility=View.VISIBLE
 
-
-        val searching = Searching()
-        //searching.initarray(data)
-        var nowsize=0
-        var latesize=-1
-        binding.searchwindow.addTextChangedListener {
-            val inputstr=it.toString()
-            latesize = nowsize
-            nowsize = inputstr.length
-            if(nowsize>latesize) searching.SearchFunction(inputstr, SEARCHFUNC_FLAG_INPUTSIZE_BIGGER,data)
-            else searching.SearchFunction(inputstr, SEARCHFUNC_FLAG_INPUTSIZE_SMALLER,data)
-        }
     }
 
 

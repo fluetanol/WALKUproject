@@ -25,6 +25,7 @@ import kotlin.concurrent.timer
 
 class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBinding>(FragmentChallengeMychallengeBinding::bind, R.layout.fragment_challenge_mychallenge){
     val Customer = Firebase.database.getReference("Customer")
+    val mike = Firebase.database.getReference("Customer/mike415415")
     val challengenew = Firebase.database.getReference("Customer/mike415415/Challenge/New")
     val challengemy = Firebase.database.getReference("Customer/mike415415/Challenge/My")
     val challengesuccess = Firebase.database.getReference("Customer/mike415415/Challenge/Success")
@@ -53,6 +54,7 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
                 val accountchallengeDistancecount = snapshot.child("mike415415").child("Challenge").child("My").child("WalkDistanceChallenge")
                 challengeviewmodel.datalist.value=data
 
+                Log.i("test","test!")
                 if(flagremove==true){
                     Log.i("sort","remove")
                     if(data.size>0) {
@@ -110,30 +112,63 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
                 else if (flagremaintimesort){
                     sortingremaintime()
                     flagremaintimesort = false
+                    Log.i("toast","remian")
                 }
                 else if (flagachivementsort){
                     sortingremainprogress()
                     flagachivementsort = false
                 }
+
+                val walkinfo = snapshot.child("mike415415").child("analysis").child("stepData")
+                val distanceinfo = snapshot.child("mike415415").child("analysis").child("distance")
+
+                for(j in 0..data.size-1){
+                    data[j].achivement=0
+                }
+
+                for (i in walkinfo.children.iterator()){
+                    val step = i.child("stepCount").value
+                    val distance = i.child("distance").value
+                    for(j in 0..data.size-1){
+
+                        if(data[j].challengetype=="WalkCountChallenge")
+                        data[j].achivement+=step.toString().toInt()
+
+                        if(data[j].challengetype=="WalkDistanceChallenge")
+                        data[j].achivement+=distance.toString().toFloat().toInt()
+
+                    }
+                }
+                //challengeviewmodel.datalist.value=data
+
             }
             //모종의 이유로 데베쪽에서 문제가 생겨서 데이터 가져오는 것에 실패했을때 처리할 일
             override fun onCancelled(error: DatabaseError) {
                 Toast.makeText(context,error.toString(),Toast.LENGTH_SHORT).show()
             }
         })
+        dismissLoadingDialog()
     }
 
     //resume시 초기화 작업
     override fun onResume() {
         super.onResume()
+        showLoadingDialog(requireContext())
+        if(data.size==0)
+        flagremove = true
         when (binding.spinner.selectedItemPosition) {
             0-> flagremove = true
-            1->flagstarttimesort = true
-            2->flagremove = true
-            3->flagachivementsort=true
+            1-> {
+                flagstarttimesort = true
+            }
+            2->{
+                flagremaintimesort=true
+            }
+            3->{
+                flagachivementsort=true
+            }
             else->{}
          }
-
         if (data.size != 0)
             binding.counttext.text = "내 챌린지: " + data.size.toString()
     }
@@ -172,15 +207,18 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
                     builder.setTitle("정말로?")
                         .setMessage("정말로 이 챌린지를 그만 두시겠나요?")
                         .setPositiveButton("확인") { dialog, which ->
+                            showLoadingDialog(requireContext())
                             flagremove = true
                             data[pos].timer.cancel()
                             data[pos].timer.purge()
                             val temp = data[pos]
+
                             challengemy.child(temp!!.challengetype).child(temp?.num.toString()).removeValue()
                             challengenew.child(temp!!.challengetype).child(temp?.num.toString()).child("context").setValue(temp.context)
                             challengenew.child(temp!!.challengetype).child(temp?.num.toString()).child("achiveamount").setValue(temp.achivementamount)
                             challengenew.child(temp!!.challengetype).child(temp?.num.toString()).child("day").setValue(temp.day)
                             recyclernone()
+                            dismissLoadingDialog()
                         }
                         .setNegativeButton("취소") { _, _ -> }
                         .show()
@@ -207,16 +245,7 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
                 }
             }
         }
-        /*
-        adapter.ontimechangelistener = object:ChallengeMyRecyclerAdapter.OnTimeChangeListener{
-            override fun Timechangelistener(pos: Int, timetext: String, achivetext: String) {
-                try {
-                    var splitremaintime = data[pos].remaintime.split(" ")
-                    if (splitremaintime[0].toInt() <= 2 && splitremaintime[1].toInt() <= 23 && splitremaintime[2].toInt() <= 54 && splitremaintime[3].toInt() <= 55) {
-                    }
-                }catch(e:Exception){}
-            }
-        }*/
+
         binding.recyclerview.adapter = adapter
 
         //정렬을 위한 스피너 리스너
@@ -290,19 +319,36 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
                     flagtime=true
                     data[position].remaintime= "$difday $difhour $difminute $difsecond"
                     challengemy.child(data[position].challengetype).child(data[position].num.toString()).child("remaintime").setValue("$difday $difhour $difminute $difsecond")
+
+                    if (difday<=0 && difhour<=0 && difminute<=0 && difsecond <=0) {
+                        data[position].remaintime= "0 0 0 0"
+                        data[position].buttontext = "시간종료"
+                        data[position].timer.cancel()
+                        data[position].timer.purge()
+                    }
+
+                    if (data[position].achivement > data[position].achivementamount.toInt()){
+                        data[position].achivement =  data[position].achivementamount.toInt()
+                        data[position].buttontext = "확인"
+                        data[position].timer.cancel()
+                        data[position].timer.purge()
+                    }
                 }
                 catch(e:Exception) {
                     Log.e("timer","$e")
                 }
             }
         }
-        Log.i("timer?","생성 완료 -> "+timer.toString())
         return timer
     }
+
+
+
 
     // 이 아래부터는 sorting알고리즘들입니다
     // 그런데 저는 알고리즘에 너무 쥐약이니 시간 복잡도를 더 줄일수 있는 좋은 소팅 알고리즘을 생각하시는 분들은
     // 여기에서 수정해주시면 감사드리겠습니다...
+    // 밑의 소팅 방법은 최대값을 찾아내어 순차적으로 뒤에 갖다 넣는 방식의 소팅입니다.
 
     fun sortingstarttime(){
         for(i in data.size-1 downTo 0){
@@ -402,8 +448,10 @@ class ChallengeMyChallengeFragment : BaseFragment<FragmentChallengeMychallengeBi
             var maxindex = -1
             for(j in 0..i) {
                 val achivement =  data[j].achivement
-                if (achivement>=maxachivement) {                    //날짜 비교, 날짜가 크다 = 더 늦게 선택한 챌린지다
-                    maxachivement = achivement
+                val entireachivement = data[j].achivementamount.toInt()
+                val rateachivement  =  achivement / entireachivement
+                if (entireachivement>=maxachivement) {                    //날짜 비교, 날짜가 크다 = 더 늦게 선택한 챌린지다
+                    maxachivement = entireachivement
                     maxindex = j                    //가장 최근에 신청한 챌린지가 담긴 인덱스 번호 저장
                 }
             }

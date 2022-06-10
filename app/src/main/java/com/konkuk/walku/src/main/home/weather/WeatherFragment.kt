@@ -131,7 +131,7 @@ class WeatherFragment :
     override fun onGetWeatherSuccess(response: GetWeatherResponse) {
         dismissLoadingDialog()
         Log.d("okhttp", "onGetWeatherSuccess")
-        showCustomToast("날씨 api 연동 성공")
+//        showCustomToast("날씨 api 연동 성공")
         if(response.response.header.resultCode=="00") {
             val it = response.response.body.items.item
             // 현재 시각부터 1시간 뒤 마다의 날씨 100개를 담을 배열 (100개는 넉넉하게 만들었습니다.)

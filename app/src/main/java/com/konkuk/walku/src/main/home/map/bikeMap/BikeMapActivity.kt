@@ -85,7 +85,7 @@ class BikeMapActivity : BaseActivity<ActivityBikeMapBinding>(ActivityBikeMapBind
     override fun onGetBikeSuccess(response: GetBikeResponse) {
         dismissLoadingDialog()
         if (response.rentBikeStatus.RESULT.CODE=="INFO-000") {
-            showCustomToast("따릉이 API 연결 성공")
+//            showCustomToast("따릉이 API 연결 성공")
             response.rentBikeStatus.row.forEach {
                 bikeArr[it.stationId] = ModelBike(
                     rackTotalCount = it.rackTotCnt,
