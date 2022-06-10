@@ -12,7 +12,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.konkuk.walku.R
 import com.konkuk.walku.src.main.home.map.walkMap.model.ModelPark
 
-class ParkBottomSheetDialog(val itemId: Int, val parkArr: MutableList<ModelPark>, val itemClick: (Int) -> Unit) : BottomSheetDialogFragment() {
+class ParkBottomSheetDialog(private val itemId: Int, private val parkArr: MutableList<ModelPark>, val itemClick: (Int) -> Unit) : BottomSheetDialogFragment() {
 
     lateinit var parkImageView : AppCompatImageView
     lateinit var titleTextView : TextView

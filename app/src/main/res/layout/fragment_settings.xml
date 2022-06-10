@@ -1,24 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
+
+    <!-- 상단 레이아웃 바 (로고, 알림) -->
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/fragment_settings_top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="6:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/fragment_settings_walku_title_image_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/walku_main_text"
+            android:tint="@color/main_green_background"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="20dp"
+            android:tint="@color/light_gray"
+            app:layout_constraintBottom_toBottomOf="@id/fragment_settings_walku_title_image_view"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/fragment_settings_walku_title_image_view"
+            app:srcCompat="@drawable/ic_alarm_selected" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/fragment_settings_top_border"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/border_gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fragment_settings_top_layout" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/fragment_settings_profile_image"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fragment_settings_top_border"
+        tools:src="@drawable/profile_temp" />
 
     <TextView
+        android:id="@+id/fragment_settings_name_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="설정"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:layout_gravity="center"/>
+        android:layout_marginStart="20dp"
+        android:fontFamily="@font/roboto_bold"
+        android:textColor="@color/dark_gray"
+        android:textSize="17sp"
+        app:layout_constraintBottom_toTopOf="@id/fragment_settings_email_text_view"
+        app:layout_constraintStart_toEndOf="@id/fragment_settings_profile_image"
+        app:layout_constraintTop_toTopOf="@id/fragment_settings_profile_image"
+        tools:text="김원석" />
 
+    <TextView
+        android:id="@+id/fragment_settings_name_sub_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="님"
+        android:textColor="@color/dark_gray"
+        android:textSize="15sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/fragment_settings_name_text_view"
+        app:layout_constraintStart_toEndOf="@id/fragment_settings_name_text_view" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/settingrecycler1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+    <TextView
+        android:id="@+id/fragment_settings_email_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_bold"
+        android:textColor="@color/medium_gray"
+        app:layout_constraintBottom_toBottomOf="@id/fragment_settings_profile_image"
+        app:layout_constraintStart_toStartOf="@id/fragment_settings_name_text_view"
+        app:layout_constraintTop_toBottomOf="@id/fragment_settings_name_text_view"
+        tools:text="dnjstjr245" />
 
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/fragment_my_carrot_right_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:backgroundTint="@color/transparent"
+        android:src="@drawable/ic_right"
+        android:tint="@color/dark_gray"
+        app:layout_constraintBottom_toBottomOf="@id/fragment_settings_profile_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/fragment_settings_profile_image" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
