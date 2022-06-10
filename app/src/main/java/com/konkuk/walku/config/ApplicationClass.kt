@@ -35,6 +35,10 @@ class ApplicationClass : Application() {
         val K_USER_ACCOUNT = "kakaoUserAccount"
         val K_USER_THUMB = "kakaoUserThumbnailImageUrl"
 
+        val G_USER_NAME = "googleUserName"
+        val G_USER_ACCOUNT = "googleUserAccount"
+        val G_USER_THUMB = "googleUserThumbnailImageUrl"
+
         // JWT Token Header 키 값
         val X_ACCESS_TOKEN = "X-ACCESS-TOKEN"
 
