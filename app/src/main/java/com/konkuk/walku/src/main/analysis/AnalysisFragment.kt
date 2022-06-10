@@ -82,7 +82,7 @@ class AnalysisFragment : BaseFragment<FragmentAnalysisBinding>(FragmentAnalysisB
 
     private fun initDB() {
         rdb= Firebase.database.reference
-        val userid = ApplicationClass.sSharedPreferences.getString(ApplicationClass.K_USER_ACCOUNT,null)?.split('@')?.get(0)
+        val userid = ApplicationClass.sSharedPreferences.getString(ApplicationClass.G_USER_ACCOUNT,null)?.split('@')?.get(0)
         rdb.child("Customer").child(userid.toString()).get().addOnSuccessListener {
             val analysisData =it.child("analysis")
             val stepData = analysisData.child("stepData")

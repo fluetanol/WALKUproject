@@ -162,7 +162,7 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
     private fun insertDB(){
         rdb= Firebase.database.reference
         try {
-            val userid = ApplicationClass.sSharedPreferences.getString(ApplicationClass.K_USER_ACCOUNT,null)?.split('@')?.get(0)!!
+            val userid = ApplicationClass.sSharedPreferences.getString(ApplicationClass.G_USER_ACCOUNT,null)?.split('@')?.get(0)!!
             rdb.child("Customer/$userid").child("analysis").setValue(analysisData).addOnSuccessListener {
                 Log.i("asd","Data insert success")
             }.addOnFailureListener {
