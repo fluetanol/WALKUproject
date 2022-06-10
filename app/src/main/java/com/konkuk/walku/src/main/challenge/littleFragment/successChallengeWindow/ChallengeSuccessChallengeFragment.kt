@@ -14,7 +14,6 @@ import com.google.firebase.ktx.Firebase
 import com.konkuk.walku.R
 import com.konkuk.walku.config.BaseFragment
 import com.konkuk.walku.databinding.FragmentChallengeMychallengeBinding
-import com.konkuk.walku.src.main.challenge.littleFragment.myChallengeWindow.ChallengeMyData
 import com.konkuk.walku.src.main.challenge.ChallengeFragmentView.RecyclerDecoadpater
 import java.util.*
 

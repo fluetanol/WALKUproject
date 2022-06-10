@@ -81,18 +81,39 @@
 
     <!-- -->
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/activity_permission_fitness_image_view"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/ic_body"
+        app:layout_constraintStart_toStartOf="@id/activity_permission_location_image_view"
+        app:layout_constraintTop_toBottomOf="@id/activity_permission_location_image_view" />
+
     <TextView
-        android:id="@+id/activity_permission_choice_permission_text_view"
+        android:id="@+id/activity_permission_fitness_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
-        android:layout_marginTop="50dp"
         android:fontFamily="@font/roboto_bold"
-        android:text="선택 접근 권한"
+        android:text="신체 활동 정보"
         android:textColor="@color/black"
-        android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/activity_permission_location_sub_text_view" />
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@id/activity_permission_fitness_image_view"
+        app:layout_constraintTop_toTopOf="@id/activity_permission_fitness_image_view" />
+
+    <TextView
+        android:id="@+id/activity_permission_fitness_sub_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_regular"
+        android:text="걸음 수 등 신체 활동 관련 정보 기능 사용"
+        android:textColor="@color/light_gray"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@id/activity_permission_fitness_image_view"
+        app:layout_constraintStart_toStartOf="@id/activity_permission_fitness_text_view"
+        app:layout_constraintTop_toBottomOf="@id/activity_permission_fitness_text_view" />
+
 
     <TextView
         android:id="@+id/activity_permission_detail_description_first_text_view"
