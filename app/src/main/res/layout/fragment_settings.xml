@@ -46,67 +46,158 @@
         android:id="@+id/fragment_settings_top_border"
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:background="@color/border_gray"
+        android:background="@color/background_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/fragment_settings_top_layout" />
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/fragment_settings_profile_image"
-        android:layout_width="65dp"
-        android:layout_height="65dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="16dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/fragment_settings_profile_layout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="15dp"
+        android:background="@drawable/profile_background"
+        app:layout_constraintDimensionRatio="4:1"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fragment_settings_top_border"
-        tools:src="@drawable/profile_temp" />
+        app:layout_constraintTop_toBottomOf="@id/fragment_settings_top_border">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/fragment_settings_profile_image"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/profile_temp" />
+
+        <TextView
+            android:id="@+id/fragment_settings_name_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:fontFamily="@font/roboto_bold"
+            android:textColor="@color/dark_gray"
+            android:textSize="17sp"
+            app:layout_constraintBottom_toTopOf="@id/fragment_settings_email_text_view"
+            app:layout_constraintStart_toEndOf="@id/fragment_settings_profile_image"
+            app:layout_constraintTop_toTopOf="@id/fragment_settings_profile_image"
+            tools:text="김원석" />
+
+        <TextView
+            android:id="@+id/fragment_settings_name_sub_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:fontFamily="@font/roboto_bold"
+            android:text="님"
+            android:textColor="@color/dark_gray"
+            android:textSize="14sp"
+            app:layout_constraintBaseline_toBaselineOf="@id/fragment_settings_name_text_view"
+            app:layout_constraintStart_toEndOf="@id/fragment_settings_name_text_view" />
+
+        <TextView
+            android:id="@+id/fragment_settings_email_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_bold"
+            android:textColor="@color/medium_gray"
+            app:layout_constraintBottom_toBottomOf="@id/fragment_settings_profile_image"
+            app:layout_constraintStart_toStartOf="@id/fragment_settings_name_text_view"
+            app:layout_constraintTop_toBottomOf="@id/fragment_settings_name_text_view"
+            tools:text="dnjstjr245" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/fragment_my_carrot_right_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:backgroundTint="@color/transparent"
+            android:src="@drawable/ic_right"
+            android:tint="@color/dark_gray"
+            app:layout_constraintBottom_toBottomOf="@id/fragment_settings_profile_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/fragment_settings_profile_image" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
-        android:id="@+id/fragment_settings_name_text_view"
+        android:id="@+id/fragment_settings_value_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
         android:fontFamily="@font/roboto_bold"
+        android:text="활동온도"
         android:textColor="@color/dark_gray"
-        android:textSize="17sp"
-        app:layout_constraintBottom_toTopOf="@id/fragment_settings_email_text_view"
-        app:layout_constraintStart_toEndOf="@id/fragment_settings_profile_image"
-        app:layout_constraintTop_toTopOf="@id/fragment_settings_profile_image"
-        tools:text="김원석" />
+        app:layout_constraintStart_toStartOf="@id/fragment_settings_profile_layout"
+        app:layout_constraintTop_toBottomOf="@id/fragment_settings_profile_layout" />
 
-    <TextView
-        android:id="@+id/fragment_settings_name_sub_text_view"
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/dark_gray"
+        app:layout_constraintBottom_toBottomOf="@id/fragment_settings_value_text_view"
+        app:layout_constraintEnd_toEndOf="@id/fragment_settings_value_text_view"
+        app:layout_constraintStart_toStartOf="@id/fragment_settings_value_text_view" />
+
+    <androidx.appcompat.widget.AppCompatImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="3dp"
+        android:layout_marginStart="5dp"
+        android:src="@drawable/ic_info"
+        android:tint="@color/border_gray"
+        app:layout_constraintBottom_toBottomOf="@id/fragment_settings_value_text_view"
+        app:layout_constraintStart_toEndOf="@id/fragment_settings_value_text_view"
+        app:layout_constraintTop_toTopOf="@id/fragment_settings_value_text_view" />
+
+    <com.skydoves.progressview.ProgressView
+        android:id="@+id/fragment_settings_walku_progress_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:visibility="invisible"
+        app:layout_constraintDimensionRatio="20:1"
+        app:layout_constraintEnd_toEndOf="@id/fragment_settings_profile_layout"
+        app:layout_constraintStart_toStartOf="@id/fragment_settings_value_text_view"
+        app:layout_constraintTop_toBottomOf="@id/fragment_settings_value_text_view"
+        app:progressView_animation="accelerateDecelerate"
+        app:progressView_autoAnimate="true"
+        app:progressView_colorBackground="@color/background_gray"
+        app:progressView_colorProgress="@color/main_green_background"
+        app:progressView_max="100"
+        app:progressView_min="0"
+        app:progressView_orientation="horizontal"
+        app:progressView_padding="1dp"
+        app:progressView_progressFromPrevious="true"
+        app:progressView_radius="12dp"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/fragment_settings_walku_value_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="7dp"
+        android:layout_marginBottom="10dp"
         android:fontFamily="@font/roboto_bold"
-        android:text="님"
         android:textColor="@color/dark_gray"
         android:textSize="15sp"
-        app:layout_constraintBaseline_toBaselineOf="@id/fragment_settings_name_text_view"
-        app:layout_constraintStart_toEndOf="@id/fragment_settings_name_text_view" />
+        app:layout_constraintBottom_toTopOf="@id/fragment_settings_walku_progress_view"
+        app:layout_constraintEnd_toStartOf="@id/fragment_settings_badge_image_view"
+        tools:text="38.6°C" />
 
-    <TextView
-        android:id="@+id/fragment_settings_email_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/roboto_bold"
-        android:textColor="@color/medium_gray"
-        app:layout_constraintBottom_toBottomOf="@id/fragment_settings_profile_image"
-        app:layout_constraintStart_toStartOf="@id/fragment_settings_name_text_view"
-        app:layout_constraintTop_toBottomOf="@id/fragment_settings_name_text_view"
-        tools:text="dnjstjr245" />
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/fragment_settings_badge_image_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@drawable/ic_walku"
+        android:tint="@color/main_green_background"
+        app:layout_constraintBottom_toBottomOf="@id/fragment_settings_walku_value_text_view"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="@id/fragment_settings_walku_progress_view"
+        app:layout_constraintTop_toTopOf="@id/fragment_settings_walku_value_text_view" />
 
-    <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/fragment_my_carrot_right_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="5dp"
-        android:backgroundTint="@color/transparent"
-        android:src="@drawable/ic_right"
-        android:tint="@color/dark_gray"
-        app:layout_constraintBottom_toBottomOf="@id/fragment_settings_profile_image"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/fragment_settings_profile_image" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

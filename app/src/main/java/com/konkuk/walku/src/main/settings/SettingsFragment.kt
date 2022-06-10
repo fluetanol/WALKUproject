@@ -1,5 +1,6 @@
 package com.konkuk.walku.src.main.settings
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import com.bumptech.glide.Glide
@@ -14,6 +15,7 @@ import com.konkuk.walku.databinding.FragmentSettingsBinding
 class SettingsFragment : BaseFragment<FragmentSettingsBinding>(FragmentSettingsBinding::bind, R.layout.fragment_settings),
     SettingsFragmentView {
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -24,7 +26,14 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>(FragmentSettingsB
                 .into(fragmentSettingsProfileImage)
             fragmentSettingsNameTextView.text = sSharedPreferences.getString(K_USER_NAME, null)
             fragmentSettingsEmailTextView.text = spiltUserIdFromEmail(sSharedPreferences.getString(K_USER_ACCOUNT, null))
+
+            fragmentSettingsWalkuProgressView.visibility = View.VISIBLE
+            fragmentSettingsWalkuProgressView.progress = 38.6F
+            fragmentSettingsWalkuProgressView.animate()
+            fragmentSettingsWalkuValueTextView.text = "${fragmentSettingsWalkuProgressView.progress}°C"
         }
+
+
 
     }
 
