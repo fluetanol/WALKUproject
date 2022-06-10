@@ -86,8 +86,12 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
             isRotationEnabled = false
             centerText = "${analysisData.stepData[todayIndex].stepCount.toInt()} / ${analysisData.stepData[todayIndex].stepGoal.toInt()}"
             setEntryLabelColor(Color.BLACK)
+            if(initbar)
+                animateY(1400)
+            else
+                animateY(1)
 
-            animateY(1)
+
             //animateY( Easing.Linear)
 
             animate()

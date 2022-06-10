@@ -121,7 +121,7 @@ class StatisticsFragment: BaseFragment<FragmentStatisticsBinding>(FragmentStatis
         //hiding the x-axis line, default true if not set
         xAxis.setDrawAxisLine(false)
         //hiding the vertical grid lines, default true if not set
-        xAxis.setDrawGridLines(true)
+        xAxis.setDrawGridLines(false)
 
         xAxis.valueFormatter= DateAxisValuewFormat()
         xAxis.setDrawLabels(true)

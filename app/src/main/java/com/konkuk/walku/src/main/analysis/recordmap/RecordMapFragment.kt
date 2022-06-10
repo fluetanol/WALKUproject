@@ -48,6 +48,7 @@ class RecordMapFragment : BaseFragment<FragmentRecordMapBinding>(FragmentRecordM
         locList.add(Walk(37.5400,127.0773))
         locList.add(Walk(37.5438,127.0723))
         walkList =ArrayList<LocationList>()
+        getBundle()
         //insertDB(locList)
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -58,6 +59,7 @@ class RecordMapFragment : BaseFragment<FragmentRecordMapBinding>(FragmentRecordM
 
     override fun onResume() {
         super.onResume()
+        getBundle()
         init()
     }
     private fun getBundle() {
