@@ -87,7 +87,6 @@ class ChallengeFragment : BaseFragment<FragmentChallengeBinding>(FragmentChallen
             tab.text = tabTitles[position]
         }.attach()
 
-        var id = splitUserIdFromEmail()
     }
 
 
