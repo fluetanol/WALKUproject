@@ -3,7 +3,6 @@ package com.konkuk.walku.src.main.analysis.statistics
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Half.toFloat
 import android.util.Log
 import android.view.View
 import com.github.mikephil.charting.charts.BarChart
@@ -15,8 +14,6 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 import com.konkuk.walku.R
 import com.konkuk.walku.config.BaseFragment
 import com.konkuk.walku.databinding.FragmentStatisticsBinding
@@ -25,10 +22,7 @@ import com.konkuk.walku.src.main.analysis.model.AnalysisData
 import com.konkuk.walku.src.main.analysis.model.LocationList
 import com.konkuk.walku.src.main.analysis.model.Step
 import com.konkuk.walku.src.main.analysis.model.Walk
-import com.konkuk.walku.src.main.analysis.today.CircleBarView
 import java.time.LocalDate
-import java.util.concurrent.TimeUnit
-import kotlin.properties.Delegates
 
 class StatisticsFragment: BaseFragment<FragmentStatisticsBinding>(FragmentStatisticsBinding::bind, R.layout.fragment_statistics) {
     lateinit var analysisData:AnalysisData

@@ -18,23 +18,23 @@
             android:id="@+id/goalInput"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="52dp"
+            android:backgroundTint="@color/main_green_background"
             android:ems="10"
-            android:inputType="number"
-            app:layout_constraintEnd_toStartOf="@+id/setgoal"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/customCircleBarView" />
+            android:inputType="number" />
+
         <Button
             android:id="@+id/setgoal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="52dp"
-            android:text="목표 설정"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.848"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/customCircleBarView" />
+            android:backgroundTint="@color/main_green_background"
+            android:elevation="5dp"
+            android:text="Set Goal"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/white"
+            app:rippleColor="@color/colorAccent"
+            app:shapeAppearance="@style/ShapeAppearance.MaterialComponents.MediumComponent"
+            app:strokeColor="@color/colorAccent"
+            app:strokeWidth="2dp" />
 
 
     </LinearLayout>

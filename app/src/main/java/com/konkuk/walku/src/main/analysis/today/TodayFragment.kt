@@ -1,32 +1,21 @@
 package com.konkuk.walku.src.main.analysis.today
 
-import android.app.Activity
 import android.content.Context
-import android.content.Context.INPUT_METHOD_SERVICE
 import android.graphics.Color
+import android.graphics.Paint
+import android.icu.text.Transliterator
 import android.os.Bundle
-import android.os.Parcelable
-import android.provider.Contacts.SettingsColumns.KEY
 import android.util.Log
-import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentResultListener
 import com.github.mikephil.charting.animation.Easing
+import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.utils.ColorTemplate
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.fitness.Fitness
-import com.google.android.gms.fitness.FitnessOptions
-import com.google.android.gms.fitness.data.DataType
-import com.google.android.gms.fitness.request.OnDataPointListener
-import com.google.android.gms.fitness.request.SensorRequest
+import com.github.mikephil.charting.utils.MPPointF
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -39,18 +28,15 @@ import com.konkuk.walku.src.main.analysis.model.AnalysisData
 import com.konkuk.walku.src.main.analysis.model.LocationList
 import com.konkuk.walku.src.main.analysis.model.Step
 import com.konkuk.walku.src.main.analysis.model.Walk
-import kotlinx.parcelize.Parcelize
 import java.time.LocalDate
-import java.util.concurrent.TimeUnit
 import kotlin.properties.Delegates
 
 class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::bind, R.layout.fragment_today) {
-    //val circleBarView: CircleBarView by lazy { binding.customCircleBarView }
     var todayIndex by Delegates.notNull<Int>()
     lateinit var mainActivity: MainActivity
     lateinit var rdb: DatabaseReference
     private lateinit var analysisData:AnalysisData
-
+    var initbar =true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i("asd","OnCreate!!")
@@ -61,10 +47,10 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.i("asd","OnCreateView!!")
+        initbar =true
         bundleReciever()
         setGoal()
         pieChart()
-        //circleBarDraw()
     }
 
     private fun pieChart() {
@@ -76,13 +62,9 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
         entries.add(PieEntry(analysisData.stepData[todayIndex].stepCount.toFloat()))
         entries.add(PieEntry(analysisData.stepData[todayIndex].stepGoal.toFloat()))
 
-
-
         val colorItems = ArrayList<Int>()
-        colorItems.add(ColorTemplate.MATERIAL_COLORS[1])
-        colorItems.add(Color.WHITE)
-
-
+        colorItems.add(Color.rgb(16,163,114))
+        colorItems.add(Color.rgb(245,255,250))
 
         val pieDataSet = PieDataSet(entries,"")
         pieDataSet.apply {
@@ -97,11 +79,17 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
             description.isEnabled = true
             description.text = "오늘의 걸음 수"
             description.textSize = 30f
+            description.textColor = Color.rgb(16,163,114)
+            description.textAlign =Paint.Align.CENTER
+            description.xOffset = 180f
             isRotationEnabled = false
             centerText = "${analysisData.stepData[todayIndex].stepCount.toInt()} / ${analysisData.stepData[todayIndex].stepGoal.toInt()}"
             setEntryLabelColor(Color.BLACK)
             animateY(1400, Easing.EaseOutQuad)
-            animate()
+            if(initbar){
+                animate()
+                initbar=false
+            }
         }
     }
 
@@ -143,10 +131,6 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
         }
     }
 
-//    private fun circleBarDraw(){
-//        val progress = (analysisData.stepData[todayIndex].stepCount.toFloat())/analysisData.stepData[todayIndex].stepGoal.toFloat() * 360
-//        circleBarView.setProgress(progress,analysisData.stepData[todayIndex].stepCount.toString()+"/"+analysisData.stepData[todayIndex].stepGoal.toString())
-//    }
     private fun searchTodayIndex(){
         for(i in 0 until analysisData.stepData.size){
             if(analysisData.stepData[i].date==LocalDate.now().toString()){
@@ -161,6 +145,7 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
         binding.goalInput.addTextChangedListener{
             binding.setgoal.isEnabled = !it.isNullOrBlank()
         }
+
         binding.setgoal.setOnClickListener {
             //goalInput의 목표 걸음수 파이어베이스에 저장
             if(binding.goalInput.textSize.toInt()!=0){
