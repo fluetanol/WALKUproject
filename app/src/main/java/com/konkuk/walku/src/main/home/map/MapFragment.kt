@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.konkuk.walku.R
 import com.konkuk.walku.databinding.FragmentMapBinding
+import com.konkuk.walku.src.main.home.map.bikeMap.BikeMapSplashActivity
 import com.konkuk.walku.src.main.home.map.model.MapViewPagerItem
 import com.konkuk.walku.src.main.home.map.walkMap.WalkMapActivity
 import com.konkuk.walku.src.main.home.map.walkMap.WalkMapSplashActivity
@@ -76,7 +77,19 @@ class MapFragment : Fragment() {
             override fun OnItemClick(position: Int) {
                 when (position % 3) {
                     0 -> {
-                        Toast.makeText(requireActivity(), "따릉이", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(requireActivity(), BikeMapSplashActivity::class.java)
+                        val activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            requireActivity(),
+                            androidx.core.util.Pair<View, String>(
+                                view?.findViewById(R.id.fragment_map_image_view),
+                                "background_image"
+                            )
+                        )
+                        ActivityCompat.startActivity(
+                            requireActivity(),
+                            intent,
+                            activityOptions.toBundle()
+                        )
                     }
                     1 -> {
                         val intent = Intent(requireActivity(), WalkMapSplashActivity::class.java)

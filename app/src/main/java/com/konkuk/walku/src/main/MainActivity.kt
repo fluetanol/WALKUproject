@@ -32,6 +32,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
         supportFragmentManager.beginTransaction().replace(R.id.main_frm, HomeFragment()).commitAllowingStateLoss()
 
+        binding.mainBtmFab.setOnClickListener {
+            /*위치받는리스너 설정 여기에다가 해주시면됩니다 */
+        }
+
         binding.mainBtmNav.setOnItemSelectedListener{ item ->
             when (item.itemId) {
                 R.id.menu_main_btm_nav_home -> {
