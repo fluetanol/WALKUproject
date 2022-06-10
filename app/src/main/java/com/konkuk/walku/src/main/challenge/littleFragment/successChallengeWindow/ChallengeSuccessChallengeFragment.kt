@@ -29,7 +29,6 @@ class ChallengeSuccessChallengeFragment : BaseFragment<FragmentChallengeMychalle
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        showLoadingDialog(requireContext())
         challengeinit()
         //데이터 가져오는 리스너, 프레그먼트가 실행될떄, 재실행(resume)될때, 데이터베이스에 변동이 있을때 모두 작동
         val walk = Customer.addValueEventListener(object : ValueEventListener {
@@ -65,7 +64,7 @@ class ChallengeSuccessChallengeFragment : BaseFragment<FragmentChallengeMychalle
                 binding.counttext.text = "성공한 챌린지: "+data.size.toString()
                 adapter.notifyDataSetChanged()
                 recyclernone()
-                dismissLoadingDialog()
+
             }
             //모종의 이유로 데베쪽에서 문제가 생겨서 데이터 가져오는 것에 실패했을때 처리할 일
             override fun onCancelled(error: DatabaseError) {
