@@ -77,7 +77,6 @@ class AnalysisFragment : BaseFragment<FragmentAnalysisBinding>(FragmentAnalysisB
         }
         initDB()
         setSwipeView()
-        accessGoogleFit()
     }
 
     private fun initDB() {
@@ -180,78 +179,6 @@ class AnalysisFragment : BaseFragment<FragmentAnalysisBinding>(FragmentAnalysisB
 
     }
 
-    private fun accessGoogleFit() {
-//        getDistanceData()
-//        subscribeData()
-//        updateStepData(2000)
-//
-//        subscribeData()
-//        dailyDistanceData()
-//        dailyStepData()
-//        updateDistanceData(3000.0f)
-//        //getDistanceData(2)
-////        //n일전 걸음수 가져오기\
-//        getStepData(7)
-
-        //getDataLocation()
-    }
-
-    private fun getDistanceData(n:Long) {
-        val startTime = LocalDate.now().minusDays(n).atStartOfDay(ZoneId.systemDefault())
-        val endTime = LocalDate.now().minusDays(n-1).atStartOfDay(ZoneId.systemDefault())
-        //val endTime = LocalDateTime.now().atZone(ZoneId.systemDefault())
-
-        val datasource = DataSource.Builder()
-            .setAppPackageName("com.google.android.gms")
-            .setDataType(DataType.AGGREGATE_DISTANCE_DELTA)
-            .setType(DataSource.TYPE_DERIVED)
-            .setStreamName("estimated_distance")
-            .build()
-
-        val request = DataReadRequest.Builder()
-            .aggregate(datasource)
-            .bucketByTime(1, TimeUnit.DAYS)
-            .setTimeRange(startTime.toEpochSecond(), endTime.toEpochSecond(), TimeUnit.SECONDS)
-            .build()
-
-        Fitness.getHistoryClient(mainActivity, GoogleSignIn.getAccountForExtension(mainActivity, fitnessOptions))
-            .readData(request)
-            .addOnSuccessListener { response ->
-                val totalDistance = response.buckets
-                    .flatMap { it.dataSets }
-                    .flatMap { it.dataPoints }.last().getValue(Field.FIELD_DISTANCE)
-                Log.i("asd $n 일전", "TotalStep: $totalDistance")
-            }
-    }
-    private fun getStepData(n:Long) {
-        val startTime = LocalDate.now().minusDays(n).atStartOfDay(ZoneId.systemDefault())
-        val endTime = LocalDate.now().minusDays(n-1).atStartOfDay(ZoneId.systemDefault())
-        //val endTime = LocalDateTime.now().atZone(ZoneId.systemDefault())
-
-        val datasource = DataSource.Builder()
-            .setAppPackageName("com.google.android.gms")
-            .setDataType(DataType.TYPE_STEP_COUNT_DELTA)
-            .setType(DataSource.TYPE_DERIVED)
-            .setStreamName("estimated_distance")
-            .build()
-
-        val request = DataReadRequest.Builder()
-            .aggregate(datasource)
-            .bucketByTime(1, TimeUnit.DAYS)
-            .setTimeRange(startTime.toEpochSecond(), endTime.toEpochSecond(), TimeUnit.SECONDS)
-            .build()
-
-        Fitness.getHistoryClient(mainActivity, GoogleSignIn.getAccountForExtension(mainActivity, fitnessOptions))
-            .readData(request)
-            .addOnSuccessListener { response ->
-                val totalStep = response.buckets
-                    .flatMap { it.dataSets }
-                    .flatMap { it.dataPoints }
-                    .sumBy { it.getValue(Field.FIELD_STEPS).asInt() }
-                Log.i("asd $n 일전", "TotalStep: $totalStep")
-
-            }
-    }
     private fun dailyStepData() {
         Fitness.getHistoryClient(mainActivity, GoogleSignIn.getAccountForExtension(mainActivity, fitnessOptions))
             .readDailyTotal(DataType.TYPE_STEP_COUNT_DELTA)
@@ -279,97 +206,6 @@ class AnalysisFragment : BaseFragment<FragmentAnalysisBinding>(FragmentAnalysisB
                 Log.i("TAG", "There was a problem getting steps.", e)
             }
     }
-
-
-
-    private fun updateStepData(stepCountCumulative:Int) {
-        // Declare that the historical data was collected during the past 50 minutes.
-        val endTime = LocalDateTime.now().atZone(ZoneId.systemDefault())
-        //val time = LocalDate.now().minusDays(7).atStartOfDay()
-        val startTime = endTime.minusMinutes(50)
-
-        // Create a data source
-        val dataSource  = DataSource.Builder()
-            .setAppPackageName(mainActivity)
-            .setDataType(DataType.TYPE_STEP_COUNT_CUMULATIVE)
-            .setStreamName("asd - step count")
-            .setType(DataSource.TYPE_RAW)
-            .build()
-
-        // Create a data set
-        // For each data point, specify a start time, end time, and the
-        // data value -- in this case, 1000 new steps.
-
-
-        val dataPoint = DataPoint.builder(dataSource)
-            .setTimeInterval(startTime.toEpochSecond(), endTime.toEpochSecond(), TimeUnit.SECONDS)
-            .setField(Field.FIELD_STEPS, stepCountCumulative)
-            .build()
-
-        val dataSet = DataSet.builder(dataSource)
-            .add(dataPoint)
-            .build()
-        val request = DataUpdateRequest.Builder()
-            .setDataSet(dataSet)
-            .setTimeInterval(startTime.toEpochSecond(), endTime.toEpochSecond(), TimeUnit.SECONDS)
-            .build()
-
-        Fitness.getHistoryClient(mainActivity, GoogleSignIn.getAccountForExtension(mainActivity, fitnessOptions))
-            .updateData(request)
-            .addOnSuccessListener {
-                Log.i("asdUPDATE", "DataSet updated successfully!")
-            }
-            .addOnFailureListener { e ->
-                Log.w("asdUPDATE", "There was an error updating the DataSet", e)
-            }
-    }
-    private fun updateDistanceData(stepCountCumulative:Float) {
-        // Declare that the historical data was collected during the past 50 minutes.
-        val endTime = LocalDateTime.now().minusDays(2).atZone(ZoneId.systemDefault())
-        //val time = LocalDate.now().minusDays(7).atStartOfDay()
-        val startTime = endTime.minusMinutes(50)
-
-        // Create a data source
-        val dataSource  = DataSource.Builder()
-            .setAppPackageName(mainActivity)
-            .setDataType(DataType.AGGREGATE_DISTANCE_DELTA)
-            .setStreamName("asd - distance")
-            .setType(DataSource.TYPE_RAW)
-            .build()
-
-        // Create a data set
-        // For each data point, specify a start time, end time, and the
-        // data value -- in this case, 1000 new steps.
-
-
-        val dataPoint = DataPoint.builder(dataSource)
-            .setTimeInterval(startTime.toEpochSecond(), endTime.toEpochSecond(), TimeUnit.SECONDS)
-            .setField(Field.FIELD_DISTANCE, stepCountCumulative)
-            .build()
-
-        val dataSet = DataSet.builder(dataSource)
-            .add(dataPoint)
-            .build()
-        val request = DataUpdateRequest.Builder()
-            .setDataSet(dataSet)
-            .setTimeInterval(startTime.toEpochSecond(), endTime.toEpochSecond(), TimeUnit.SECONDS)
-            .build()
-
-        Fitness.getHistoryClient(mainActivity, GoogleSignIn.getAccountForExtension(mainActivity, fitnessOptions))
-            .updateData(request)
-            .addOnSuccessListener {
-                Log.i("asdUPDATE", "DataSet updated successfully!")
-            }
-            .addOnFailureListener { e ->
-                Log.w("asdUPDATE", "There was an error updating the DataSet", e)
-            }
-    }
-    fun DataPoint.getStartTimeString() = Instant.ofEpochSecond(this.getStartTime(TimeUnit.SECONDS))
-        .atZone(ZoneId.systemDefault())
-        .toLocalDateTime().toString()
-    fun DataPoint.getEndTimeString() = Instant.ofEpochSecond(this.getEndTime(TimeUnit.SECONDS))
-        .atZone(ZoneId.systemDefault())
-        .toLocalDateTime().toString()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
