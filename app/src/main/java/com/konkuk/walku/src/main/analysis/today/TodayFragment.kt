@@ -25,6 +25,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.konkuk.walku.R
+import com.konkuk.walku.config.ApplicationClass
 import com.konkuk.walku.config.BaseFragment
 import com.konkuk.walku.databinding.FragmentTodayBinding
 import com.konkuk.walku.src.main.MainActivity
@@ -127,7 +128,8 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
     private fun insertDB(){
         rdb= Firebase.database.reference
         try {
-            rdb.child("Customer/ksho0925").child("analysis").setValue(analysisData).addOnSuccessListener {
+            val userid = ApplicationClass.sSharedPreferences.getString(ApplicationClass.K_USER_ACCOUNT,null)?.split('@')?.get(0)!!
+            rdb.child("Customer/$userid").child("analysis").setValue(analysisData).addOnSuccessListener {
                 Log.i("asd","Data insert success")
             }.addOnFailureListener {
                 Log.i("asd","Data insert fail")

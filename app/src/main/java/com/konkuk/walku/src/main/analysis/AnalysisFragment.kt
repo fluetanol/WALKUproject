@@ -17,6 +17,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.konkuk.walku.R
+import com.konkuk.walku.config.ApplicationClass
 import com.konkuk.walku.config.BaseFragment
 import com.konkuk.walku.databinding.FragmentAnalysisBinding
 import com.konkuk.walku.src.main.MainActivity
@@ -81,8 +82,8 @@ class AnalysisFragment : BaseFragment<FragmentAnalysisBinding>(FragmentAnalysisB
 
     private fun initDB() {
         rdb= Firebase.database.reference
-        val userid = "ksho0925"
-        rdb.child("Customer").child(userid).get().addOnSuccessListener {
+        val userid = ApplicationClass.sSharedPreferences.getString(ApplicationClass.K_USER_ACCOUNT,null)?.split('@')?.get(0)
+        rdb.child("Customer").child(userid.toString()).get().addOnSuccessListener {
             val analysisData =it.child("analysis")
             val stepData = analysisData.child("stepData")
             val walkData = analysisData.child("walkData")

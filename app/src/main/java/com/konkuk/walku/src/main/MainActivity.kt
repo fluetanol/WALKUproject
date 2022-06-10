@@ -6,6 +6,7 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.provider.Settings
 import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.fitness.Fitness
@@ -17,6 +18,8 @@ import com.google.android.gms.fitness.request.SensorRequest
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.konkuk.walku.R
+import com.konkuk.walku.config.ApplicationClass.Companion.K_USER_ACCOUNT
+import com.konkuk.walku.config.ApplicationClass.Companion.sSharedPreferences
 import com.konkuk.walku.config.BaseActivity
 import com.konkuk.walku.databinding.ActivityMainBinding
 import com.konkuk.walku.src.main.analysis.AnalysisFragment
@@ -69,15 +72,15 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         super.onCreate(savedInstanceState)
         recieveTodayOnPause()
         subscribeData()
-        supportFragmentManager.beginTransaction().replace(R.id.main_frm, AnalysisFragment()).commitAllowingStateLoss()
+        supportFragmentManager.beginTransaction().replace(R.id.main_frm, HomeFragment()).commitAllowingStateLoss()
         binding.mainBtmFab.setOnClickListener {
             Log.i("asd","in fab btn")
             recordStart = recordStart != true
             if(recordStart){
                 getDataLocation()
-
             }else{
-                insertDB(locationList)
+                if(locationList.size>1)
+                    insertDB(locationList)
                 removeDataLocation()
             }
         }
@@ -237,14 +240,15 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     private fun insertDB(locList: ArrayList<Walk>){
         val rdb= Firebase.database.reference
         try {
-            val key=rdb.child("Customer/ksho0925").child("analysis").child("walkData").push().key
+            val userid = sSharedPreferences.getString(K_USER_ACCOUNT,null)?.split('@')?.get(0)
 
-            val username = "ksho0925"
+            val key=rdb.child("Customer/$userid").child("analysis").child("walkData").push().key
+
             val locLista = LocationList(locList)
             val locListb = locLista.toMap()
 
             val childUpdate = hashMapOf<String,Any>(
-                "/Customer/$username/analysis/walkData/$key" to locListb
+                "/Customer/$userid/analysis/walkData/$key" to locListb
             )
             rdb.updateChildren(childUpdate)
         }catch (e:Exception){
