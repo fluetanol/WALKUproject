@@ -1,6 +1,8 @@
 package com.konkuk.walku.util
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +13,7 @@ import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.konkuk.walku.R
 import com.konkuk.walku.src.main.home.map.walkMap.model.ModelPark
+
 
 class ParkBottomSheetDialog(private val itemId: Int, private val parkArr: MutableList<ModelPark>, val itemClick: (Int) -> Unit) : BottomSheetDialogFragment() {
 
@@ -56,14 +59,20 @@ class ParkBottomSheetDialog(private val itemId: Int, private val parkArr: Mutabl
         equipTextView.text = if(parkArr[itemId-1].parkMainEquip=="") {
             "정보가 존재하지 않습니다."
         } else {
-            parkArr[itemId-1].parkDescription
+            parkArr[itemId-1].parkMainEquip
         }
         roadTextView.text = if(parkArr[itemId-1].parkRoad=="") {
             "정보가 존재하지 않습니다."
         } else {
-            parkArr[itemId-1].parkDescription
+            parkArr[itemId-1].parkRoad
+        }
+
+        tellTextView.setOnClickListener {
+            val tel = "tel:${tellTextView.text}"
+            startActivity(Intent(Intent.ACTION_DIAL, Uri.parse(tel)))
         }
     }
+
     override fun getTheme(): Int {
         return R.style.AppBottomSheetDialogTheme
     }
