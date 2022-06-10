@@ -41,13 +41,14 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
         super.onCreate(savedInstanceState)
         Log.i("asd","OnCreate!!")
         initAnalysisData()
+        initbar =true
         todayIndex=0
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.i("asd","OnCreateView!!")
-        initbar =true
+
         bundleReciever()
         setGoal()
         pieChart()
@@ -85,11 +86,11 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
             isRotationEnabled = false
             centerText = "${analysisData.stepData[todayIndex].stepCount.toInt()} / ${analysisData.stepData[todayIndex].stepGoal.toInt()}"
             setEntryLabelColor(Color.BLACK)
-            animateY(1400, Easing.EaseOutQuad)
-            if(initbar){
-                animate()
-                initbar=false
-            }
+
+            animateY(1)
+            //animateY( Easing.Linear)
+
+            animate()
         }
     }
 
@@ -114,6 +115,7 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
             searchTodayIndex()
             pieChart()
             //circleBarDraw()
+
         }
         requireActivity().supportFragmentManager.setFragmentResultListener("step3",mainActivity
         ) { requestKey, result ->
