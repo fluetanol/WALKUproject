@@ -22,7 +22,8 @@ class ApplicationClass : Application() {
 
     // 기본 url만 작성해주세요.
     val API_URL_LIST = arrayListOf(
-        "http://apis.data.go.kr/"
+        "http://apis.data.go.kr/",
+        "http://openapi.seoul.go.kr:8088/"
     )
 
     // 코틀린의 전역변수 문법
@@ -57,8 +58,8 @@ class ApplicationClass : Application() {
     // 연결 타임아웃시간은 5초로 지정이 되어있고, HttpLoggingInterceptor를 붙여서 어떤 요청이 나가고 들어오는지를 보여줍니다.
     private fun initRetrofitInstance() {
         val client: OkHttpClient = OkHttpClient.Builder()
-            .readTimeout(10000, TimeUnit.MILLISECONDS)
-            .connectTimeout(10000, TimeUnit.MILLISECONDS)
+            .readTimeout(100000, TimeUnit.MILLISECONDS)
+            .connectTimeout(100000, TimeUnit.MILLISECONDS)
             // 로그캣에 okhttp.OkHttpClient로 검색하면 http 통신 내용을 보여줍니다.
             .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
             .addNetworkInterceptor(XAccessTokenInterceptor()) // JWT 자동 헤더 전송

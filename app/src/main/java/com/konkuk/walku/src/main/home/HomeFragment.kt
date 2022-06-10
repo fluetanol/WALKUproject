@@ -2,6 +2,8 @@ package com.konkuk.walku.src.main.home
 
 import android.os.Bundle
 import android.view.View
+import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_DRAGGING
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.konkuk.walku.R
 import com.konkuk.walku.config.BaseFragment
@@ -19,6 +21,16 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         // 탭 레이아웃과 뷰페이저2를 연결해주는 함수입니다.
         setSwipeView()
 
+        // 오른쪽 탭으로 갔을 때 왼쪽으로 스와이프 이동되는거 막기
+        binding.apply {
+            fragmentHomeViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageScrollStateChanged(state: Int) {
+                    super.onPageScrollStateChanged(state)
+                    fragmentHomeViewPager.isUserInputEnabled = fragmentHomeViewPager.currentItem != 1
+                }
+            })
+        }
+
     }
 
     private fun setSwipeView() {
@@ -30,5 +42,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
             tab.text = tabTitles[position]
         }.attach()
     }
+
 
 }

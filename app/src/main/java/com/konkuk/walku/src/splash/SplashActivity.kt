@@ -35,4 +35,8 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
 
     }
 
+    override fun onBackPressed() {
+        /* 뒤로가기 버튼 막아둠 */
+    }
+
 }

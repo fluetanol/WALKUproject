@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/park_bottom_sheet_dialog_card_view"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:elevation="0dp"
+                app:cardCornerRadius="12dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/park_bottom_sheet_dialog_image_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    tools:src="@drawable/temp_park" />
+
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/park_bottom_sheet_dialog_title_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:fontFamily="@font/roboto_bold"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                app:layout_constraintStart_toEndOf="@id/park_bottom_sheet_dialog_card_view"
+                app:layout_constraintTop_toTopOf="@id/park_bottom_sheet_dialog_card_view"
+                tools:text="궁동근린공원" />
+
+            <TextView
+                android:id="@+id/park_bottom_sheet_dialog_address_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/roboto_bold"
+                android:maxLines="1"
+                android:textColor="@color/medium_gray"
+                android:textSize="11sp"
+                app:layout_constraintStart_toStartOf="@id/park_bottom_sheet_dialog_title_text_view"
+                app:layout_constraintTop_toBottomOf="@id/park_bottom_sheet_dialog_title_text_view"
+                tools:text="서울특별시 서대문구 성산로7길 19-24(궁동공원)" />
+
+
+            <TextView
+                android:id="@+id/park_bottom_sheet_dialog_area_and_open_date_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/roboto_bold"
+                android:maxLines="1"
+                android:textColor="@color/medium_gray"
+                android:textSize="13sp"
+                app:layout_constraintBottom_toTopOf="@id/park_bottom_sheet_dialog_tell_icon"
+                app:layout_constraintStart_toStartOf="@id/park_bottom_sheet_dialog_address_text_view"
+                app:layout_constraintTop_toBottomOf="@id/park_bottom_sheet_dialog_address_text_view"
+                tools:text="29843.8㎡  ·  1993.10.31 개원" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/park_bottom_sheet_dialog_tell_icon"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:padding="1dp"
+                android:src="@drawable/ic_phone"
+                android:tint="@color/main_green_accent"
+                app:layout_constraintBottom_toBottomOf="@id/park_bottom_sheet_dialog_tell_text_view"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintStart_toStartOf="@id/park_bottom_sheet_dialog_area_and_open_date_text_view"
+                app:layout_constraintTop_toBottomOf="@id/park_bottom_sheet_dialog_area_and_open_date_text_view" />
+
+            <TextView
+                android:id="@+id/park_bottom_sheet_dialog_tell_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/roboto_bold"
+                android:maxLines="1"
+                android:textColor="@color/medium_gray"
+                android:textSize="13sp"
+                app:layout_constraintBottom_toBottomOf="@id/park_bottom_sheet_dialog_tell_icon"
+                app:layout_constraintStart_toEndOf="@id/park_bottom_sheet_dialog_tell_icon"
+                app:layout_constraintTop_toTopOf="@id/park_bottom_sheet_dialog_tell_icon"
+                tools:text="02-2600-4186" />
+
+            <TextView
+                android:id="@+id/park_bottom_sheet_dialog_description_title_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:fontFamily="@font/roboto_bold"
+                android:text="개요"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="@id/park_bottom_sheet_dialog_card_view"
+                app:layout_constraintTop_toBottomOf="@id/park_bottom_sheet_dialog_card_view" />
+
+            <TextView
+                android:id="@+id/park_bottom_sheet_dialog_description_content_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:fontFamily="@font/roboto_regular"
+                android:textColor="@color/dark_gray"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/park_bottom_sheet_dialog_description_title_text_view"
+                app:layout_constraintTop_toBottomOf="@id/park_bottom_sheet_dialog_description_title_text_view"
+                tools:text="공원 주위에는 서울 기념물 제11호인 허가바위가 있고 공원 내에는 전설이 깃든 광주바위와 허준 선생이 앉아서 병자를 진료하는 인자한 모습의 동상 그리고 호수 정자 어린이 놀이 시설이 있으며 인근 주민들의 휴식공간으로 이용되고 있다. 또한 주변에 허준박물관과 한강시민공원이 있어 인근 주민들에게 많은 사랑을 받고 있다. 그리고 7월부터 10월까지 건강 약초교실이 매주 일요일 2시부터 5시까지 운영되어 한방비누 만들기 등 다양한 한방체험을 할 수 있다." />
+
+            <TextView
+                android:id="@+id/park_bottom_sheet_dialog_equip_title_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:fontFamily="@font/roboto_bold"
+                android:text="주요시설"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="@id/park_bottom_sheet_dialog_description_content_text_view"
+                app:layout_constraintTop_toBottomOf="@id/park_bottom_sheet_dialog_description_content_text_view" />
+
+            <TextView
+                android:id="@+id/park_bottom_sheet_dialog_equip_content_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:fontFamily="@font/roboto_regular"
+                android:textColor="@color/dark_gray"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/park_bottom_sheet_dialog_equip_title_text_view"
+                app:layout_constraintTop_toBottomOf="@id/park_bottom_sheet_dialog_equip_title_text_view"
+                tools:text="연못(5100㎡) 정자 어린이 놀이 시설 허준 동상 음악분수 " />
+
+            <TextView
+                android:id="@+id/park_bottom_sheet_dialog_road_title_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:fontFamily="@font/roboto_bold"
+                android:text="오시는길"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="@id/park_bottom_sheet_dialog_equip_content_text_view"
+                app:layout_constraintTop_toBottomOf="@id/park_bottom_sheet_dialog_equip_content_text_view" />
+
+            <TextView
+                android:id="@+id/park_bottom_sheet_dialog_road_content_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:fontFamily="@font/roboto_regular"
+                android:textColor="@color/dark_gray"
+                android:textSize="13sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/park_bottom_sheet_dialog_road_title_text_view"
+                app:layout_constraintTop_toBottomOf="@id/park_bottom_sheet_dialog_road_title_text_view"
+                tools:text="버스(G 지선 B 간선 R 광역 Y 순환) 구암공원 하차(도보 5분) G 1002 6631 6643 6712 " />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/park_bottom_sheet_dialog_road_content_text_view" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

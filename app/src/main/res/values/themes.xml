@@ -17,6 +17,17 @@
         <item name="android:navigationBarColor">@color/white</item>
     </style>
 
+    <style name="AppTheme.NoActionBarForMap">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+
+        <item name="android:windowActivityTransitions">true</item>
+        <item name="android:navigationBarColor">@color/white</item>
+    </style>
+
     <!-- 스플래시 화면 기기 상단 바 색상 변경 -->
     <style name="AppTheme.Splash">
         <item name="windowActionBar">false</item>
@@ -62,6 +73,5 @@
     <style name="AppBottomSheetDialogTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/AppModalStyle</item>
     </style>
-
 
 </resources>
