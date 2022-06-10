@@ -3,6 +3,7 @@ package com.konkuk.walku.src.main.analysis.today
 import android.app.Activity
 import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Parcelable
 import android.provider.Contacts.SettingsColumns.KEY
@@ -15,6 +16,11 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentResultListener
+import com.github.mikephil.charting.animation.Easing
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.fitness.Fitness
 import com.google.android.gms.fitness.FitnessOptions
@@ -39,7 +45,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.properties.Delegates
 
 class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::bind, R.layout.fragment_today) {
-    val circleBarView: CircleBarView by lazy { binding.customCircleBarView }
+    //val circleBarView: CircleBarView by lazy { binding.customCircleBarView }
     var todayIndex by Delegates.notNull<Int>()
     lateinit var mainActivity: MainActivity
     lateinit var rdb: DatabaseReference
@@ -57,7 +63,46 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
         Log.i("asd","OnCreateView!!")
         bundleReciever()
         setGoal()
-        circleBarDraw()
+        pieChart()
+        //circleBarDraw()
+    }
+
+    private fun pieChart() {
+        val pieChart = binding.pieChart
+
+        pieChart.setUsePercentValues(true)
+
+        val entries = ArrayList<PieEntry>()
+        entries.add(PieEntry(analysisData.stepData[todayIndex].stepCount.toFloat()))
+        entries.add(PieEntry(analysisData.stepData[todayIndex].stepGoal.toFloat()))
+
+
+
+        val colorItems = ArrayList<Int>()
+        colorItems.add(ColorTemplate.MATERIAL_COLORS[1])
+        colorItems.add(Color.WHITE)
+
+
+
+        val pieDataSet = PieDataSet(entries,"")
+        pieDataSet.apply {
+            colors = colorItems
+            valueTextColor = Color.WHITE
+            valueTextSize=0f
+        }
+
+        val pieData = PieData(pieDataSet)
+        pieChart.apply {
+            data = pieData
+            description.isEnabled = true
+            description.text = "오늘의 걸음 수"
+            description.textSize = 30f
+            isRotationEnabled = false
+            centerText = "${analysisData.stepData[todayIndex].stepCount.toInt()} / ${analysisData.stepData[todayIndex].stepGoal.toInt()}"
+            setEntryLabelColor(Color.BLACK)
+            animateY(1400, Easing.EaseOutQuad)
+            animate()
+        }
     }
 
     private fun initAnalysisData() {
@@ -79,26 +124,29 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
             analysisData = result.getParcelable("analysisData")!!
             Log.i("asd","bundle 받았습니다")
             searchTodayIndex()
-            circleBarDraw()
+            pieChart()
+            //circleBarDraw()
         }
         requireActivity().supportFragmentManager.setFragmentResultListener("step3",mainActivity
         ) { requestKey, result ->
             analysisData.stepData[todayIndex].stepCount = result.get("step3").toString().toInt()
-            circleBarDraw()
+            pieChart()
+            //circleBarDraw()
             insertDB()
         }
         requireActivity().supportFragmentManager.setFragmentResultListener("distance",mainActivity
         ) { requestKey, result ->
             analysisData.stepData[todayIndex].distance = result.get("distance").toString().toDouble()
-            circleBarDraw()
+            pieChart()
+            //circleBarDraw()
             insertDB()
         }
     }
 
-    private fun circleBarDraw(){
-        val progress = (analysisData.stepData[todayIndex].stepCount.toFloat())/analysisData.stepData[todayIndex].stepGoal.toFloat() * 360
-        circleBarView.setProgress(progress,analysisData.stepData[todayIndex].stepCount.toString()+"/"+analysisData.stepData[todayIndex].stepGoal.toString())
-    }
+//    private fun circleBarDraw(){
+//        val progress = (analysisData.stepData[todayIndex].stepCount.toFloat())/analysisData.stepData[todayIndex].stepGoal.toFloat() * 360
+//        circleBarView.setProgress(progress,analysisData.stepData[todayIndex].stepCount.toString()+"/"+analysisData.stepData[todayIndex].stepGoal.toString())
+//    }
     private fun searchTodayIndex(){
         for(i in 0 until analysisData.stepData.size){
             if(analysisData.stepData[i].date==LocalDate.now().toString()){
@@ -120,7 +168,8 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::b
                 imm.hideSoftInputFromWindow(requireActivity().currentFocus?.windowToken, 0)
                 analysisData.stepData[todayIndex].stepGoal = binding.goalInput.text.toString().toInt()
                 binding.goalInput.text.clear()
-                circleBarDraw()
+                //circleBarDraw()
+                pieChart()
             }
         }
     }
