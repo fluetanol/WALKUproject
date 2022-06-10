@@ -25,7 +25,7 @@ class ChallengeSuccessChallengeFragment : BaseFragment<FragmentChallengeMychalle
     val Customer = Firebase.database.getReference("Customer")
     val challengenew = Firebase.database.getReference("Customer/mike415415/Challenge/Success")
 
-    var data = ArrayList<ChallengeMyData>()
+    var data = ArrayList<ChallengeSuccessData>()
     lateinit var adapter: ChallengeSuccessRecyclerAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -43,32 +43,22 @@ class ChallengeSuccessChallengeFragment : BaseFragment<FragmentChallengeMychalle
                 if (data.size == 0) {
                     for (j in accountchallengesuccess.child("WalkDistanceChallenge").children.iterator()) {
                         if (j.child("context").value.toString() != "null") {
-                            val newvalue = ChallengeMyData(
+                            val newvalue = ChallengeSuccessData(
                                 j.key!!.toInt(),
                                 j.child("challengetype").value.toString(),
                                 j.child("day").value.toString(),
                                 j.child("context").value.toString(),
-                                "0",
-                                0,
-                                "00:00:00",
-                                "00 00 00",
-                                Timer(),
-                                "삭제")
+                                )
                             data.add(newvalue)
                         }
                     }
                     for (j in accountchallengesuccess.child("WalkCountChallenge").children.iterator()) {
                         if (j.child("context").value.toString() != "null") {
-                            val newvalue = ChallengeMyData(j.key!!.toInt(),
+                            val newvalue = ChallengeSuccessData(j.key!!.toInt(),
                                 j.child("challengetype").value.toString(),
                                 j.child("day").value.toString(),
                                 j.child("context").value.toString(),
-                                "0",
-                                0,
-                                "00:00:00",
-                                "00 00 00",
-                                Timer(),
-                                "삭제")
+                                )
                             data.add(newvalue)
                         }
                     }
@@ -99,6 +89,7 @@ class ChallengeSuccessChallengeFragment : BaseFragment<FragmentChallengeMychalle
         binding.recyclerview.addItemDecoration(decoration)
         adapter = ChallengeSuccessRecyclerAdapter(data)
         binding.recyclerview.adapter = adapter
+        binding.spinner.visibility = View.GONE
     }
 
     //리사이클러 뷰에 아무것도 없을때...

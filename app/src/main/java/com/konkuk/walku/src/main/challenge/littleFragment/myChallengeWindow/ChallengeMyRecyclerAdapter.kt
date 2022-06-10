@@ -46,6 +46,7 @@ class ChallengeMyRecyclerAdapter : ListAdapter<ChallengeMyData, ChallengeMyRecyc
             binding.achivetextview.text = challengedata.achivement.toString() +"/"+ challengedata.achivementamount
             //달성도 기록
             binding.progressbar.progress = challengedata.achivement
+            binding.progressbar.max = challengedata.achivementamount.toInt()
             binding.button.text = challengedata.buttontext
             //버튼 텍스트
         }
