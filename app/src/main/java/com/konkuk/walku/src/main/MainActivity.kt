@@ -18,6 +18,7 @@ import com.google.android.gms.fitness.request.SensorRequest
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.konkuk.walku.R
+import com.konkuk.walku.config.ApplicationClass.Companion.G_USER_ACCOUNT
 import com.konkuk.walku.config.ApplicationClass.Companion.K_USER_ACCOUNT
 import com.konkuk.walku.config.ApplicationClass.Companion.sSharedPreferences
 import com.konkuk.walku.config.BaseActivity
@@ -240,7 +241,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     private fun insertDB(locList: ArrayList<Walk>){
         val rdb= Firebase.database.reference
         try {
-            val userid = sSharedPreferences.getString(K_USER_ACCOUNT,null)?.split('@')?.get(0)
+            var userid: String? = null
+            userid = if(sSharedPreferences.getString(K_USER_ACCOUNT,null)==null){
+                sSharedPreferences.getString(G_USER_ACCOUNT,null)?.split('@')?.get(0)
+            }else{
+                sSharedPreferences.getString(K_USER_ACCOUNT,null)?.split('@')?.get(0)
+            }
 
             val key=rdb.child("Customer/$userid").child("analysis").child("walkData").push().key
 
