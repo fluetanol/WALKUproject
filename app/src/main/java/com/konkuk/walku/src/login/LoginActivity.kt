@@ -22,6 +22,9 @@ import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
 import com.konkuk.walku.R
+import com.konkuk.walku.config.ApplicationClass.Companion.G_USER_ACCOUNT
+import com.konkuk.walku.config.ApplicationClass.Companion.G_USER_NAME
+import com.konkuk.walku.config.ApplicationClass.Companion.G_USER_THUMB
 import com.konkuk.walku.config.ApplicationClass.Companion.K_USER_ACCOUNT
 import com.konkuk.walku.config.ApplicationClass.Companion.K_USER_NAME
 import com.konkuk.walku.config.ApplicationClass.Companion.K_USER_THUMB
@@ -133,7 +136,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
         // [START config_signin]
         // Configure Google Sign In
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestIdToken(getString(R.string.web_client_id))
             .requestEmail()
             .build()
 
@@ -176,10 +179,10 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
 
     private fun updateUI(user: FirebaseUser?) {
         editor = sSharedPreferences.edit()
-        editor.putString(K_USER_NAME, user?.displayName)
-        editor.putString(K_USER_ACCOUNT,user?.email)
+        editor.putString(G_USER_NAME, user?.displayName)
+        editor.putString(G_USER_ACCOUNT,user?.email)
         //user?.kakaoAccount?.profile?.profileImageUrl
-        editor.putString(K_USER_THUMB, user?.photoUrl.toString())
+        editor.putString(G_USER_THUMB, user?.photoUrl.toString())
         editor.apply()
 
         val intent = Intent(this, PermissionActivity::class.java)
