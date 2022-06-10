@@ -23,6 +23,7 @@ import com.konkuk.walku.src.main.challenge.littleFragment.myChallengeWindow.Chal
 
 class ChallengeFragment : BaseFragment<FragmentChallengeBinding>(FragmentChallengeBinding::bind, R.layout.fragment_challenge),
     ChallengeFragmentView {
+
     val data = ArrayList<ChallengeMyData>()
     val Customer = Firebase.database.getReference("Customer")
     val challengenew = Firebase.database.getReference("Customer/mike415415/Challenge/New")
