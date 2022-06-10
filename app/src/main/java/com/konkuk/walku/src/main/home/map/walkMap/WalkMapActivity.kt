@@ -133,7 +133,7 @@ class WalkMapActivity : BaseActivity<ActivityWalkMapBinding>(ActivityWalkMapBind
     override fun onGetWalkSuccess(response: GetWalkResponse) {
         dismissLoadingDialog()
         if (response.SearchParkInfoService.RESULT.CODE == "INFO-000") {
-            showCustomToast("공원 API 연결 성공")
+//            showCustomToast("공원 API 연결 성공")
             response.SearchParkInfoService.row.forEach {
                 parkArr.add(
                     ModelPark(

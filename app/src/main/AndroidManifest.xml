@@ -48,7 +48,7 @@
         <activity
             android:name=".src.main.MainActivity"
             android:exported="true"
-            android:screenOrientation="fullSensor"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".src.main.home.map.bikeMap.BikeMapActivity"
