@@ -1,31 +1,7 @@
 # Android
 워쿠 (Android) - 건국대 모바일프로그래밍 4팀
 
-
-## 담당파트 정리
-
-- 김원석
- - 디자인 최종 수정
- - src/main/home
-
-------------
-
-- 김경호
- - src/main/analysis 
-
-------------
-
-- 정태승
- - src/main/settings
- - src/main/challenge
-
-------------
-
-- 아이닌자리파
- - 디자인 작업
-
-## 지켜주세요!
-- 각자 브랜치로 작업하는게 아니라면, 작업하시기 전에 항상, 자주 main branch 최신화, 동기화 한 후, 진행해주세요! 
-- (충돌일어나면 헬파티 일어날 수 있어요ㅠㅠ)
-- 해시키, api 키 등 민감한 정보는 local.properties에 저장해두고 app 수준의 build.gradle에서 buildConfig에 추가해주세요.
-- 조금 이해가 어려운 코드는 간단하게 주석 달아주시면 감사하겠습니다!
+# 개선해야할 사항
+- [Paging3](https://developer.android.com/topic/libraries/architecture/paging/v3-overview?hl=ko) 라이브러리를 사용하여 홈 탭에서 중복되는 네트워크 요청을 제거
+- [MVVM](https://developer.android.com/topic/libraries/architecture?hl=ko) 패턴으로 view의 무게를 줄이고 독립된 viewmodel 클래스를 통해 전체적인 리팩토링 필요
+- [Jetpack Compose](https://developer.android.com/jetpack/compose?gclid=CjwKCAjw46CVBhB1EiwAgy6M4vSmFZy7VtXH0MdCp67pTF-PY-VSR6wj0tWtCT2rsKKakhULVm1yyRoCn7EQAvD_BwE&gclsrc=aw.ds) 부분적인 compose로의 migration을 통해 UI 디자인 및 애니메이션 개선 필요 
