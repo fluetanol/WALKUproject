@@ -12,6 +12,10 @@
 - timer 객체의 지나친 낭비, challenge를 너무 늘릴경우 오버헤드 발생할 요지가 있음 <- 의문점: viewmodel+ Livedata를 이용하며,service 클래스를 이용한 방식으로 최적화가 가능한가?
 - 매 초마다 firebase의 내용을 업데이트 하고 가져오는 성능 저하 문제. 네트워크 의존도가 심각 <- 만약에 대비하여 local에서도 timer나 progressbar의 동작이 이루어질 수 있도록 따로 구현을 해볼 필요가 있음.
 - 너무 단순한 challenge내용들. 종류를 좀 더 다양하게 추가해볼 필요가 있다고 생각
-- 
+
+# 개선 이외에 challenge 파트에서 건진 점
+- ListAdapter - 리스트의 각element의 업데이트 여부를 즉각적으로 반응하여 처리해주는 리사이클러뷰의 어댑터 클래스의 일종, 일반적인 RecyclerviewAdapter의 상위호환의 느낌이 강하다.  LiveData와 DiffUtil을 활용하여 백그라운드 스레드 동작으로 리스트에 들어간 Livedata배열을 지속적으로 감시하여 리사이클러뷰의 변화 여부를 결정하는 방식의 동작이다.
+
+
 # 시연 영상
 [유튜브 링크](https://www.youtube.com/watch?v=Wi_6a4kydJc&feature=youtu.be)
