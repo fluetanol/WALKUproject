@@ -21,4 +21,4 @@
 [유튜브 링크](https://www.youtube.com/watch?v=Wi_6a4kydJc&feature=youtu.be)
 
 
-##이 레퍼지토리는 모바일 프로그래밍으로 구현한 WALKU앱 프로젝트의 코드가 
+## 이 레퍼지토리는 모바일 프로그래밍으로 구현한 WALKU앱 프로젝트의 코드가 담겨있음
